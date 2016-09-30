@@ -1,0 +1,42 @@
+﻿/**************************************************************************************/
+/*! @file   BaseObjectSingleton.cs
+***************************************************************************************
+@brief      シングルトン作成用基底クラス
+***************************************************************************************
+@author     橋本 航
+***************************************************************************************/
+using UnityEngine;
+using System.Collections;
+using System;
+
+/******************************************************************************* 
+@brief   シングルトン作成用基底クラス
+*/
+public class BaseObjectSingleton<T> : BaseObject where T : BaseObjectSingleton<T>
+{
+    private static T m_instance;
+    public static T mInstance
+    {
+        get{ return m_instance; }
+    }
+
+    /****************************************************************************** 
+    @brief      インスタンスがあるかの確認用    
+    @return     インスタンスがある：true / ない：false
+    */
+    protected bool mCheckInstance()
+    {
+        if (m_instance == null)
+        {
+            m_instance = (T)this;
+            return true;
+        }
+        else if (m_instance == this)
+        {
+            return true;
+        }
+
+        Destroy(this);
+        return false;
+    }
+}
