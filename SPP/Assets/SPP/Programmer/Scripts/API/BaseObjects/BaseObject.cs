@@ -103,7 +103,13 @@ public abstract class BaseObject: MonoBehaviour{
     @return     none
     */
     public virtual void mOnUpdate() { return; }
-    
+
+    /******************************************************************************
+    @brief      物理系の更新処理。継承先で必ず実装する。
+    @return     none
+    */
+    public virtual void mOnFixedUpdate() { return; }
+
     /****************************************************************************** 
     @brief      管理リストへ登録された時に1度だけ呼ばれる。オーバーライド可能
     @return     none

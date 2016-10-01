@@ -17,12 +17,22 @@ public class BaseObjectUpdater : MonoBehaviour {
     */
     void Update()
     {
-        var node = BaseObject.ObjectList.First;
-        while(node != null)
+
+        foreach(var index in BaseObject.ObjectList)
         {
-            node.Value.mOnUpdate();
-            node = node.Next;
+            index.mOnUpdate();
         }
+        
     }
 
+    /**************************************************************bu************************
+    @brief  物理系の更新処理。MonoBehaviorの実装。
+    */
+    void FixedUpdate()
+    {
+        foreach (var index in BaseObject.ObjectList)
+        {
+            index.mOnFixedUpdate();
+        }
+    }
 }
