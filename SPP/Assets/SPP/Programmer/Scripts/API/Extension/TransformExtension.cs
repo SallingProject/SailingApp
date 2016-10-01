@@ -3,11 +3,14 @@
 *********************************************************************************************
 @brief      Transform型に対しての拡張メソッドをまとめたファイル
 *********************************************************************************************
-@author     橋本 航
+@author     Ko Hashimoto
 **********************************************************************************************/
 using UnityEngine;
 using System.Collections;
 
+/**************************************************************************************
+@brief  Transform型に対しての拡張メソッドをまとめた静的クラス
+*/
 public static class TransformExtension{
 
     /**************************************************************************************
@@ -75,5 +78,15 @@ public static class TransformExtension{
     public static void SetActive(this Transform target, bool isActive)
     {
         target.gameObject.SetActive(isActive);
+    }
+
+    /**************************************************************************************
+    @brief        オブジェクトが存在するかの判定
+    @return       存在する：true/存在しない：false
+    */
+    public static bool IsValid(this Transform target)
+    {
+        return (target != null) ? true : false;
+         
     }
 }

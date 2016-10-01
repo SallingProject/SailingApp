@@ -3,7 +3,7 @@
 *********************************************************************************************
 @brief      すべてのオブジェクトの基底クラス
 *********************************************************************************************
-@author     橋本 航
+@author     Ko Hashimoto
 **********************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ public abstract class BaseObject: MonoBehaviour{
     @brief      BaseObject型オブジェクト管理配列
     */
     static LinkedList<BaseObject> m_objectList = new LinkedList<BaseObject>();
-    public static LinkedList<BaseObject> ObjectList
+    public static LinkedList<BaseObject> mObjectList
     {
         get { return m_objectList; }
         private set { m_objectList = value; }
@@ -28,7 +28,7 @@ public abstract class BaseObject: MonoBehaviour{
    @brief      自身の参照オブジェクト
    */
     private BaseObject m_owner;
-    public BaseObject Owner
+    public BaseObject mOwner
     {
         get { return m_owner; }
         private set { m_owner = value; }
@@ -43,7 +43,7 @@ public abstract class BaseObject: MonoBehaviour{
     @brief      BaseObjectを基底クラスとして作成されたコンポーネントの総数
     */
     private static int m_objectCount = 0;
-    public static int ObjectCount
+    public static int mObjectCount
     {
         get { return m_objectCount; }
         private set { m_objectCount = value; }
@@ -61,7 +61,7 @@ public abstract class BaseObject: MonoBehaviour{
     protected virtual void Awake()
     {
         m_isCallDeleted = false;
-        Owner = this;
+        mOwner = this;
         mRegisterList(this);
     }
 
@@ -141,7 +141,7 @@ public abstract class BaseObject: MonoBehaviour{
         if (m_isCallDeleted) return;
         m_isCallDeleted = true;
         mOnDelete();
-        ObjectCount -= 1;
+        mObjectCount -= 1;
     }
 
     /****************************************************************************** 
@@ -152,9 +152,9 @@ public abstract class BaseObject: MonoBehaviour{
     static public void mRegisterList(BaseObject input)
     {
         if (mSerch(input) != null) return;
-        ObjectList.AddLast(input);
+        mObjectList.AddLast(input);
         input.mOnRegistered();
-        ObjectCount += 1;
+        mObjectCount += 1;
     }
 
     /****************************************************************************** 
@@ -165,7 +165,7 @@ public abstract class BaseObject: MonoBehaviour{
     {
         if (mSerch(input) == null) return;
 
-        if (ObjectList.Remove(input))
+        if (mObjectList.Remove(input))
         {
             input.mOnUnregistered();
         }
@@ -178,7 +178,7 @@ public abstract class BaseObject: MonoBehaviour{
     */
     static public BaseObject mSerch(BaseObject input)
     {
-        var findObject = ObjectList.Find(input);
+        var findObject = mObjectList.Find(input);
         if(findObject != null)
         {
             return findObject.Value;
