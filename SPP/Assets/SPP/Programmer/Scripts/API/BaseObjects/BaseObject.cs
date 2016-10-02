@@ -4,9 +4,12 @@
 @brief      すべてのオブジェクトの基底クラス
 *********************************************************************************************
 @author     Ko Hashimoto
+***************************************************************************************
+* Copyright © 2016 Ko Hashimoto All Rights Reserved.
 **********************************************************************************************/
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 /******************************************************************************* 
 @brief   すべてのオブジェクトの基底クラス
@@ -64,7 +67,6 @@ public abstract class BaseObject: MonoBehaviour{
         mOwner = this;
         mRegisterList(this);
     }
-
 
     /****************************************************************************** 
     @brief      オブジェクトのアップデート前に呼ばれる。MonoBehaviorの実装
@@ -159,7 +161,7 @@ public abstract class BaseObject: MonoBehaviour{
 
     /****************************************************************************** 
     @brief      指定オブジェクトが管理リストの管理対象なら管理リストから外す
-    @return     成功：管理から外したオブジェクト/失敗：null
+    @return     none
     */
     static public void mUnregisterList(BaseObject input)
     {
@@ -206,6 +208,21 @@ public abstract class BaseObject: MonoBehaviour{
         return;
     }
 
+    /********************************************************************************************
+    @brief      オブジェクト削除用。削除したいオブジェクトがBaseObject型なら管理リストからも削除
+    @note       MonoBehaviorのDestroy関数は使用せずこの関数を使用してください。
+    @return     none
+    */
+    static public void mDelete(BaseObject remove)
+    {
+        if (remove == null) return;
+
+        mUnregisterList(remove);
+
+        Destroy(remove.gameObject);
+        return;
+    }
+
     /****************************************************************************** 
     @brief      オブジェクト生成用。生成したオブジェクトがBaseObject型なら管理リストに登録
     @note       MonoBehaviorのInstantiate関数は使用しないでください。
@@ -215,10 +232,6 @@ public abstract class BaseObject: MonoBehaviour{
     {
         if (input == null) return null;
         T output = Instantiate(input) as T;
-        if (output is BaseObject)
-        {
-            mRegisterList((BaseObject)(object)output);
-        }
         return output;
     }
 
