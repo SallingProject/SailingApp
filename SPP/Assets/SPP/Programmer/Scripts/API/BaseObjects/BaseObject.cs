@@ -143,7 +143,7 @@ public abstract class BaseObject: MonoBehaviour{
         if (m_isCallDeleted) return;
         m_isCallDeleted = true;
         mOnDelete();
-        mObjectCount -= 1;
+        mObjectCount = mObjectList.Count;
     }
 
     /****************************************************************************** 
@@ -155,8 +155,9 @@ public abstract class BaseObject: MonoBehaviour{
     {
         if (mSerch(input) != null) return;
         mObjectList.AddLast(input);
+        
         input.mOnRegistered();
-        mObjectCount += 1;
+        mObjectCount = mObjectList.Count;
     }
 
     /****************************************************************************** 

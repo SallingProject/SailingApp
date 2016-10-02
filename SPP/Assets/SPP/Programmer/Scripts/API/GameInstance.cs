@@ -9,18 +9,15 @@
 ***************************************************************************************/
 using UnityEngine;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 /******************************************************************************* 
 @brief   ゲームインスタンスクラス　シングルトン実装
 */
 public class GameInstance : BaseObjectSingleton<GameInstance> {
 
-    /******************************************************************************
-    @brief      更新処理管理クラスオブジェクト
-    */
     [SerializeField]
-    BaseObjectUpdater m_baseObjectUpdaterPref;
-    BaseObjectUpdater m_baseObjectUpdater;
+    BaseObjectUpdater m_updaterPrefbs;
+    BaseObjectUpdater m_updater;
 
 
     /****************************************************************************** 
@@ -33,13 +30,11 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         mUnregisterList(this); // mUpdateRunを呼び出す必要がないので管理から外す
 
         //初期化するべきオブジェクトの初期化や生成など
-
-        // アップデータオブジェクトの生成
-        if(m_baseObjectUpdaterPref != null)
+        if (m_updater != null)
         {
-            m_baseObjectUpdater = mCreate(m_baseObjectUpdaterPref) as BaseObjectUpdater;
-            m_baseObjectUpdater.transform.SetParent(this.transform);
+            m_updater = mCreate(m_updaterPrefbs) as BaseObjectUpdater;
         }
+        this.transform.SetParent(m_updater.transform, false);
     }
 
 

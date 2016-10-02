@@ -4,6 +4,8 @@
 @brief      ゲームの更新処理クラス。ObjectBaseを継承したオブジェクトの更新処理用
 ***************************************************************************************
 @author     Ko Hashimoto
+***************************************************************************************
+* Copyright © 2016 Ko Hashimoto All Rights Reserved.
 ***************************************************************************************/
 using UnityEngine;
 /**************************************************************************************
@@ -12,13 +14,19 @@ using UnityEngine;
 */
 public class BaseObjectUpdater : BaseObject {
 
+
+    protected override void mOnRegistered()
+    {
+        base.mOnRegistered();
+        mUnregisterList(this);
+    }
+
     /**************************************************************************************
     @brief  更新処理。MonoBehaviorの実装。
     @note   このプロジェクトの唯一のUpdate関数。ここ以外にUpdateは存在するはずがない。
     */
     void Update()
     {
-
         foreach(var index in mObjectList)
         {
             index.mOnUpdate();
