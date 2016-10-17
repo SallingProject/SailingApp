@@ -30,10 +30,11 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         mUnregisterList(this); // mUpdateRunを呼び出す必要がないので管理から外す
 
         //初期化するべきオブジェクトの初期化や生成など
-        if (m_updater != null)
+        if (m_updater == null)
         {
             m_updater = mCreate(m_updaterPrefbs) as BaseObjectUpdater;
         }
+
         this.transform.SetParent(m_updater.transform, false);
     }
 
