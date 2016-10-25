@@ -1,30 +1,36 @@
-﻿using UnityEngine;
+﻿/**************************************************************************************/
+/*! @file   ShipMove.cs
+***************************************************************************************
+@brief      船の動きを行うクラス
+***************************************************************************************
+@author     Kaneko Kazuki
+***************************************************************************************/
+using UnityEngine;
 using System.Collections;
 
 public class ShipMove : BaseObject {
-    [SerializeField]
-    [Range(-180,180)]
-    private int m_windDirection;
-    private float m_windForce;
+
 
     [SerializeField]
-    private WindZone m_wind;
+    private WindObject m_wind;
 
     private float m_speedVector;
     
     //定数
-    private const float mkMaxSpeed = 20.0f;             //最大速度
+    private const float mkMagnification = 5.0f;             //最大速度倍率
     private const float mkFriction = 0.98f;              //摩擦
 
     protected override void Start()
     {
-        m_windForce = 1;
         m_speedVector = 0;
     }
 
 
+
+
     public override void mOnUpdate()
     {
+        //仮コントロール
         float shipDirection = 0.0f;
         if(Input.GetKey(KeyCode.LeftArrow)){
             shipDirection += 1;
@@ -34,10 +40,10 @@ public class ShipMove : BaseObject {
         }
 
         //速度の加算　最大値を超えていた場合収めるが風力によって変わる
-        m_speedVector += mForce(m_wind.transform.rotation.y);
-        if (m_speedVector >= mkMaxSpeed)
+        m_speedVector += mForce(m_wind.mWindDirection) * m_wind.mWindForce;
+        if (m_speedVector >= m_wind.mWindForce * mkMagnification)
         {
-            m_speedVector = mkMaxSpeed;
+            m_speedVector = m_wind.mWindForce * mkMagnification;
         }
 
         m_speedVector *= mkFriction;
@@ -52,12 +58,12 @@ public class ShipMove : BaseObject {
 
 
 
+
     /****************************************************************************** 
     @brief      風を受けて力へ変える関数
-    @note       
-    @return     受けた風
-    */
-
+    @note       風上へは一番力が弱くなる
+    @return     受けた風量
+    *******************************************************************************/
     private float mForce(float windDirec)
     {
         Vector2 windVec,shipVec;
