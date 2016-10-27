@@ -15,6 +15,7 @@ public class ShipMove : BaseObject {
     private WindObject m_wind;
 
     private float m_speedVector;
+    private float m_surfacingRadian;
     
     //定数
     private const float mkMagnification = 5.0f;             //最大速度倍率
@@ -23,7 +24,9 @@ public class ShipMove : BaseObject {
     protected override void Start()
     {
         m_speedVector = 0;
+        m_surfacingRadian = 0;
     }
+    
 
 
 
@@ -47,8 +50,10 @@ public class ShipMove : BaseObject {
         }
 
         m_speedVector *= mkFriction;
+        m_surfacingRadian += Time.deltaTime * 150;
 
         //移動
+        transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f)/8, transform.position.z);
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
         //Rote
         transform.Rotate(new Vector3(0.0f, shipDirection, 0.0f));
