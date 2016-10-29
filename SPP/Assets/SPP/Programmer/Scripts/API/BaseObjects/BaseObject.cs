@@ -107,6 +107,12 @@ public abstract class BaseObject: MonoBehaviour{
     public virtual void mOnUpdate() { return; }
 
     /******************************************************************************
+    @brief      一番最後の更新処理。継承先で必ず実装する。
+    @return     none
+    */
+    public virtual void mOnLateUpdate() { return; }
+
+    /******************************************************************************
     @brief      物理系の更新処理。継承先で必ず実装する。
     @return     none
     */
