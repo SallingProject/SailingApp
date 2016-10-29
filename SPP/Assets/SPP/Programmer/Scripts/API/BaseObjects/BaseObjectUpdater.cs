@@ -30,8 +30,15 @@ public class BaseObjectUpdater : BaseObject {
         foreach(var index in mObjectList)
         {
             index.mOnUpdate();
+        }        
+    }
+
+    void LateUpdate()
+    {
+        foreach (var index in mObjectList)
+        {
+            index.mOnLateUpdate();
         }
-        
     }
 
     /**************************************************************************************
