@@ -21,8 +21,6 @@ public class TargetMarker : BaseObject {
     [System.Serializable]
     class CanvasUI
     {
-        public RectTransform _top;
-        public RectTransform _bottom;
         public RectTransform _right;
         public RectTransform _left;
     }
@@ -124,38 +122,6 @@ public class TargetMarker : BaseObject {
             m_canvasMark._right.SetActive(false);
             m_canvasMark._left.SetActive(true);
         }
-        m_canvasMark._top.SetActive(false);
-        m_canvasMark._bottom.SetActive(false);
-        //if(diff.x > diff.z)
-        //{
-        //    if(diff.x > 0)
-        //    {
-        //        m_canvasMark._right.SetActive(true);
-        //        m_canvasMark._left.SetActive(false);
-        //    }
-        //    else
-        //    {
-        //        m_canvasMark._right.SetActive(false);
-        //        m_canvasMark._left.SetActive(true);
-        //    }
-        //    m_canvasMark._top.SetActive(false);
-        //    m_canvasMark._bottom.SetActive(false);
-        //}
-        //else if(diff.x < diff.z)
-        //{
-        //    if (diff.z > 0)
-        //    {
-        //        m_canvasMark._top.SetActive(true);
-        //        m_canvasMark._bottom.SetActive(false);
-        //    }
-        //    else
-        //    {
-        //        m_canvasMark._top.SetActive(false);
-        //        m_canvasMark._bottom.SetActive(true);
-        //    }
-        //    m_canvasMark._right.SetActive(false);
-        //    m_canvasMark._left.SetActive(false);
-        //}
     }
 
     /**************************************************************************************
@@ -168,8 +134,6 @@ public class TargetMarker : BaseObject {
         
         if (isSpriteActive)
         {
-            m_canvasMark._bottom.SetActive(false);
-            m_canvasMark._top.SetActive(false);
             m_canvasMark._right.SetActive(false);
             m_canvasMark._left.SetActive(false);
         }
