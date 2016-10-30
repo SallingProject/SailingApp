@@ -45,18 +45,13 @@ public class TargetMarker : BaseObject {
 #if UNITY_EDITOR
     [SerializeField]
 #endif
-    private GameObject m_target;
-
     // カメラに映っているかのコンポーネント
-    private ReflectedOnCamera m_reflectedComponent;
+    private ReflectedOnCamera m_target;
 
     // 初期化処理
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
-#if UNITY_EDITOR
-        m_reflectedComponent = m_target.GetComponent<ReflectedOnCamera>();
-#endif
     }
 
 
@@ -66,7 +61,7 @@ public class TargetMarker : BaseObject {
     /**************************************************************************************
     @brief  更新処理
     */
-    public override void mOnLateUpdate()
+    public override void mOnUpdate()
     {
         // なんかちらつくから最初の2回は無視
         if(m_updateCount < 2)
@@ -74,36 +69,27 @@ public class TargetMarker : BaseObject {
             m_updateCount += 1;
             return;
         }
-        if (m_target == null || m_reflectedComponent == null) return;
+        if (m_target == null) return;
         base.mOnUpdate();
-        mSetSpriteMarkActive(m_reflectedComponent.mIsOnView);
-        if (m_reflectedComponent.mIsOnView)
+        mSetSpriteMarkActive(m_target.mIsOnView);
+        if (m_target.mIsOnView)
         {
             Vector3 position = m_target.transform.position;
             m_spriteMark.transform.position = position + m_spriteOffset;
         }
         else
         {
-//            Debug.Log(m_reflectedComponent.mGameCamera.transform.position);
-            mSetCanvasMarkActive(m_target.transform.position, m_reflectedComponent.mGameCamera.transform.position);
+            mSetCanvasMarkActive(m_target.transform.position, m_target.mGameCamera.transform.position);
         }
+        m_target.mUpdate();
     }
 
     /**************************************************************************************
     @brief  マーカーのさすオブジェクトを設定
     */
-    public void mSetTarget(GameObject nextPoint)
+    public void mSetTarget(ReflectedOnCamera nextPoint)
     {
         m_target = nextPoint;
-        m_reflectedComponent = null;
-        if (m_target != null)
-        {
-            var component = m_target.GetComponent<ReflectedOnCamera>();
-            if (component != null)
-            {
-                m_reflectedComponent = component;
-            }
-        }
     }
 
     /**************************************************************************************

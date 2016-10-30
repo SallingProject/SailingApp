@@ -16,7 +16,7 @@ public class ReflectedOnCamera: BaseObject {
 
     protected override void mOnRegistered()
     {
-
+        mUnregisterList(this);
     }
 
 
@@ -25,7 +25,7 @@ public class ReflectedOnCamera: BaseObject {
     /// 更新時に呼ばれる
     /// BaseObjectの実装
     /// </summary>
-    public override void mOnLateUpdate()
+    public void mUpdate()
     {
         mIsOnView = false;
     }
@@ -35,10 +35,13 @@ public class ReflectedOnCamera: BaseObject {
     /// 不可視状態の時に呼ばれる
     /// MonoBehaviorの実装
     /// </summary>
+    /// 
+#if !UNITY_EDITOR
     void OnBecameInvisible()
     {
         mIsOnView = false;
     }
+#endif
 
     /// <summary>
     /// 可視状態の時に呼ばれる
