@@ -61,6 +61,7 @@ public class Point: PointArrayObject{
     override public void mOnUpdate()
     {
         if (!enabled) return;       //そもそもスクリプトがONじゃない場合<<Return
+        Debug.Log("come"+name);
         //エリア外なら元に戻す
         if (!m_stayArea)
         {

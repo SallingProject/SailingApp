@@ -84,7 +84,7 @@ public class TargetMarker : BaseObject {
         }
         else
         {
-            Debug.Log(m_reflectedComponent.mGameCamera.transform.position);
+//            Debug.Log(m_reflectedComponent.mGameCamera.transform.position);
             mSetCanvasMarkActive(m_target.transform.position, m_reflectedComponent.mGameCamera.transform.position);
         }
     }

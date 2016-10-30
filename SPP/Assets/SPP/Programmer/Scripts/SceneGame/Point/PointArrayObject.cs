@@ -36,9 +36,10 @@ public class PointArrayObject : BaseObject {
         if (m_currentId >= m_pointArray.Count) return;
 
         //Baseクラスに書き換える
-
         m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
         m_currentId++;
+
+        if (m_currentId >= m_pointArray.Count) return;
         m_pointArray[m_currentId].GetComponent<Point>().enabled = true;
     }
 
