@@ -58,7 +58,7 @@ public class ShipMove : BaseObject {
         //Rote
         transform.Rotate(new Vector3(0.0f, shipDirection, 0.0f));
         //        Debug.Log("X:"+m_windDirectionX + "\tY:" + m_windDirectionY);
-        Debug.Log(m_speedVector);
+//        Debug.Log(m_speedVector);
     }
 
 
