@@ -2,6 +2,7 @@
 /*! @file   PointArrayManager.cs
 ***************************************************************************************
 @brief      ポイントを管理するArrayを管理する
+@note       とりあえず
 ***************************************************************************************
 @author     Kaneko Kazuki
 ***************************************************************************************/
@@ -10,9 +11,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PointArrayObject : BaseObject {
-
-    
+public class PointArrayObject : BaseObject {    
 
     static private List<BaseObject>m_pointArray = new List<BaseObject>();
     static private int m_currentId;
@@ -22,28 +21,49 @@ public class PointArrayObject : BaseObject {
     protected override void mOnRegistered()
     {
         m_pointArray.Add(this);
-        Debug.Log(this+""+m_pointArray.Count);
+        Debug.Log(this+""+m_pointArray.Count+"Name:"+name);
     }
 
-    //次のポイントへ進めるために
+
+    /****************************************************************************** 
+    @brief      ポイントを次へ進める
+    @note       次がないときは最後/継承先でしか利用できない
+    @return     のね
+    *******************************************************************************/
     protected void mNext()
     {
+        Debug.Log("ClearPoint:"+m_currentId);
+        if (m_currentId >= m_pointArray.Count) return;
+
+        //Baseクラスに書き換える
+
+        m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
         m_currentId++;
+        m_pointArray[m_currentId].GetComponent<Point>().enabled = true;
     }
 
 
-    //ポイントを取得する
-    protected BaseObject mGetPoint() {
+    /****************************************************************************** 
+    @brief      現在の（次の）ポイントを取得する
+    @note       
+    @return     ポイント(BaseObject)
+    *******************************************************************************/
+    public BaseObject mGetPoint() {
         return m_pointArray[m_currentId];
     }
-    //前のポイントを取得する
-    protected BaseObject mGetPrevPoint()
+
+    /****************************************************************************** 
+    @brief      前のポイントを取得する
+    @note       最初は前が無いのでNullを返します。
+    @return     ポイント(BaseObject)
+    *******************************************************************************/
+    public BaseObject mGetPrevPoint()
     {
         if (m_currentId <= 0) return null;
         return m_pointArray[m_currentId-1];
     }
 
-
+    
 
 
 }
