@@ -32,8 +32,9 @@ public class Point: PointArrayObject{
     private const float mk_scaleY = 0.01f;
 
 
-    protected override void Start()
+    protected override void mOnRegistered()
     {
+        base.mOnRegistered();
         {   //入りのオブジェクトの生成
             var Obj = BaseObject.mCreate(m_detectionPrefab);
             Obj.transform.parent = transform;
@@ -61,7 +62,7 @@ public class Point: PointArrayObject{
     override public void mOnUpdate()
     {
         if (!enabled) return;       //そもそもスクリプトがONじゃない場合<<Return
-        Debug.Log("come"+name);
+        Debug.Log("come:"+name);
         //エリア外なら元に戻す
         if (!m_stayArea)
         {
@@ -69,7 +70,7 @@ public class Point: PointArrayObject{
             m_outAngleObject.GetComponent<CollisionDetection>().mIsEntered = false;
             return;
         }
-        //すべて通っていたら判定
+        //すべて通っていたら次へ
         if (m_inAngleObject.GetComponent<CollisionDetection>().mIsEntered)
         {
             if (m_outAngleObject.GetComponent<CollisionDetection>().mIsEntered)
@@ -91,6 +92,12 @@ public class Point: PointArrayObject{
     void OnTriggerExit(Collider col)
     {
         m_stayArea = false;
+    }
+
+    private void OnEnable()
+    {
+        m_inAngleObject.SetActive(true);
+        m_outAngleObject.SetActive(true);
     }
 
     private void OnDisable()

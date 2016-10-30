@@ -11,7 +11,6 @@ using System.Collections;
 public class ShipMove : BaseObject {
 
 
-    [SerializeField]
     private WindObject m_wind;
 
     private float m_speedVector;
@@ -20,11 +19,13 @@ public class ShipMove : BaseObject {
     //定数
     private const float mkMagnification = 5.0f;             //最大速度倍率
     private const float mkFriction = 0.98f;              //摩擦
+    public const float mkMoveValue = 2.0f;
 
     protected override void Start()
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;
+        m_wind = GameInfo.mInstance.m_wind;
     }
     
 
@@ -36,10 +37,10 @@ public class ShipMove : BaseObject {
         //仮コントロール
         float shipDirection = 0.0f;
         if(Input.GetKey(KeyCode.LeftArrow)){
-            shipDirection += 2;
+            shipDirection += mkMoveValue;
         }
         if(Input.GetKey(KeyCode.RightArrow)){
-            shipDirection -= 2;
+            shipDirection -= mkMoveValue;
         }
 
         //速度の加算　最大値を超えていた場合収めるが風力によって変わる

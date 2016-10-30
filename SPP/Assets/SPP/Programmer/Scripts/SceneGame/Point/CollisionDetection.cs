@@ -9,7 +9,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class CollisionDetection : MonoBehaviour {
+public class CollisionDetection : BaseObject{
 
     private bool m_isEnter = false;
     public bool mIsEntered
@@ -22,5 +22,11 @@ public class CollisionDetection : MonoBehaviour {
     {
         mIsEntered = true;
     }
+
+    protected override void mOnRegistered()
+    {
+        mUnregisterList(this);
+    }
+
 
 }

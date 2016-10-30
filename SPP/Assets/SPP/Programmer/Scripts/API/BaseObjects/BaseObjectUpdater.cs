@@ -27,8 +27,10 @@ public class BaseObjectUpdater : BaseObject {
     */
     void Update()
     {
+        
         foreach(var index in mObjectList)
         {
+            if(index.IsValid())
             index.mOnUpdate();
         }        
     }
@@ -37,8 +39,10 @@ public class BaseObjectUpdater : BaseObject {
     {
         foreach (var index in mObjectList)
         {
-            index.mOnLateUpdate();
+            if (index.IsValid())
+                index.mOnLateUpdate();
         }
+        mUnregister();
     }
 
     /**************************************************************************************
@@ -49,7 +53,8 @@ public class BaseObjectUpdater : BaseObject {
     {
         foreach (var index in mObjectList)
         {
-            index.mOnFixedUpdate();
+            if (index.IsValid())
+                index.mOnFixedUpdate();
         }
     }
 }

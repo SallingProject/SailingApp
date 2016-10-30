@@ -21,6 +21,7 @@ public abstract class BaseObject: MonoBehaviour{
     @brief      BaseObject型オブジェクト管理配列
     */
     static LinkedList<BaseObject> m_objectList = new LinkedList<BaseObject>();
+    static List<BaseObject> m_unregisterList = new List<BaseObject>();
     public static LinkedList<BaseObject> mObjectList
     {
         get { return m_objectList; }
@@ -118,6 +119,21 @@ public abstract class BaseObject: MonoBehaviour{
     */
     public virtual void mOnFixedUpdate() { return; }
 
+    /******************************************************************************
+    @brief      予約したオブジェクトを管理対象から外す
+    @return     none
+    */
+    public void mUnregister()
+    {
+        foreach(var obj in m_unregisterList)
+        {
+            if (mObjectList.Remove(obj))
+            {
+                obj.mOnUnregistered();
+            }
+        }
+        m_unregisterList.Clear();
+    }
     /****************************************************************************** 
     @brief      管理リストへ登録された時に1度だけ呼ばれる。オーバーライド可能
     @return     none
@@ -173,11 +189,8 @@ public abstract class BaseObject: MonoBehaviour{
     static public void mUnregisterList(BaseObject input)
     {
         if (mSerch(input) == null) return;
+        m_unregisterList.Add(input);
 
-        if (mObjectList.Remove(input))
-        {
-            input.mOnUnregistered();
-        }
         return;
     }
 

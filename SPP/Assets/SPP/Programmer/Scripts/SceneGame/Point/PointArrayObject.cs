@@ -24,6 +24,7 @@ public class PointArrayObject : BaseObject {
         Debug.Log(this+""+m_pointArray.Count+"Name:"+name);
     }
 
+    
 
     /****************************************************************************** 
     @brief      ポイントを次へ進める
@@ -36,11 +37,13 @@ public class PointArrayObject : BaseObject {
         if (m_currentId >= m_pointArray.Count) return;
 
         //Baseクラスに書き換える
+        mUnregisterList(m_pointArray[m_currentId]);
         m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
         m_currentId++;
-
         if (m_currentId >= m_pointArray.Count) return;
         m_pointArray[m_currentId].GetComponent<Point>().enabled = true;
+        Debug.Log(GameInfo.mInstance);
+        GameInfo.mInstance.m_targetMarker.mSetTarget(m_pointArray[m_currentId].GetComponent<ReflectedOnCamera>());
     }
 
 

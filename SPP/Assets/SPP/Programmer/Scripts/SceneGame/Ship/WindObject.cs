@@ -9,7 +9,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class WindObject : BaseObject {
+public class WindObject : BaseObject{
 
     [SerializeField]
     private float m_windForce;
@@ -35,12 +35,10 @@ public class WindObject : BaseObject {
         }
     }
 
-    // Use this for initialization
-    override protected void Start(){
+    protected override void mOnRegistered()
+    {
+        mUnregisterList(this);
+        mUnregister();
     }
-	
-	//// Update is called once per frame
-	//override public void mOnUpdate () {
-	//}
 
 }

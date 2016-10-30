@@ -38,4 +38,8 @@ public class BaseObjectSingleton<T> : BaseObject where T : BaseObjectSingleton<T
         Destroy(this);
         return false;
     }
+    protected override void mOnRegistered()
+    {
+        while (!mCheckInstance()) ;
+    }
 }
