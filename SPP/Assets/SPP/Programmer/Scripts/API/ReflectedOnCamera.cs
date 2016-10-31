@@ -54,7 +54,7 @@ public class ReflectedOnCamera: BaseObject {
         if (Camera.current.name == Camera.main.name)
 #endif
         {
-            Debug.Log(Camera.main.name);
+//            Debug.Log(Camera.main.name);
             // 処理
             mIsOnView = true;
         }

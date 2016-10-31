@@ -12,7 +12,7 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     {
         base.mOnRegistered();
         m_wind = new WindObject();
-        m_wind.mWindForce = 5;
+        m_wind.mWindForce = 2;
         m_wind.mWindDirection = 0;
     }
 
