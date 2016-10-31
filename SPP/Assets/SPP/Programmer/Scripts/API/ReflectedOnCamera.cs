@@ -9,9 +9,9 @@ public class ReflectedOnCamera: BaseObject {
         private set;
     }
 
-    public GameObject mGameCamera
+    public Camera mGameCamera
     {
-        get{ return Camera.main.gameObject; }
+        get{ return Camera.main; }
     }
 
     protected override void mOnRegistered()
@@ -50,9 +50,11 @@ public class ReflectedOnCamera: BaseObject {
     void OnWillRenderObject()
     {
 #if UNITY_EDITOR
+        
         if (Camera.current.name == Camera.main.name)
 #endif
         {
+            Debug.Log(Camera.main.name);
             // 処理
             mIsOnView = true;
         }

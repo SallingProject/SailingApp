@@ -24,6 +24,9 @@ public class TargetMarker : BaseObject {
         public RectTransform _right;
         public RectTransform _left;
     }
+
+    [SerializeField]
+    private GameObject m_ship;
     // キャンバスに表示するマーカーすべての親
     [SerializeField]
     private RectTransform m_canvasMarkRoot;
@@ -79,7 +82,7 @@ public class TargetMarker : BaseObject {
         }
         else
         {
-            mSetCanvasMarkActive(m_target.transform.position, m_target.mGameCamera.transform.position);
+            mSetCanvasMarkActive(m_target.transform.position, m_ship.transform.position);
         }
         m_target.mUpdate();
     }
@@ -95,9 +98,10 @@ public class TargetMarker : BaseObject {
     /**************************************************************************************
     @brief  ターゲットとカメラの位置関係からどのオブジェクトのアクティブをオンにするか決める
     */
-    private void mSetCanvasMarkActive(Vector3 target,Vector3 camera)
+    private void mSetCanvasMarkActive(Vector3 target,Vector3 ship)
     {
-        Vector3 diff = target - camera;
+        Vector3 diff = target - ship;
+
         if (diff.x > 0)
         {
             m_canvasMark._right.SetActive(true);
