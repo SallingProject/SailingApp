@@ -37,10 +37,10 @@ public class ShipMove : BaseObject {
         //仮コントロール
         float shipDirection = 0.0f;
         if(Input.GetKey(KeyCode.LeftArrow)){
-            shipDirection += mkMoveValue;
+            shipDirection -= mkMoveValue;
         }
         if(Input.GetKey(KeyCode.RightArrow)){
-            shipDirection -= mkMoveValue;
+            shipDirection += mkMoveValue;
         }
 
         //速度の加算　最大値を超えていた場合収めるが風力によって変わる

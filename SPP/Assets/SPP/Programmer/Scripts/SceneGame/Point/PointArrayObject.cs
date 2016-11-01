@@ -53,6 +53,7 @@ public class PointArrayObject : BaseObject {
     @return     ポイント(BaseObject)
     *******************************************************************************/
     public BaseObject mGetPoint() {
+        if (m_currentId >= m_pointArray.Count) return null;
         return m_pointArray[m_currentId];
     }
 
@@ -63,7 +64,7 @@ public class PointArrayObject : BaseObject {
     *******************************************************************************/
     public BaseObject mGetPrevPoint()
     {
-        if (m_currentId <= 0) return null;
+        if (m_currentId <= 0 || m_currentId >= m_pointArray.Count) return null;
         return m_pointArray[m_currentId-1];
     }
 
