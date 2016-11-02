@@ -120,8 +120,6 @@ public class UIHandleController : BaseObject{
     */
     void Drag(BaseEventData eventData)
     {
-
-        Debug.Log(mHandleRotationZ);
         Vector2 mousePosition = Input.mousePosition;
         Vector2 diff = m_dragPosition - mousePosition;
         
@@ -130,6 +128,8 @@ public class UIHandleController : BaseObject{
             m_dragPosition = Input.mousePosition;
             return;
         }
+
+        Debug.Log(diff);
         // 左
         if (diff.x > 0)
         {
@@ -140,7 +140,7 @@ public class UIHandleController : BaseObject{
         }
         else // 右
         {
-            if (m_handle.localEulerAngles.z >= 0 || m_handle.localEulerAngles.z > 360 - m_maxZRotation)
+            if ((int)m_handle.localEulerAngles.z == 0|| m_handle.localEulerAngles.z > 360 - m_maxZRotation)
             {
                 m_handle.localEulerAngles += new Vector3(0, 0, diff.x);
             }
