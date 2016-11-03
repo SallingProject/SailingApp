@@ -13,7 +13,8 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     [HideInInspector]
     public PointArrayObject m_pointArray;       //ポイント配列管理クラス(Staticなので問題ない)
 
-    private bool m_controllerTrigger = false;
+    public bool mControllerTrigger { get; private set; }
+    private float m_prevControllerRotation = 0;
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
@@ -28,22 +29,36 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
 
     }
 
-    public float mGetHandleRotationZ()
+
+    /****************************************************************************** 
+    @brief      コントローラー回転量を取得する
+    @note       離した瞬間だけ値が取れる
+    @return     回転量
+    *******************************************************************************/
+    public float mGetHandleRotationTrigger()
     {
-
-        //if (m_handleController.mIsDown){
-        //    m_controllerTrigger = true;
-        //}
-        bool trigger = m_controllerTrigger & !m_handleController.mIsDown;
-            m_controllerTrigger = m_handleController.mIsDown;
-
-        if (trigger) { 
-            return -m_handleController.mHandleRotationZ;
+        bool trigger = mControllerTrigger & !m_handleController.mIsDown;
+            mControllerTrigger = m_handleController.mIsDown;
+        if (trigger) {
+            Debug.Log(m_prevControllerRotation);
+            return -m_prevControllerRotation;
+            
         }else
         {
+            m_prevControllerRotation = m_handleController.mHandleRotationZ;
             return 0.0f;
         }
     }
-    
+
+    /****************************************************************************** 
+    @brief      コントローラー回転量を取得する
+    @note       常に取得する
+    @return     回転量
+    *******************************************************************************/
+    public float mGetHandleRotation()
+    {
+            return -m_handleController.mHandleRotationZ;
+    }
+
 
 }

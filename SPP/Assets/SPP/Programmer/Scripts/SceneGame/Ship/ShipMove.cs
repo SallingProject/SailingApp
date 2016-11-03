@@ -7,6 +7,7 @@
 ***************************************************************************************/
 using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 
 public class ShipMove : BaseObject {
 
@@ -21,22 +22,28 @@ public class ShipMove : BaseObject {
     private const float mkFriction = 0.98f;              //摩擦
     public const float mkMoveValue = 2.0f;
 
+    private float m_presaveDirection;
     protected override void Start()
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;
         m_wind = GameInfo.mInstance.m_wind;
     }
-    
 
+    /****************************************************************************** 
+    @brief      回転中かどうかの値を取得する
+    @note       
+    */
+    public float mRotateValue { get; private set; }
 
 
 
     public override void mOnUpdate()
     {
         //仮コントロール
-        float shipDirection = GameInfo.mInstance.mGetHandleRotationZ();
-        if(shipDirection != 0)Debug.Log(shipDirection);
+        float shipDirection = GameInfo.mInstance.mGetHandleRotationTrigger();
+        if (shipDirection == 0) ;
+        else StartCoroutine(mRotation(10, shipDirection));
 
         //速度の加算　最大値を超えていた場合収めるが風力によって変わる
         m_speedVector += mForce(m_wind.mWindDirection) * m_wind.mWindForce;
@@ -49,14 +56,28 @@ public class ShipMove : BaseObject {
         m_surfacingRadian += Time.deltaTime * 150;
 
         //移動
-        transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f)/8, transform.position.z);
+        transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
         //Rote
-        transform.eulerAngles += Vector3.up * shipDirection;
-        //        Debug.Log("X:"+m_windDirectionX + "\tY:" + m_windDirectionY);
-//        Debug.Log(m_speedVector);
+        //transform.eulerAngles += Vector3.up * shipDirection;
     }
 
+    /****************************************************************************** 
+    @brief      回転をTweenする
+    @note       実行し終わったら消えます
+    @return     none
+    *******************************************************************************/
+    private IEnumerator mRotation(int duration,float value)
+    {
+        mRotateValue = value / duration;
+        while (duration >= 0)
+        {
+            transform.eulerAngles += Vector3.up * (mRotateValue);
+            duration--;
+            yield return null;
+        }
+        mRotateValue = 0;
+    }
 
 
 
