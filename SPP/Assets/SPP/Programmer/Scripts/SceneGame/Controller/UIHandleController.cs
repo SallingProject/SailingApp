@@ -129,7 +129,7 @@ public class UIHandleController : BaseObject{
             return;
         }
 
-        Debug.Log(diff);
+//        Debug.Log(diff);
         // 左
         if (diff.x > 0)
         {
