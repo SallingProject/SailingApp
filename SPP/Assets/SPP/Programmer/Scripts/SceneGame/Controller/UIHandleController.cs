@@ -111,7 +111,7 @@ public class UIHandleController : BaseObject{
     void Up(BaseEventData eventData)
     {
         mIsDown = false;
-        m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation) ? true : false;
+        m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation + m_frameHandleValue) ? true : false;
         StartCoroutine(ResetHandle());
     }
 
