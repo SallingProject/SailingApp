@@ -133,14 +133,14 @@ public class UIHandleController : BaseObject{
         // 左
         if (diff.x > 0)
         {
-            if (m_handle.localEulerAngles.z < m_maxZRotation)
+            if (mHandleRotationZ +diff.x  < m_maxZRotation)
             {
                 m_handle.localEulerAngles += new Vector3(0, 0, diff.x);
             }
         }
         else // 右
         {
-            if ((int)m_handle.localEulerAngles.z == 0|| m_handle.localEulerAngles.z > 360 - m_maxZRotation)
+            if (mHandleRotationZ + diff.x > -m_maxZRotation)
             {
                 m_handle.localEulerAngles += new Vector3(0, 0, diff.x);
             }
