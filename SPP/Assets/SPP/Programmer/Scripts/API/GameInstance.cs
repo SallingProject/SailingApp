@@ -8,8 +8,9 @@
 * Copyright © 2016 Ko Hashimoto All Rights Reserved.
 ***************************************************************************************/
 using UnityEngine;
-using System.Collections;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
 /******************************************************************************* 
 @brief   ゲームインスタンスクラス　シングルトン実装
 */
@@ -17,22 +18,23 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     // BaseObjectのアップデーター
     [SerializeField]
-    BaseObjectUpdater m_updaterPrefbs;
-    BaseObjectUpdater m_updater;
+    private BaseObjectUpdater m_updaterPrefbs;
+    private BaseObjectUpdater m_updater;
 
     // スタティックキャンバス
     [SerializeField]
-    GameObject m_staticCanvasPrefabs;
-    GameObject m_staticCanvas;
+    private GameObject m_staticCanvasPrefabs;
+    private GameObject m_staticCanvas;
     public GameObject mStaticCanvas
     {
         get { return m_staticCanvas; }
         private set { m_staticCanvas = value; }
     }
-
     [SerializeField]
-    DebugManager m_debugManagerPref;
-    DebugManager m_debugManager;
+    private DebugManager m_debugManagerPref;
+    private DebugManager m_debugManager;
+
+    private Image m_fade;
 
     /****************************************************************************** 
     @brief      初期化用。タイミングはAwakeと一緒。BaseObjectの実装
@@ -41,8 +43,6 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
-        mUnregisterList(this); // mUpdateRunを呼び出す必要がないので管理から外す
-
         //初期化するべきオブジェクトの初期化や生成など
         if (m_updater == null)
         {
@@ -54,6 +54,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         {
             mStaticCanvas = mCreate(m_staticCanvasPrefabs) as GameObject;
             mStaticCanvas.name = "StaticCanvas";
+            mStaticCanvas.transform.SetParent(this.transform, false);
         }
 
         if(m_debugManager == null)
@@ -61,7 +62,35 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
             m_debugManager = mCreate(m_debugManagerPref) as DebugManager;
             m_debugManager.transform.SetParent(this.transform, false);
         }
+
+        m_fade = m_staticCanvas.transform.FindChild("Fade").GetComponent<Image>();
     }
 
+    public void ChnageScene(string nextScene)
+    {
+        StartCoroutine(OnChangeScene(nextScene));
+    }
 
+    IEnumerator OnChangeScene(string nextScene)
+    {
+
+        m_fade.gameObject.SetActive(true);
+        yield return null;
+        while (m_fade.color.a < 1)
+        {
+            
+            m_fade.color += new Color(0, 0, 0, 1 * Time.deltaTime);
+            yield return null;
+        }
+
+        SceneManager.LoadScene(nextScene);
+
+        while (m_fade.color.a > 0)
+        {
+            m_fade.color -= new Color(0, 0, 0, 1*Time.deltaTime);
+            yield return null;
+        }
+
+        m_fade.gameObject.SetActive(false);
+    }
 }
