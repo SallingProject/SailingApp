@@ -20,8 +20,6 @@ public class UIHandleController : BaseObject{
     [SerializeField]
     private float m_maxZRotation = 80;      // 回転する最大値
 
-    [SerializeField]
-    private float m_frameHandleValue = 5;   // 1フレーム中に進む最大量
         
     [SerializeField]
     private RectTransform m_handle;         // 回転するオブジェクト
@@ -111,7 +109,7 @@ public class UIHandleController : BaseObject{
     void Up(BaseEventData eventData)
     {
         mIsDown = false;
-        m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation + m_frameHandleValue) ? true : false;
+        m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation) ? true : false;
         StartCoroutine(ResetHandle());
     }
 
@@ -122,14 +120,7 @@ public class UIHandleController : BaseObject{
     {
         Vector2 mousePosition = Input.mousePosition;
         Vector2 diff = m_dragPosition - mousePosition;
-        
-        if (diff.x > m_frameHandleValue || diff.x < -m_frameHandleValue)
-        {
-            m_dragPosition = Input.mousePosition;
-            return;
-        }
 
-//        Debug.Log(diff);
         // 左
         if (diff.x > 0)
         {
