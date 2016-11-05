@@ -15,17 +15,6 @@ using UnityEngine.SceneManagement;
 */
 public class GameInstance : BaseObjectSingleton<GameInstance> {
 
-    // シーンマネージャー
-    [SerializeField]
-    SceneManager m_sceneManagerPrefabs;
-    SceneManager m_sceneManager;
-    public SceneManager mSceneManager
-    {
-        get { return m_sceneManager; }
-        private set { m_sceneManager = value; }
-    }
-
-
     // BaseObjectのアップデーター
     [SerializeField]
     BaseObjectUpdater m_updaterPrefbs;
@@ -41,7 +30,9 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         private set { m_staticCanvas = value; }
     }
 
-
+    [SerializeField]
+    DebugManager m_debugManagerPref;
+    DebugManager m_debugManager;
 
     /****************************************************************************** 
     @brief      初期化用。タイミングはAwakeと一緒。BaseObjectの実装
@@ -52,25 +43,23 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         base.mOnRegistered();
         mUnregisterList(this); // mUpdateRunを呼び出す必要がないので管理から外す
 
-        // ゲームに必要なプレハブとかを作成する。
-        
-        if(mSceneManager == null)
-        {
-            mSceneManager = mCreate(m_sceneManagerPrefabs) as SceneManager;
-        }
-        mSceneManager.transform.SetParent(this.transform, false);
-
         //初期化するべきオブジェクトの初期化や生成など
         if (m_updater == null)
         {
             m_updater = mCreate(m_updaterPrefbs) as BaseObjectUpdater;
+            m_updater.transform.SetParent(this.transform, false);
         }
-        m_updater.transform.SetParent(this.transform, false);
 
-        if(mStaticCanvas == null)
+        if (mStaticCanvas == null)
         {
             mStaticCanvas = mCreate(m_staticCanvasPrefabs) as GameObject;
             mStaticCanvas.name = "StaticCanvas";
+        }
+
+        if(m_debugManager == null)
+        {
+            m_debugManager = mCreate(m_debugManagerPref) as DebugManager;
+            m_debugManager.transform.SetParent(this.transform, false);
         }
     }
 
