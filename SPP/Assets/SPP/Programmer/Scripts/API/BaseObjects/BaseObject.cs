@@ -68,7 +68,7 @@ public abstract class BaseObject: MonoBehaviour{
         mOwner = this;
         mRegisterList(this);
     }
-
+    
     /****************************************************************************** 
     @brief      オブジェクトのアップデート前に呼ばれる。MonoBehaviorの実装
     @note       スクリピティングランタイム適用のため、コーティングルールには従いません。
