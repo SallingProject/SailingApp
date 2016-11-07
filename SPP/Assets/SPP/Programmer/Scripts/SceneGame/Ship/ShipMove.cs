@@ -41,9 +41,9 @@ public class ShipMove : BaseObject {
     public override void mOnUpdate()
     {
         //仮コントロール
-        float shipDirection = GameInfo.mInstance.mGetHandleRotationTrigger();
-        if (shipDirection == 0) ;
-        else StartCoroutine(mRotation(10, shipDirection));
+        float shipDirection = GameInfo.mInstance.mGetHandleRotation();
+//        if (shipDirection == 0);
+//        else StartCoroutine(mRotation(20, shipDirection));
 
         //速度の加算　最大値を超えていた場合収めるが風力によって変わる
         m_speedVector += mForce(m_wind.mWindDirection) * m_wind.mWindForce;
@@ -55,11 +55,12 @@ public class ShipMove : BaseObject {
         m_speedVector *= mkFriction;
         m_surfacingRadian += Time.deltaTime * 150;
 
+
         //移動
         transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
         //Rote
-        //transform.eulerAngles += Vector3.up * shipDirection;
+        transform.eulerAngles += Vector3.up * shipDirection*Time.deltaTime;
     }
 
     /****************************************************************************** 
