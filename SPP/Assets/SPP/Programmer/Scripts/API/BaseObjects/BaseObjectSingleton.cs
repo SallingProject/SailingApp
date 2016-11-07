@@ -19,6 +19,16 @@ public class BaseObjectSingleton<T> : BaseObject where T : BaseObjectSingleton<T
         get{ return m_instance; }
     }
 
+
+    /****************************************************************************** 
+    @brief      インスタンスがあるかの確認用    
+    */
+    protected override void mOnRegistered()
+    {
+        base.mOnRegistered();
+        mCheckInstance();
+    }
+
     /****************************************************************************** 
     @brief      インスタンスがあるかの確認用    
     @return     インスタンスがある：true / ない：false
@@ -38,8 +48,6 @@ public class BaseObjectSingleton<T> : BaseObject where T : BaseObjectSingleton<T
         Destroy(this);
         return false;
     }
-    protected override void mOnRegistered()
-    {
-        while (!mCheckInstance()) ;
-    }
+
+
 }
