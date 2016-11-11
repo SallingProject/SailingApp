@@ -18,8 +18,8 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     // BaseObjectのアップデーター
     [SerializeField]
-    private BaseObjectUpdater m_updaterPrefbs;
-    private BaseObjectUpdater m_updater;
+	private GameObject m_managerPrefbs;
+	private GameObject m_manager;
 
     // スタティックキャンバス
     [SerializeField]
@@ -44,10 +44,10 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
     {
         base.mOnRegistered();
         //初期化するべきオブジェクトの初期化や生成など
-        if (m_updater == null)
+		if (m_manager == null)
         {
-            m_updater = mCreate(m_updaterPrefbs) as BaseObjectUpdater;
-            m_updater.transform.SetParent(this.transform, false);
+			m_manager = mCreate(m_managerPrefbs) as GameObject;
+			m_manager.transform.SetParent(this.transform, false);
         }
 
         if (mStaticCanvas == null)
