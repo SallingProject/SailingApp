@@ -12,7 +12,7 @@ using UnityEngine;
 @brief  ゲームの更新処理クラス。
 @note   Update関数を使うためMonoBehaviorを継承している　  
 */
-public class BaseObjectUpdater : BaseObject {
+public class BaseObjectUpdateManager : BaseObject {
 
 
     protected override void mOnRegistered()

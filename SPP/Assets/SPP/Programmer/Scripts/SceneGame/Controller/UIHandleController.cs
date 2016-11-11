@@ -68,8 +68,10 @@ public class UIHandleController : BaseObject{
         // OnUpdateなどは使わないのでBaseObjectの管理から外す
         mUnregisterList(this);
 
+
         EventTrigger trigger = m_clickImage.GetComponent<EventTrigger>();
-        // PointerEnterイベントの追加
+
+		// PointerEnterイベントの追加
         {
             EventTrigger.Entry enter = new EventTrigger.Entry();
             enter.eventID = EventTriggerType.PointerDown;
@@ -135,44 +137,20 @@ public class UIHandleController : BaseObject{
     */
     void Drag(BaseEventData eventData)
     {
-        Vector2 mousePosition = Vector2.zero;
-        Vector2 diff = Vector2.zero;
-#if UNITY_EDITOR || UNITY_WINDOWS
-
-        mousePosition = Input.mousePosition;
-        diff = m_dragPosition - mousePosition;
-
-#elif UNITY_ANDROID
-
-        if (Input.touchCount > 0)
-        {
-            foreach (Touch t in Input.touches)
-            {
-                if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)
-                {
-        
-                    mousePosition = t.position;
-
-                    diff = -t.deltaPosition;
-                }
-                break;
-            }
-        }
-#endif
-      
+		var point = InputManager.mInstance.GetdeltaPosition (1);
         // 左
-        if (diff.x > 0)
+		if (point[0].X > 0)
         {
-            if (mHandleRotationZ +diff.x  < m_maxZRotation)
-            {
-                m_handle.localEulerAngles += new Vector3(0, 0, diff.x);
-            }
+			if (mHandleRotationZ + point [0].X < m_maxZRotation) 
+			{
+				m_handle.localEulerAngles += new Vector3 (0, 0, point[0].X);
+			}
         }
         else // 右
         {
-            if (mHandleRotationZ + diff.x > -m_maxZRotation)
+			if (mHandleRotationZ + point[0].X > -m_maxZRotation)
             {
-                m_handle.localEulerAngles += new Vector3(0, 0, diff.x);
+				m_handle.localEulerAngles += new Vector3(0, 0, point[0].X);
             }
         }
 
