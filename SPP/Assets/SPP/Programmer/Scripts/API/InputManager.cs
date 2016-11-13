@@ -74,8 +74,8 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 		List<TouchPosition> deltaPositionList = new List<TouchPosition> ();
 		TouchPosition deltaPosition = new TouchPosition ();
 
-		#if UNITY_EDITOR || UNITY_WINDOWS
-		deltaPosition.X = m_mouseDiff.X - Input.mousePosition.x ;
+        #if UNITY_EDITOR || UNITY_WINDOWS
+        deltaPosition.X = m_mouseDiff.X - Input.mousePosition.x;
 		deltaPosition.Y = m_mouseDiff.Y - Input.mousePosition.y;
 		m_mouseDiff.X = Input.mousePosition.x;
 		m_mouseDiff.Y = Input.mousePosition.y;
@@ -89,8 +89,8 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 			{
 				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
 				{
-					deltaPosition.X = touch.deltaPosition.x;
-					deltaPosition.Y = touch.deltaPosition.y;
+					deltaPosition.X = -touch.deltaPosition.x;
+					deltaPosition.Y = -touch.deltaPosition.y;
 					deltaPositionList.Add(deltaPosition);
 				}
 				break;
