@@ -16,18 +16,14 @@ public class SceneLibrary : BaseObject {
 
 
         EventTrigger trigger = m_touchPanel.GetComponent<EventTrigger>();
-
-        // Dragイベントの追加
+        EventTrigger.Entry drag = new EventTrigger.Entry();
+        drag.eventID = EventTriggerType.Drag;
+        drag.callback.AddListener(eventData =>
         {
-            EventTrigger.Entry drag = new EventTrigger.Entry();
-            drag.eventID = EventTriggerType.Drag;
-            drag.callback.AddListener(eventData =>
-            {
-                var rotation = InputManager.mInstance.mGetDeltaPosition(1);
-                m_shipRoot.transform.Rotate(new Vector3(m_shipRoot.transform.rotation.y + rotation[0].Y, m_shipRoot.transform.rotation.x + rotation[0].X, 0));
-            });
+            var rotation = InputManager.mInstance.mGetDeltaPosition(1);
+            m_shipRoot.transform.Rotate(new Vector3(rotation[0].Y, rotation[0].X, 0));
+        });
 
-            trigger.triggers.Add(drag);
-        }
+        trigger.triggers.Add(drag);
     }
 }
