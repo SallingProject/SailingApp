@@ -16,6 +16,8 @@ using System.Collections;
 */
 public class GameInstance : BaseObjectSingleton<GameInstance> {
 
+    const float kFadeAlphaValue = 1f;
+
     // BaseObjectのアップデーター
     [SerializeField]
 	private GameObject m_managerPrefbs;
@@ -76,10 +78,10 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
         m_fade.gameObject.SetActive(true);
         yield return null;
-        while (m_fade.color.a < 1)
+        while (m_fade.color.a <= 1)
         {
             
-            m_fade.color += new Color(0, 0, 0, 1 * Time.deltaTime);
+            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
             yield return null;
         }
 
@@ -87,7 +89,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
         while (m_fade.color.a > 0)
         {
-            m_fade.color -= new Color(0, 0, 0, 1*Time.deltaTime);
+            m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
             yield return null;
         }
 
