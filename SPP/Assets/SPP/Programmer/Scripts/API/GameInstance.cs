@@ -73,11 +73,22 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         }
 
         m_fade = m_staticCanvas.transform.FindChild("Fade").GetComponent<Image>();
+
+        var scene = SceneManager.GetActiveScene();
+        if (scene.name != "Setup")
+        {
+            AsyncLoad("Setup");
+        }
     }
 
     public void AsyncLoad(string nextScene)
     {
         StartCoroutine(OnAsyncLoad(nextScene));
+    }
+
+    public void ForceGoTo(string SceneName)
+    {
+        SceneManager.LoadScene(SceneName);
     }
 
     IEnumerator OnAsyncLoad(string nextScene)

@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.SceneManagement;
 public class SceneBase : BaseObject {
+    static bool m_isFirst = false;
 
     protected override void Awake()
     {
         base.Awake();
         mUnregisterList(this);
-    }
+        if (!m_isFirst)
+        {
+            var scene = SceneManager.GetActiveScene();
+            if (scene.name != "Setup")
+            {
+                SceneManager.LoadScene("Setup");
 
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+            }
+            m_isFirst = true;
+        }
+    }
 }

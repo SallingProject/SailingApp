@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class SceneHome : BaseObject
+public class SceneHome : SceneBase
 {
     [SerializeField]
     Button m_homeButton;

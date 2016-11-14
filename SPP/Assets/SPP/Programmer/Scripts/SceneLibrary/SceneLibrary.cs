@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class SceneLibrary : BaseObject {
+public class SceneLibrary : SceneBase {
 
     [SerializeField]
     Image m_touchPanel;
@@ -17,9 +17,8 @@ public class SceneLibrary : BaseObject {
     Camera m_camera;
     protected override void mOnRegistered()
     {
-        mUnregisterList(this);
-
-
+        base.mOnRegistered();
+        
         EventTrigger trigger = m_touchPanel.GetComponent<EventTrigger>();
         EventTrigger.Entry drag = new EventTrigger.Entry();
         drag.eventID = EventTriggerType.Drag;

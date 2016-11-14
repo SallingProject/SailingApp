@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SceneSetup : MonoBehaviour {
+public class SceneSetup : SceneBase {
 
-	// Use this for initialization
-	void Start () {
-
+	
+    protected override void Start()
+    {
+        base.Start();
         GameInstance.mInstance.AsyncLoad("DebugHome");
-	}
+    }
 }
