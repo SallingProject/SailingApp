@@ -10,6 +10,11 @@ public class SceneLibrary : BaseObject {
     [SerializeField]
     GameObject m_shipRoot;
 
+    [SerializeField]
+    Button m_resetButton;
+
+    [SerializeField]
+    Camera m_camera;
     protected override void mOnRegistered()
     {
         mUnregisterList(this);
@@ -20,10 +25,23 @@ public class SceneLibrary : BaseObject {
         drag.eventID = EventTriggerType.Drag;
         drag.callback.AddListener(eventData =>
         {
-            var rotation = InputManager.mInstance.mGetDeltaPosition(1);
-            m_shipRoot.transform.Rotate(new Vector3(rotation[0].Y, rotation[0].X, 0));
+            var rotationList = InputManager.mInstance.mGetDeltaPosition(1);
+            
+            m_shipRoot.transform.Rotate(new Vector3(rotationList[0].y, rotationList[0].x, 0));
         });
 
         trigger.triggers.Add(drag);
+
+        m_resetButton.onClick.AddListener(() =>
+        {
+            Vector3 from = new Vector3(
+                m_shipRoot.transform.rotation.x,
+                m_shipRoot.transform.rotation.y,
+                m_shipRoot.transform.rotation.z);
+
+            m_shipRoot.transform.rotation = new Quaternion();
+        });
     }
+
+    
 }

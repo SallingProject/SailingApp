@@ -55,7 +55,6 @@ public class UIHandleController : BaseObject{
     */
     public bool mIsDown { get; private set; }
 
-    private Vector2 m_dragPosition = Vector2.zero; // ドラッグ開始地点保存用
     private bool m_isLeftHandle = false;           // ハンドルが左側にあるときtrue/右側のときにfalse
 
     /**************************************************************************************
@@ -104,7 +103,6 @@ public class UIHandleController : BaseObject{
 
 #if UNITY_EDITOR || UNITY_WINDOWS
         mIsDown = true;
-        m_dragPosition = Input.mousePosition;
 #elif UNITY_ANDROID
         
         if (Input.touchCount > 0)
@@ -112,7 +110,6 @@ public class UIHandleController : BaseObject{
             mIsDown = true;
             foreach (Touch t in Input.touches)
             {
-                m_dragPosition = t.position; 
                 mIsDown = true;
         
                 break;
@@ -139,23 +136,20 @@ public class UIHandleController : BaseObject{
     {
 		var point = InputManager.mInstance.mGetDeltaPosition (1);
         // 左
-		if (point[0].X > 0)
+		if (point[0].x > 0)
         {
-			if (mHandleRotationZ + point [0].X < m_maxZRotation) 
+			if (mHandleRotationZ + point [0].x < m_maxZRotation) 
 			{
-				m_handle.localEulerAngles += new Vector3 (0, 0, point[0].X);
+				m_handle.localEulerAngles += new Vector3 (0, 0, point[0].x);
 			}
         }
         else // 右
         {
-			if (mHandleRotationZ + point[0].X > -m_maxZRotation)
+			if (mHandleRotationZ + point[0].x > -m_maxZRotation)
             {
-				m_handle.localEulerAngles += new Vector3(0, 0, point[0].X);
+				m_handle.localEulerAngles += new Vector3(0, 0, point[0].x);
             }
         }
-
-        
-        m_dragPosition = Input.mousePosition;
     }
 
     /**************************************************************************************
