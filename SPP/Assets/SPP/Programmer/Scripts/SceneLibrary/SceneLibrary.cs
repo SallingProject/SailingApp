@@ -32,13 +32,9 @@ public class SceneLibrary : BaseObject {
 
         trigger.triggers.Add(drag);
 
+        // リセット処理
         m_resetButton.onClick.AddListener(() =>
         {
-            Vector3 from = new Vector3(
-                m_shipRoot.transform.rotation.x,
-                m_shipRoot.transform.rotation.y,
-                m_shipRoot.transform.rotation.z);
-
             m_shipRoot.transform.rotation = new Quaternion();
         });
     }
