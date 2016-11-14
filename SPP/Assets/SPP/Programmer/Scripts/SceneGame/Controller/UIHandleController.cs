@@ -137,7 +137,7 @@ public class UIHandleController : BaseObject{
     */
     void Drag(BaseEventData eventData)
     {
-		var point = InputManager.mInstance.GetdeltaPosition (1);
+		var point = InputManager.mInstance.mGetDeltaPosition (1);
         // 左
 		if (point[0].X > 0)
         {

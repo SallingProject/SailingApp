@@ -3,7 +3,7 @@
 ***************************************************************************************
 @brief      入力処理などはここから取得する
 ***************************************************************************************
-@author     Ko Hashimoto and Kana Yoshidumi
+@author     Ko Hashimoto
 ***************************************************************************************
 * Copyright © 2016 Ko Hashimoto All Rights Reserved.
 ***************************************************************************************/
@@ -31,7 +31,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     @return 	Editor上は必ずサイズは１
     			スマートフォンのサイズはmaxTouchCountと同じ
     */
-	public List<TouchPosition> GetPosition(int maxTouchCount)
+	public List<TouchPosition> mGetPosition(int maxTouchCount)
 	{
 
 		List<TouchPosition> positionList = new List<TouchPosition> ();
@@ -68,7 +68,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     @return 	Editor上は必ずサイズは１
     			スマートフォンのサイズはmaxTouchCountと同じ
     */
-	public List<TouchPosition> GetdeltaPosition(int maxTouchCount)
+	public List<TouchPosition> mGetDeltaPosition(int maxTouchCount)
 	{
 
 		List<TouchPosition> deltaPositionList = new List<TouchPosition> ();
