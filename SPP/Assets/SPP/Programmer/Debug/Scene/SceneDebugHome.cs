@@ -10,7 +10,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SceneDebugHome : BaseObject {
+public class SceneDebugHome : SceneBase {
 
     public void mGoToTitle()
     {
