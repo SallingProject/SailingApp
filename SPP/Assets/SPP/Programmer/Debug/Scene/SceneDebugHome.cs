@@ -14,12 +14,12 @@ public class SceneDebugHome : BaseObject {
 
     public void mGoToTitle()
     {
-        GameInstance.mInstance.ChnageScene("Title");
+        GameInstance.mInstance.AsyncLoad("Title");
     }
 
     public void mGoToLibrary()
     {
-        GameInstance.mInstance.ChnageScene("Library");
+        GameInstance.mInstance.AsyncLoad("Library");
     }
 
 }
