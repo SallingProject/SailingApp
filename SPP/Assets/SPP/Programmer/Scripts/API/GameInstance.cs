@@ -17,6 +17,13 @@ using System.Collections;
 public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     const float kFadeAlphaValue = 1f;
+    const float kCompleateLoad = 0.9f;
+
+    public float mLoadProgress
+    {
+        get;
+        private set;
+    }
 
     // BaseObjectのアップデーター
     [SerializeField]
@@ -68,25 +75,36 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         m_fade = m_staticCanvas.transform.FindChild("Fade").GetComponent<Image>();
     }
 
-    public void ChnageScene(string nextScene)
+    public void AsyncLoad(string nextScene)
     {
-        StartCoroutine(OnChangeScene(nextScene));
+        StartCoroutine(OnAsyncLoad(nextScene));
     }
 
-    IEnumerator OnChangeScene(string nextScene)
+    IEnumerator OnAsyncLoad(string nextScene)
     {
-
+        mLoadProgress = 0;
         m_fade.gameObject.SetActive(true);
         yield return null;
-        while (m_fade.color.a <= 1)
+        // フェードイン
+        while (m_fade.color.a < 1)
         {
             
             m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
             yield return null;
         }
+        
+        AsyncOperation async = SceneManager.LoadSceneAsync(nextScene);
+        async.allowSceneActivation = false;
 
-        SceneManager.LoadScene(nextScene);
-
+        while (async.progress < kCompleateLoad)
+        {
+            mLoadProgress = async.progress;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        async.allowSceneActivation = true;    // シーン遷移許可
+        
+        // フェードアウト
         while (m_fade.color.a > 0)
         {
             m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
