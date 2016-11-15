@@ -39,7 +39,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 			{
 				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
 				{
-                    position = touch.position;
+                    position = -touch.position;
                     positionList.Add(position);
 				}
 				break;
@@ -63,7 +63,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         Vector2 deltaPosition = new Vector2();
 
         #if UNITY_EDITOR || UNITY_WINDOWS
-        deltaPosition = m_mouseDiff - new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        deltaPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - m_mouseDiff;
 		       
 		m_mouseDiff = Input.mousePosition;
 		
