@@ -18,23 +18,46 @@ public class SceneLibrary : SceneBase {
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
-        
+
         EventTrigger trigger = m_touchPanel.GetComponent<EventTrigger>();
-        EventTrigger.Entry drag = new EventTrigger.Entry();
-        drag.eventID = EventTriggerType.Drag;
-        drag.callback.AddListener(eventData =>
+
+        // PointerDragイベントの追加
         {
-            var rotationList = InputManager.mInstance.mGetDeltaPosition(1);
-            
-            m_shipRoot.transform.Rotate(new Vector3(rotationList[0].y, rotationList[0].x, 0));
-        });
+            EventTrigger.Entry drag = new EventTrigger.Entry();
+            drag.eventID = EventTriggerType.Drag;
+            drag.callback.AddListener(eventData =>
+            {
+                var rotationList = InputManager.mInstance.mGetDeltaPosition(1);
 
-        trigger.triggers.Add(drag);
+                Vector3 rotation = m_shipRoot.transform.localEulerAngles;
 
+                m_shipRoot.transform.Rotate(new Vector3(rotationList[0].y, rotationList[0].x, m_shipRoot.transform.rotation.z));
+
+            });
+
+            trigger.triggers.Add(drag);
+        }
+
+        // PointerDownイベントの追加
+        //{
+        //    EventTrigger.Entry down = new EventTrigger.Entry();
+        //    down.eventID = EventTriggerType.PointerDown;
+        //    down.callback.AddListener(eventData =>
+        //    {
+        //        var rotationList = InputManager.mInstance.mGetPosition(1);
+        //        Vector3 rotation = m_shipRoot.transform.localEulerAngles;
+
+        //        m_shipRoot.transform.localEulerAngles = new Vector3(rotationList[0].y, rotationList[0].x, m_shipRoot.transform.rotation.z);
+        //    });
+
+        //    trigger.triggers.Add(down);
+        //}
+
+        
         // リセット処理
         m_resetButton.onClick.AddListener(() =>
         {
-            m_shipRoot.transform.rotation = new Quaternion();
+            m_shipRoot.transform.localEulerAngles = new Vector3(0, -150, 0);
         });
     }
 

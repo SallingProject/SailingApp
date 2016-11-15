@@ -44,6 +44,7 @@ public class DebugManager : BaseObjectSingleton<DebugManager> {
      */
     private void RenderLog(Rect rect, Color color)
     {
+#if false
         Rect curRect = rect;
         curRect.y += rect.height * (logQueue.Count - 1);
         Color prevColor = GUI.color;
@@ -57,5 +58,6 @@ public class DebugManager : BaseObjectSingleton<DebugManager> {
         }
 
         GUI.color = prevColor;
+#endif
     }
 }

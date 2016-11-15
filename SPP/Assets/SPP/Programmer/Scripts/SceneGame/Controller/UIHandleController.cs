@@ -70,7 +70,7 @@ public class UIHandleController : BaseObject{
 
         EventTrigger trigger = m_clickImage.GetComponent<EventTrigger>();
 
-		// PointerEnterイベントの追加
+		// PointerDownイベントの追加
         {
             EventTrigger.Entry enter = new EventTrigger.Entry();
             enter.eventID = EventTriggerType.PointerDown;
@@ -78,7 +78,7 @@ public class UIHandleController : BaseObject{
             trigger.triggers.Add(enter);
         }
 
-        // PointerExitイベントの追加
+        // PointerUpイベントの追加
         {
             EventTrigger.Entry exit = new EventTrigger.Entry();
             exit.eventID = EventTriggerType.PointerUp;
