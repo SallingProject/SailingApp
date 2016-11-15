@@ -7,6 +7,6 @@ public class SceneSetup : SceneBase {
     protected override void Start()
     {
         base.Start();
-        GameInstance.mInstance.AsyncLoad("DebugHome");
+        GameInstance.mInstance.mAsyncLoad("DebugHome");
     }
 }

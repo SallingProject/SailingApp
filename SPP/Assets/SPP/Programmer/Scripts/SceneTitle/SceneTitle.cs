@@ -14,6 +14,6 @@ public class SceneTitle : SceneBase
 
     public void NextScene()
     {
-        GameInstance.mInstance.AsyncLoad("Home");
+        GameInstance.mInstance.mAsyncLoad("Home");
     }
 }
