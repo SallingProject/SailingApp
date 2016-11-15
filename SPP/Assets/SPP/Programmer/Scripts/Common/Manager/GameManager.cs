@@ -22,28 +22,39 @@ public class GameManager : BaseObjectSingleton<GameManager> {
 
     }
 
+
     /****************************************************************************** 
-    @brief      船のオブジェクト取得
+    @brief      船のオブジェクトのパスを取得取得
     @return     none
     */
     public GameObject GetShipObject(EShipType type)
     {
+
+        return Resources.Load(GetShipPath(type)) as GameObject;
+    }
+
+    /****************************************************************************** 
+    @brief      船のオブジェクトのパスを取得取得
+    @return     none
+    */
+    string GetShipPath(EShipType type)
+    {
         switch (type)
         {
             case EShipType.Class470:
-                return null;
+                return "Ship/Test";
 
             case EShipType.Class49er:
-                return null;
+                return "Ship/Test";
 
             case EShipType.ClassLaser:
-                return null;
+                return "Ship/Test";
 
             case EShipType.ClassRS_X:
-                return null;
+                return "Ship/Test";
 
             case EShipType.Invalid:
-                return null;
+                return "Ship/Test";
         }
         return null;
     }
