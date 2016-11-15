@@ -30,7 +30,9 @@ public class SceneDebugHome : SceneBase {
     protected override void Start()
     {
         base.Start();
+
         m_pageCount = 0;
+
         m_next.onClick.AddListener(() =>
         {
             m_pageList[m_pageCount].SetActive(false);
