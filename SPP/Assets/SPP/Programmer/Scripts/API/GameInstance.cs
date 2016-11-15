@@ -18,6 +18,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     const float kFadeAlphaValue = 1f;
     const float kCompleateLoad = 0.9f;
+    Color kBlack = new Color(0, 0, 0, 0);
 
     public float mLoadProgress
     {
@@ -80,9 +81,9 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
     @param[in]  次のシーンの名前
     @return     none
     */
-    public void mAsyncLoad(string nextScene)
+    public void mAsyncLoad(string nextScene,System.Action<float> action = null)
     {
-        StartCoroutine(mOnAsyncLoad(nextScene));
+        StartCoroutine(mOnAsyncLoad(nextScene, action));
     }
 
     /****************************************************************************** 
@@ -100,11 +101,13 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
     @param[in]  次のシーンの名前
     @return     none
     */
-    IEnumerator mOnAsyncLoad(string nextScene)
+    IEnumerator mOnAsyncLoad(string nextScene, System.Action<float> action = null)
     {
         mLoadProgress = 0;
         m_fade.gameObject.SetActive(true);
+        
         yield return null;
+        m_fade.color = kBlack;
         // フェードイン
         while (m_fade.color.a < 1)
         {
@@ -119,11 +122,17 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         while (async.progress < kCompleateLoad)
         {
             mLoadProgress = async.progress;
+            if(action != null)
+            {
+                action.Invoke(mLoadProgress);
+            }
             yield return new WaitForEndOfFrame();
         }
         
-        async.allowSceneActivation = true;    // シーン遷移許可
-        
+        async.allowSceneActivation = true;      // シーン遷移許可
+        action = null;
+
+        yield return new WaitForSeconds(0.1f);  // ロード終了後少し待機
         // フェードアウト
         while (m_fade.color.a > 0)
         {
@@ -131,6 +140,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
             yield return null;
         }
 
+        m_fade.color = kBlack;
         m_fade.gameObject.SetActive(false);
     }
 }
