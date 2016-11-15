@@ -73,25 +73,34 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         }
 
         m_fade = m_staticCanvas.transform.FindChild("Fade").GetComponent<Image>();
-
-        var scene = SceneManager.GetActiveScene();
-        if (scene.name != "Setup")
-        {
-            AsyncLoad("Setup");
-        }
     }
 
-    public void AsyncLoad(string nextScene)
+    /****************************************************************************** 
+    @brief      非同期シーンロード
+    @param[in]  次のシーンの名前
+    @return     none
+    */
+    public void mAsyncLoad(string nextScene)
     {
-        StartCoroutine(OnAsyncLoad(nextScene));
+        StartCoroutine(mOnAsyncLoad(nextScene));
     }
 
-    public void ForceGoTo(string SceneName)
+    /****************************************************************************** 
+    @brief      同期シーンロード
+    @param[in]  次のシーンの名前
+    @return     none
+    */
+    public void mSyncLoad(string SceneName)
     {
         SceneManager.LoadScene(SceneName);
     }
 
-    IEnumerator OnAsyncLoad(string nextScene)
+    /****************************************************************************** 
+    @brief      非同期シーンの実処理
+    @param[in]  次のシーンの名前
+    @return     none
+    */
+    IEnumerator mOnAsyncLoad(string nextScene)
     {
         mLoadProgress = 0;
         m_fade.gameObject.SetActive(true);
