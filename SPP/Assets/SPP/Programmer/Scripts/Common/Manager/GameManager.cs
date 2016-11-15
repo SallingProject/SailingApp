@@ -22,4 +22,29 @@ public class GameManager : BaseObjectSingleton<GameManager> {
 
     }
 
+    /****************************************************************************** 
+    @brief      船のオブジェクト取得
+    @return     none
+    */
+    public GameObject GetShipObject(EShipType type)
+    {
+        switch (type)
+        {
+            case EShipType.Class470:
+                return null;
+
+            case EShipType.Class49er:
+                return null;
+
+            case EShipType.ClassLaser:
+                return null;
+
+            case EShipType.ClassRS_X:
+                return null;
+
+            case EShipType.Invalid:
+                return null;
+        }
+        return null;
+    }
 }

@@ -18,8 +18,8 @@ public class ShipDefine : ScriptableObject {
     @brief  船の種類
     */
     [SerializeField]
-    ShipType m_type;
-    public ShipType mType 
+    EShipType m_type;
+    public EShipType mType 
     {
         get { return m_type; }
     }
