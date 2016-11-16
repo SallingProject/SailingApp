@@ -83,4 +83,14 @@ public class SceneDebugHome : SceneBase {
     {
         GameInstance.mInstance.mAsyncLoad("Library");
     }
+    /****************************************************************************** 
+    @brief      ゲームに飛ぶ
+    @return     none
+    */
+    public void mGoToGame()
+    {
+        GameInstance.mInstance.mAsyncLoad("InGame");
+    }
+
+
 }
