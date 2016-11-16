@@ -16,13 +16,14 @@ public class ShipMove : BaseObject {
 
     private float m_speedVector;
     private float m_surfacingRadian;
-    
-    //定数
-    private const float mkMagnification = 5.0f;             //最大速度倍率
-    private const float mkFriction = 0.98f;              //摩擦
-    public const float mkMoveValue = 2.0f;
 
-    private float m_presaveDirection;
+
+    private ShipDefine m_shipDefine;
+
+    private float m_accelMagnification = 100;
+    //定数
+    private const float mkFriction = 0.98f;              //摩擦
+
     protected override void Start()
     {
         m_speedVector = 0;
@@ -30,57 +31,42 @@ public class ShipMove : BaseObject {
         m_wind = GameInfo.mInstance.m_wind;
     }
 
-    /****************************************************************************** 
-    @brief      回転中かどうかの値を取得する
-    @note       
-    */
-    public float mRotateValue { get; private set; }
-
-
 
     public override void mOnUpdate()
     {
         //仮コントロール
-        float shipDirection = GameInfo.mInstance.mGetHandleRotation();
-//        if (shipDirection == 0);
-//        else StartCoroutine(mRotation(20, shipDirection));
+        float shipDirection = GameInfo.mInstance.mGetHandleRotation() * (m_shipDefine.mHandling / 100);
 
-        //速度の加算　最大値を超えていた場合収めるが風力によって変わる
-        m_speedVector += mForce(m_wind.mWindDirection) * m_wind.mWindForce;
-        if (m_speedVector >= m_wind.mWindForce * mkMagnification)
-        {
-            m_speedVector = m_wind.mWindForce * mkMagnification;
-        }
-
-        m_speedVector *= mkFriction;
-        m_surfacingRadian += Time.deltaTime * 150;
+        mAcceleration();
 
 
-        //移動
+        //FloatMove;
+        m_surfacingRadian += Time.deltaTime * 120;
         transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
-        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
+
         //Rote
         transform.eulerAngles += Vector3.up * shipDirection*Time.deltaTime;
     }
 
     /****************************************************************************** 
-    @brief      回転をTweenする
-    @note       実行し終わったら消えます
-    @return     none
+    @brief      速度の加算　最大値を超えていた場合収めるが風力によって変わる    
+    @note       MaxSpeed,Accelaration,
+    @return     受けた風量
     *******************************************************************************/
-    private IEnumerator mRotation(int duration,float value)
+    private void mAcceleration()
     {
-        mRotateValue = value / duration;
-        while (duration >= 0)
+        m_speedVector += (mForce(m_wind.mWindDirection) * m_wind.mWindForce) * 
+            (m_shipDefine.mAcceleration/100) * (m_accelMagnification/100);
+
+        if (m_speedVector >= m_wind.mWindForce * (m_shipDefine.mMaxSpeed/100))
         {
-            transform.eulerAngles += Vector3.up * (mRotateValue);
-            duration--;
-            yield return null;
+            m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100);
         }
-        mRotateValue = 0;
+
+        m_speedVector *= mkFriction;
+        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
+
     }
-
-
 
     /****************************************************************************** 
     @brief      風を受けて力へ変える関数
@@ -100,19 +86,41 @@ public class ShipMove : BaseObject {
         }
 
         //内積と１－ｘで90°以上で最速になるように
-        float liftForce = Vector2.Dot(windVec, shipVec);        
+        float liftForce = Mathf.Abs(Vector2.Dot(windVec, shipVec));        
         liftForce = 1 - liftForce;
 
-        //        Debug.Log( windVec+"ship"+shipVec);//+ "\tY:" + m_windDirectionY);
-        //        Debug.Log(liftForce);
 
         //大きさは０～１に縮小する
         return Mathf.Clamp(liftForce, 0.0f, 1.0f);
     }
 
 
+    /****************************************************************************** 
+    @brief      ScriptableObjectを受け取る
+    @note       ShipCreateから呼ぶ
+    *******************************************************************************/
+    public void mSetShipDefine(ShipDefine define)
+    {
+        m_shipDefine = define;
+    }
+
+    /****************************************************************************** 
+    @brief      風を受ける加速に変化をつける
+    @note       Default 100(%) 
+    *******************************************************************************/
+    public void mTranslateAccel(float magnification)
+    {
+        m_accelMagnification = magnification;
+    }
+
+    /****************************************************************************** 
+    @brief      風を受ける加速を元に戻す
+    *******************************************************************************/
+    public void mNormalAccel()
+    {
+        m_accelMagnification = 100;
+    }
 
 
-    
-    	
+
 }

@@ -1,6 +1,10 @@
 fileFormatVersion: 2
-guid: 8ffa654575b5b3d42b21ed233631374a
-timeCreated: 1477324189
+guid: fd406cbe51af1df498b98c61f5a5cecd
+labels:
+- Data
+- ScriptableObject
+- ShipDefine
+timeCreated: 1479288340
 licenseType: Free
 NativeFormatImporter:
   userData: 

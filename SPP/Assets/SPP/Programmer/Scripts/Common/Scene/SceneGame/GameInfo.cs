@@ -8,9 +8,9 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     [SerializeField]
     private UIHandleController m_handleController;
 
-    [HideInInspector]
+    [System.NonSerialized]
     public WindObject m_wind;       //風オブジェクト
-    [HideInInspector]
+    [System.NonSerialized]
     public PointArrayObject m_pointArray;       //ポイント配列管理クラス(Staticなので問題ない)
 
     public bool mControllerTrigger { get; private set; }
@@ -19,7 +19,7 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     {
         base.mOnRegistered();
         m_wind = new WindObject();
-        m_wind.mWindForce = 4;
+        m_wind.mWindForce = 5;
         m_wind.mWindDirection = 0;
 
         m_pointArray = new PointArrayObject();
