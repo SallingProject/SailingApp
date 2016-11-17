@@ -28,6 +28,8 @@ public class BaseObjectSingleton<T> : BaseObject where T : BaseObjectSingleton<T
         base.mOnRegistered();
         mCheckInstance();
 		mUnregisterList (this);
+
+        mManagerRegisterList(this);
     }
 
     /****************************************************************************** 

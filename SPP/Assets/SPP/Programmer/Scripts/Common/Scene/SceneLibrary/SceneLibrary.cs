@@ -27,32 +27,15 @@ public class SceneLibrary : SceneBase {
             drag.eventID = EventTriggerType.Drag;
             drag.callback.AddListener(eventData =>
             {
-                var rotationList = InputManager.mInstance.mGetDeltaPosition(1);
-
+                var touch = InputManager.mInstance.mGetTouchInfo(0);
                 Vector3 rotation = m_shipRoot.transform.localEulerAngles;
-
-                m_shipRoot.transform.Rotate(new Vector3(rotationList[0].y, rotationList[0].x, m_shipRoot.transform.rotation.z));
+                
+                m_shipRoot.transform.Rotate(new Vector3(touch._deltaPosition.y, touch._deltaPosition.x, m_shipRoot.transform.rotation.z));
 
             });
 
             trigger.triggers.Add(drag);
         }
-
-        // PointerDownイベントの追加
-        //{
-        //    EventTrigger.Entry down = new EventTrigger.Entry();
-        //    down.eventID = EventTriggerType.PointerDown;
-        //    down.callback.AddListener(eventData =>
-        //    {
-        //        var rotationList = InputManager.mInstance.mGetPosition(1);
-        //        Vector3 rotation = m_shipRoot.transform.localEulerAngles;
-
-        //        m_shipRoot.transform.localEulerAngles = new Vector3(rotationList[0].y, rotationList[0].x, m_shipRoot.transform.rotation.z);
-        //    });
-
-        //    trigger.triggers.Add(down);
-        //}
-
         
         // リセット処理
         m_resetButton.onClick.AddListener(() =>
@@ -60,6 +43,4 @@ public class SceneLibrary : SceneBase {
             m_shipRoot.transform.localEulerAngles = new Vector3(0, -150, 0);
         });
     }
-
-    
 }
