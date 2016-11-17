@@ -17,15 +17,13 @@ public class TouchInfo
     public Vector2 _position = Vector2.zero;
     public Vector2 _deltaPosition = Vector2.zero;
 
-    public float _time = float.NaN;
-    public float _deltaTime = float.NaN;
-
+    public float _speed = float.NaN;
+    
     public void Clear()
     {
         _position = Vector2.zero;
         _deltaPosition = Vector2.zero;
-        _time = float.NaN;
-        _deltaTime = float.NaN;
+        _speed = float.NaN;
     }
 }
 
@@ -35,8 +33,8 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     int m_maxTouchCount = 1;
 
     [SerializeField]
-    float m_screenSize = 1080f;
-
+    int m_addSpeed = 10;
+    
     List<TouchInfo> m_touchBuffer = new List<TouchInfo>();
     protected override void mOnRegistered()
     {
@@ -54,12 +52,11 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         m_touchBuffer.Clear();
 
 #if UNITY_EDITOR || UNITY_WINDOWS
-        TouchInfo touch = new TouchInfo();
-        touch._deltaPosition    = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        touch._position         = Input.mousePosition / m_screenSize;
-        touch._deltaTime        = Time.deltaTime;
-        touch._time             = Time.time;
-        m_touchBuffer.Add(touch);
+        TouchInfo touchInfo = new TouchInfo();
+        touchInfo._deltaPosition    = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        touchInfo._position         = Input.mousePosition;
+        touchInfo._speed = m_addSpeed;
+        m_touchBuffer.Add(touchInfo);
 
         if (Input.GetKeyDown(DebugManager.mInstance.mkConsoleCommandKey))
         {
@@ -81,6 +78,8 @@ public class InputManager : BaseObjectSingleton<InputManager> {
                     touchInfo._position         = touch.position;
                     touchInfo._time             = Time.time;
                     touchInfo._deltaTime        = touch.deltaTime;
+                    touchInfo._speed = m_addSpeed;
+
                     m_touchBuffer.Add(touchInfo);
 				}
 				break;
