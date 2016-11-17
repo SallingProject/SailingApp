@@ -44,8 +44,6 @@ public class UISailController : BaseObject {
     {
         base.mOnUpdate();
 
-        Debug.Log();
-
     }
 
 
