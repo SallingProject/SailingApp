@@ -18,6 +18,12 @@ public class CollisionDetection : BaseObject{
         set { m_isEnter = value; }
     }
 
+    private float m_direction;
+    public float mDirection
+    {
+        set { m_direction = value; }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         mIsEntered = true;
@@ -28,5 +34,13 @@ public class CollisionDetection : BaseObject{
         mUnregisterList(this);
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.6f);
+        var prefs = Resources.Load("Ship/cursor") as GameObject;
+        Vector3 rote = transform.eulerAngles;
+        rote.y += m_direction * 90;
+        Gizmos.DrawMesh(prefs.GetComponentInChildren<MeshFilter>().sharedMesh,-1, transform.position+Vector3.up*2, Quaternion.Euler(rote), new Vector3(100,100,100));
+    }
 
 }

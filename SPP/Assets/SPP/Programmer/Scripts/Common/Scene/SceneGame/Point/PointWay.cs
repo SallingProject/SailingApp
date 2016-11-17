@@ -1,13 +1,4 @@
-﻿/**************************************************************************************/
-/*! @file   PointWay.cs
-***************************************************************************************
-@brief      ポイントの判定
-***************************************************************************************
-@author     Tomoki Numakura
-***************************************************************************************/
-
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
@@ -17,15 +8,18 @@ public class PointWay : BaseObject
     [SerializeField]
     private GameObject m_wayPrefab;
 
-    private Vector3 m_point;    
-    private float angle;        //角度
+    private Vector3 m_point;
+    private float angle;
 
-    float m_now;                //現在の位置
-    float m_prevpos;            //過去の位置
-    float m_distance;           //今と過去の位置の距離の差
+    float m_now;
+    float m_prevpos;
+    float m_distance;
+
+
+//    public Text m_scoreText;
 
     [SerializeField]
-    private GameObject m_ship;  //船
+    private GameObject m_ship;
 
     [SerializeField]
     private BaseObject m_firstPoint;
@@ -42,9 +36,9 @@ public class PointWay : BaseObject
         if (!m_secondPoint.IsValid()) return;
         
 
-        m_point = m_secondPoint.transform.position + m_firstPoint.transform.position;   //ポイントとポイントの二点間の距離
+        m_point = m_secondPoint.transform.position + m_firstPoint.transform.position;
 
-        m_wayPrefab.transform.position = m_point / 2;                                      //ポイントとポイントの真ん中の場所
+        m_wayPrefab.transform.position = m_point / 2;
 
         m_point = m_secondPoint.transform.position - m_wayPrefab.transform.position;
         m_wayPrefab.transform.localScale = new Vector3(m_point.magnitude*2,0.01f,1.0f);
@@ -64,11 +58,14 @@ public class PointWay : BaseObject
         m_pointArray = GameInfo.mInstance.m_pointArray;
 
         m_wayPrefab = mCreate(m_wayPrefab);
+
+//        m_scoreText.text = m_distance.ToString();
+
     }
 
     void mOnPointWay()
     {
-        m_now = Vector3.Distance(m_secondPoint.transform.position, m_ship.transform.position); //船と次のポイントの距離
+        m_now = Vector3.Distance(m_secondPoint.transform.position, m_ship.transform.position);
 
         //Debug.Log("m_now:" + m_now);
 
@@ -77,9 +74,11 @@ public class PointWay : BaseObject
             m_prevpos = m_now;
         }
 
-        m_distance += -(m_now - m_prevpos);     //今の場所と過去の場所の比較をして距離の差を調べる
+        m_distance += -(m_now - m_prevpos);
 
-        Debug.Log("m_distance" + m_distance);
+//        m_scoreText.text = m_distance.ToString();
+
+//        Debug.Log("m_distance" + m_distance);
 
        // Debug.Log("m_prev:"+m_prevpos);
 
