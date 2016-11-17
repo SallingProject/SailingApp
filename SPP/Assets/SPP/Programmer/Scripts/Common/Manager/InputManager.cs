@@ -55,7 +55,6 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 
 #if UNITY_EDITOR || UNITY_WINDOWS
         TouchInfo touch = new TouchInfo();
-        DebugManager.mInstance.OutputMsg(new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")));
         touch._deltaPosition    = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         touch._position         = Input.mousePosition / m_screenSize;
         touch._deltaTime        = Time.deltaTime;
