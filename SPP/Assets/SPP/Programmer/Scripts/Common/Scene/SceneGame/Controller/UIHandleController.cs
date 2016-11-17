@@ -136,18 +136,18 @@ public class UIHandleController : BaseObject{
     {
         var touch = InputManager.mInstance.mGetTouchInfo(0);
         // 左
-        if (touch._deltaPosition.x > 0)
+        if (touch._deltaPosition.x < 0)
         {
-			if (mHandleRotationZ + touch._deltaPosition.x < m_maxZRotation) 
+            if (mHandleRotationZ - touch._deltaPosition.x < m_maxZRotation) 
 			{
-				m_handle.localEulerAngles += new Vector3 (0, 0, touch._deltaPosition.x);
+				m_handle.localEulerAngles -= new Vector3 (0, 0, touch._deltaPosition.x);
 			}
         }
         else // 右
         {
-			if (mHandleRotationZ + touch._deltaPosition.x > -m_maxZRotation)
+			if (mHandleRotationZ - touch._deltaPosition.x > -m_maxZRotation)
             {
-				m_handle.localEulerAngles += new Vector3(0, 0, touch._deltaPosition.x);
+				m_handle.localEulerAngles -= new Vector3(0, 0, touch._deltaPosition.x);
             }
         }
     }
