@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PointWay : BaseObject
 {
@@ -9,6 +10,16 @@ public class PointWay : BaseObject
 
     private Vector3 m_point;
     private float angle;
+
+    float m_now;
+    float m_prevpos;
+    float m_distance;
+
+
+    public Text m_scoreText;
+
+    [SerializeField]
+    private GameObject m_ship;
 
     [SerializeField]
     private BaseObject m_firstPoint;
@@ -33,10 +44,11 @@ public class PointWay : BaseObject
         m_wayPrefab.transform.localScale = new Vector3(m_point.magnitude*2,0.01f,1.0f);
 
         angle = Mathf.Atan2(m_point.z, m_point.x);
-        //Debug.Log(m_point);
 
         angle *= Mathf.Rad2Deg;
         m_wayPrefab.transform.rotation = Quaternion.AngleAxis(-angle, new Vector3(0, 1, 0));
+
+        mOnPointWay();
 
     }
 
@@ -46,8 +58,31 @@ public class PointWay : BaseObject
         m_pointArray = GameInfo.mInstance.m_pointArray;
 
         m_wayPrefab = mCreate(m_wayPrefab);
-        
+
+        m_scoreText.text = m_distance.ToString();
 
     }
 
+    void mOnPointWay()
+    {
+        m_now = Vector3.Distance(m_secondPoint.transform.position, m_ship.transform.position);
+
+        //Debug.Log("m_now:" + m_now);
+
+        if(m_prevpos == 0)
+        {
+            m_prevpos = m_now;
+        }
+
+        m_distance += -(m_now - m_prevpos);
+
+        m_scoreText.text = m_distance.ToString();
+
+        Debug.Log("m_distance" + m_distance);
+
+       // Debug.Log("m_prev:"+m_prevpos);
+
+        m_prevpos = m_now;
+
+    }
 }
