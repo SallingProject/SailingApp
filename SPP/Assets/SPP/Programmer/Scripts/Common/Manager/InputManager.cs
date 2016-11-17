@@ -81,7 +81,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
                     touchInfo._deltaPosition    = touch.deltaPosition;
                     touchInfo._time             = Time.time;
                     touchInfo._deltaTime        = touch.deltaTime;
-                    m_controller.Add(touchInfo);
+                    m_touchBuffer.Add(touchInfo);
 				}
 				break;
 			}
@@ -103,7 +103,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 #if UNITY_EDITOR || UNITY_WINDOWS
         return m_touchBuffer[0];
 #elif UNITY_ANDROID || UNITY_IOS
-        return m_controller[id];
+        return m_touchBuffer[id];
 #endif
     }
 
