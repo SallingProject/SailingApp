@@ -11,79 +11,101 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+
+public class TouchInfo
+{
+    public Vector2 _position = Vector2.zero;
+    public Vector2 _deltaPosition = Vector2.zero;
+
+    public float _time = float.NaN;
+    public float _deltaTime = float.NaN;
+
+    public void Clear()
+    {
+        _position = Vector2.zero;
+        _deltaPosition = Vector2.zero;
+        _time = float.NaN;
+        _deltaTime = float.NaN;
+    }
+}
+
 public class InputManager : BaseObjectSingleton<InputManager> {
 
-    Vector2 m_mouseDiff = Vector2.zero;
-	/**************************************************************************************
-    @brief  	タッチされた場所の座標を返す
-    @param[in]	同時に何本指タッチまで許容するかの設定（スマートフォンのみに関係）
-    @return 	Editor上は必ずサイズは１
-    			スマートフォンのサイズはmaxTouchCountと同じ
+    [SerializeField]
+    int m_maxTouchCount = 1;
+
+    [SerializeField]
+    float m_screenSize = 1080f;
+
+    List<TouchInfo> m_touchBuffer = new List<TouchInfo>();
+    protected override void mOnRegistered()
+    {
+        base.mOnRegistered();
+    }
+
+    /**************************************************************************************
+    @brief  	更新処理
     */
-	public List<Vector2> mGetPosition(int maxTouchCount)
-	{
+    public override void mOnFastUpdate()
+    {
+        base.mOnFastUpdate();
 
-		List<Vector2> positionList = new List<Vector2> ();
-        Vector2 position = new Vector2();
+        // 一回一回履歴をクリア
+        m_touchBuffer.Clear();
 
-        #if UNITY_EDITOR || UNITY_WINDOWS
-        position = Input.mousePosition;
-		m_mouseDiff = position;
-		positionList.Add(position);
+#if UNITY_EDITOR || UNITY_WINDOWS
+        TouchInfo touch = new TouchInfo();
 
-		#elif UNITY_ANDROID || UNITY_IOS
+        touch._deltaPosition    = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+        touch._position         = Input.mousePosition / m_screenSize;
+        touch._deltaTime        = Time.deltaTime;
+        touch._time             = Time.time;
+        m_touchBuffer.Add(touch);
 
-		if (Input.touchCount > 0 && Input.touchCount <= maxTouchCount)
+        if (Input.GetKeyDown(DebugManager.mInstance.mkConsoleCommandKey))
+        {
+            DebugManager.mInstance.IsConsoleOpen = true;
+            DebugManager.mInstance.OpenDebugCommandKeyboard();
+        }
+
+#elif UNITY_ANDROID || UNITY_IOS
+
+		if (Input.touchCount > 0 && Input.touchCount <= m_maxTouchCount)
 		{
 			foreach (Touch touch in Input.touches)
 			{
 				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
 				{
-                    position = -touch.position;
-                    positionList.Add(position);
+                    TouchInfo touchInfo         = new TouchInfo();
+                    touchInfo._position         = touch.position;
+                    touchInfo._deltaPosition    = touch.deltaPosition;
+                    touchInfo._time             = Time.time;
+                    touchInfo._deltaTime        = touch.deltaTime;
+                    m_controller.Add(touchInfo);
 				}
 				break;
 			}
 		}
-		#endif
 
-		return positionList;
-	}
+        if(Input.touchCount == m_maxTouchCount)
+        {
+            DebugManager.mInstance.IsConsoleOpen = true;
+            DebugManager.mInstance.OpenDebugCommandKeyboard();
+        }
+#endif
+    }
 
-	/**************************************************************************************
-    @brief  	タッチされた場所のデルタ座標を返す
-    @param[in]	同時に何本指タッチまで許容するかの設定（スマートフォンのみに関係）
-    @return 	Editor上は必ずサイズは１
-    			スマートフォンのサイズはmaxTouchCountと同じ
+    /**************************************************************************************
+    @brief  	インデックスから取得可能
     */
-	public List<Vector2> mGetDeltaPosition(int maxTouchCount)
-	{
+    public TouchInfo mGetTouchInfo(int id)
+    {
+#if UNITY_EDITOR || UNITY_WINDOWS
+        return m_touchBuffer[0];
+#elif UNITY_ANDROID || UNITY_IOS
+        return m_controller[id];
+#endif
+    }
 
-		List<Vector2> deltaPositionList = new List<Vector2> ();
-        Vector2 deltaPosition = new Vector2();
 
-        #if UNITY_EDITOR || UNITY_WINDOWS
-        deltaPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - m_mouseDiff;
-		       
-		m_mouseDiff = Input.mousePosition;
-		
-		deltaPositionList.Add(deltaPosition);
-		#elif UNITY_ANDROID || UNITY_IOS
-
-		if (Input.touchCount > 0 && Input.touchCount <= maxTouchCount)
-		{
-			foreach (Touch touch in Input.touches)
-			{
-				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
-				{
-					deltaPosition = -touch.deltaPosition;
-					deltaPositionList.Add(deltaPosition);
-				}
-				break;
-			}
-		}
-		#endif
-
-		return deltaPositionList;
-	}
 }

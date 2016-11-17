@@ -28,6 +28,12 @@ public class BaseObjectUpdateManager : BaseObject {
     void Update()
     {
         
+        foreach(var index in mManagerObjectList)
+        {
+            if (index.IsValid())
+                index.mOnFastUpdate();
+        }
+
         foreach(var index in mObjectList)
         {
             if(index.IsValid())

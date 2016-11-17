@@ -134,20 +134,20 @@ public class UIHandleController : BaseObject{
     */
     void Drag(BaseEventData eventData)
     {
-		var point = InputManager.mInstance.mGetDeltaPosition (1);
+        var touch = InputManager.mInstance.mGetTouchInfo(0);
         // 左
-		if (point[0].x > 0)
+        if (touch._deltaPosition.x > 0)
         {
-			if (mHandleRotationZ + point [0].x < m_maxZRotation) 
+			if (mHandleRotationZ + touch._deltaPosition.x < m_maxZRotation) 
 			{
-				m_handle.localEulerAngles += new Vector3 (0, 0, point[0].x);
+				m_handle.localEulerAngles += new Vector3 (0, 0, touch._deltaPosition.x);
 			}
         }
         else // 右
         {
-			if (mHandleRotationZ + point[0].x > -m_maxZRotation)
+			if (mHandleRotationZ + touch._deltaPosition.x > -m_maxZRotation)
             {
-				m_handle.localEulerAngles += new Vector3(0, 0, point[0].x);
+				m_handle.localEulerAngles += new Vector3(0, 0, touch._deltaPosition.x);
             }
         }
     }
