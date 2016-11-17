@@ -15,6 +15,9 @@ public class SceneLibrary : SceneBase {
 
     [SerializeField]
     Camera m_camera;
+
+    [SerializeField]
+    Vector3 m_initRotation = new Vector3(0, -150, 0);
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
@@ -46,7 +49,7 @@ public class SceneLibrary : SceneBase {
         // リセット処理
         m_resetButton.onClick.AddListener(() =>
         {
-            m_shipRoot.transform.localEulerAngles = new Vector3(0, -150, 0);
+            m_shipRoot.transform.localEulerAngles = m_initRotation;
         });
     }
 }

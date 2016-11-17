@@ -55,15 +55,14 @@ public class UISailController : BaseObject {
         {
             if (m_controllObject.rectTransform.position.x + touch._deltaPosition.x < m_right.position.x)
             {
-                Debug.Log(m_controllObject.rectTransform.position.x + touch._deltaPosition.x);
-                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x * touch._speed, 0, 0);
             }
         }
         else 
         {
             if (m_controllObject.rectTransform.position.x + touch._deltaPosition.x > m_left.position.x )
             {
-                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x * touch._speed, 0, 0);
             }
         }
 
