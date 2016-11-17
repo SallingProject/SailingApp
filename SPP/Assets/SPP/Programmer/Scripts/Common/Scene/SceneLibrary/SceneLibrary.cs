@@ -29,9 +29,15 @@ public class SceneLibrary : SceneBase {
             {
                 var touch = InputManager.mInstance.mGetTouchInfo(0);
                 Vector3 rotation = m_shipRoot.transform.localEulerAngles;
-                
-                m_shipRoot.transform.Rotate(new Vector3(touch._deltaPosition.y, touch._deltaPosition.x, m_shipRoot.transform.rotation.z));
 
+                
+                //移動量に応じて角度計算
+                float xAngle = touch._deltaPosition.y * touch._speed;
+                float yAngle = -touch._deltaPosition.x * touch._speed;
+                float zAngle = 0;
+
+                //回転
+                m_shipRoot.transform.Rotate(xAngle, yAngle, zAngle, Space.World);
             });
 
             trigger.triggers.Add(drag);
