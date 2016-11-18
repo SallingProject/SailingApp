@@ -11,9 +11,10 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 
-public class Point: PointArrayObject{
+
+public class Point : BaseObject{
     [System.Serializable]
-    class BuoyDetermination
+    public class BuoyDetermination
     {
         public enum eDirection
         {
@@ -27,7 +28,9 @@ public class Point: PointArrayObject{
     }
 
     [SerializeField]
-    private BuoyDetermination[] m_point;
+    private BuoyDetermination[] m_determination;
+
+    public int[] m_pointId;
 
     [SerializeField]
     private float m_radius;         //サークル半径
@@ -42,17 +45,22 @@ public class Point: PointArrayObject{
 
     private const float mk_scaleY = 0.01f;  //縦固定値
 
-
+    private PointArrayObject m_pointArray;
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
+        //管理配列に登録
+        Debug.Log("len"+m_determination.Length);
+        m_pointArray = GameInfo.mInstance.m_pointArray;
+
         {   //入りのオブジェクトの生成
-            m_angleObject = new GameObject[m_point.Length];
-            for(int i=0; i<m_point.Length; ++i)
+            m_angleObject = new GameObject[m_determination.Length];
+            for(int i=0; i< m_determination.Length; ++i)
             {
-                if (m_point[i].m_direction != 0)
+                if (m_determination[i].m_direction != 0)
                 {
-                    m_angleObject[i] = mCollisionCreate(m_point[i]);
+                    mCollisionCreate(m_determination[i], ref m_angleObject[i]);
+                    Debug.Log(m_angleObject[i]);
                 }
                 i++;
             }
@@ -60,23 +68,28 @@ public class Point: PointArrayObject{
         m_index = 0;
         transform.GetComponent<SphereCollider>().radius = m_radius;
 
+        foreach (var i in m_pointId){
+            m_pointArray.mRegisterArray(i, this);
+            Debug.Log("id"+i);
+        }
     }
     /****************************************************************************** 
     @brief      ポイント判定用板の生成 （簡略化用）
     @in         インスペクターから受け取る配置角度、向きなど
     @return     生成されたオブジェクト
     */
-    GameObject mCollisionCreate(BuoyDetermination buoy)
+    private void mCollisionCreate(BuoyDetermination buoy,ref GameObject receive)
     {
-        var Obj = BaseObject.mCreate(m_detectionPrefab);
-        Obj.transform.parent = transform;
-        Obj.transform.localScale = new Vector3(1, mk_scaleY, m_radius);
-        Obj.transform.Rotate(0, buoy.m_angle, 0);
-        Obj.transform.position = transform.position;
-        Obj.transform.Translate(0, 0, m_radius + 3);
-        Obj.transform.name = buoy.m_name;
-        Obj.GetComponent<CollisionDetection>().mDirection = (int)buoy.m_direction;
-        return Obj;
+        var Obj = mCreate(m_detectionPrefab);
+        receive = Obj;
+        receive.transform.parent = transform;
+        receive.transform.localScale = new Vector3(1, mk_scaleY, m_radius);
+        receive.transform.Rotate(0, buoy.m_angle, 0);
+        receive.transform.localPosition = Vector3.zero;
+        receive.transform.Translate(0, 0, m_radius + 3);
+        receive.transform.name = buoy.m_name;
+        receive.GetComponent<CollisionDetection>().mDirection = (int)buoy.m_direction;
+        Debug.Log(receive);
 
     }
 
@@ -98,8 +111,8 @@ public class Point: PointArrayObject{
         {
             if(m_angleObject.Length-1 == m_index)
             {
-                mNext();
-                return; ;
+                m_pointArray.mNext();
+                return;
             }
             m_index++;
         }

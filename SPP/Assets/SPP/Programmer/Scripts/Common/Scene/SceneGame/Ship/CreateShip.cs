@@ -14,6 +14,8 @@ public class CreateShip : BaseObject{
         var obj = Resources.Load(path);
         var instance = mCreate(obj) as GameObject;
         instance.transform.SetParent(transform);
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localEulerAngles = Vector3.zero;
 
         GetComponent<ShipMove>().mSetShipDefine(scripObj);
 

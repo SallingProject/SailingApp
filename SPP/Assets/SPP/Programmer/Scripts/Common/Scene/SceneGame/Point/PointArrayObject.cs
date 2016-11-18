@@ -13,25 +13,30 @@ using System.Collections.Generic;
 
 public class PointArrayObject : BaseObject {    
 
-    static private List<BaseObject>m_pointArray = new List<BaseObject>();
+    static private Dictionary<int,BaseObject>m_pointArray = new Dictionary<int, BaseObject>();
     static private int m_currentId;
 
 
     //ポイント配列に登録
     protected override void mOnRegistered()
     {
-        m_pointArray.Add(this);
-        Debug.Log(this+""+m_pointArray.Count+"Name:"+name);
+        mUnregisterList(this);
+        Debug.Log(m_pointArray.Count);
     }
 
     
-
+    public void mRegisterArray(int index,BaseObject obj)
+    {
+        Debug.Log(index + "\tName:" + obj.name);
+        m_pointArray.Add(index,obj);
+        Debug.Log(index + "\tName:" + obj.name);
+    }
     /****************************************************************************** 
     @brief      ポイントを次へ進める
     @note       次がないときは最後/継承先でしか利用できない
     @return     のね
     *******************************************************************************/
-    protected void mNext()
+    public void mNext()
     {
         Debug.Log("ClearPoint:"+m_currentId);
         if (m_currentId >= m_pointArray.Count) return;
@@ -68,7 +73,6 @@ public class PointArrayObject : BaseObject {
         return m_pointArray[m_currentId-1];
     }
 
-    
 
 
 }

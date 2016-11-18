@@ -18,12 +18,9 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
-        m_wind = new WindObject();
-        m_wind.mWindForce = 5;
-        m_wind.mWindDirection = 0;
+        m_wind = GetComponent<WindObject>();
 
-        m_pointArray = new PointArrayObject();
-
+        m_pointArray = GetComponent<PointArrayObject>();
         mUnregisterList(this);
         mUnregister();
 
