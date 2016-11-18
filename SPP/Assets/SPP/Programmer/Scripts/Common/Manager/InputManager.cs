@@ -76,8 +76,6 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         
                     touchInfo._deltaPosition    = touch.deltaPosition;
                     touchInfo._position         = touch.position;
-                    touchInfo._time             = Time.time;
-                    touchInfo._deltaTime        = touch.deltaTime;
                     touchInfo._speed = m_addSpeed;
 
                     m_touchBuffer.Add(touchInfo);
