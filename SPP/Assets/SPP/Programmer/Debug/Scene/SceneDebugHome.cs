@@ -63,7 +63,7 @@ public class SceneDebugHome : SceneBase {
     */
     public void mGoToTitle()
     {
-        GameInstance.mInstance.mSceneLoad(new LoadInfo("Title"));
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Title", LoadInfo.ELoadType.Async, 1f));
     }
 
     /****************************************************************************** 
@@ -73,7 +73,7 @@ public class SceneDebugHome : SceneBase {
     public void mGoToHome()
     {
         
-        GameInstance.mInstance.mSceneLoad(new LoadInfo("Home"));
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Home", LoadInfo.ELoadType.Async, 1f));
     }
 
     /****************************************************************************** 
@@ -82,7 +82,7 @@ public class SceneDebugHome : SceneBase {
     */
     public void mGoToLibrary()
     {
-        GameInstance.mInstance.mSceneLoad(new LoadInfo("Library"));
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Library", LoadInfo.ELoadType.Async, 1f));
     }
     /****************************************************************************** 
     @brief      ゲームに飛ぶ
@@ -90,7 +90,7 @@ public class SceneDebugHome : SceneBase {
     */
     public void mGoToGame()
     {
-        GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame"));
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame" , LoadInfo.ELoadType.Async, 1f));
     }
 
 

@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 public class SceneBase : BaseObject {
     static bool m_isFirst = false;
 
-    protected override void Awake()
+    protected override void mOnRegistered()
     {
-        base.Awake();
+        base.mOnRegistered();
         mUnregisterList(this);
         if (!m_isFirst)
         {
