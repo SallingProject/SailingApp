@@ -32,8 +32,8 @@ public enum ETouchType
 public interface ITouchInfo
 {
     Vector2 mPosition { get; }
-    Vector2 mDeltaPosition { get; }
-
+    Vector2 mDeltaPosition { get; } 
+    Vector2 mInputDeltaPosition { get; }
     int mFingerId { get; }
 
     ETouchType mTouchType { get; }
@@ -49,18 +49,21 @@ public interface ITouchInfo
 public class TouchInfo : ITouchInfo
 {
     public static readonly int InvalidFingerId = -1;
-    public int _fingerId = InvalidFingerId;         // フィンガーID  
-    public Vector2 _position = Vector2.zero;        // 現在のポジション情報
-    public Vector2 _prevPosition = Vector2.zero;    // 前回のポジション情報
-    public Vector2 _beginPosition = Vector2.zero;   // 
-    public Vector2 _beginDiff = Vector2.zero;       // 押し始めから現在までの差分
-    public float _touchTime = 0.0f;                 // 押されたときからの計測時間   
-    public ETouchType _touchType;                   // 押されている状態
-    public bool _used = false;                      // 現在使われているか
+    public int _fingerId = InvalidFingerId;             // フィンガーID  
+    public Vector2 _position = Vector2.zero;            // 現在のポジション情報
+    public Vector2 _prevPosition = Vector2.zero;        // 前回のポジション情報
+    public Vector2 _inputDeltaPosition = Vector2.zero;  // InputクラスからのdeltaPosition
+    public Vector2 _beginPosition = Vector2.zero;   
+    public Vector2 _beginDiff = Vector2.zero;           // 押し始めから現在までの差分
+    public float _touchTime = 0.0f;                     // 押されたときからの計測時間   
+    public ETouchType _touchType;                       // 押されている状態
+    public bool _used = false;                          // 現在使われているか
     
     public Vector2 mPosition { get { return _position; } }
 
     public Vector2 mDeltaPosition { get { return (_position - _prevPosition); } }
+
+    public Vector2 mInputDeltaPosition { get { return _inputDeltaPosition; } }
 
     public int mFingerId { get { return _fingerId; } }
 
@@ -73,6 +76,7 @@ public class TouchInfo : ITouchInfo
         _position       = Vector2.zero;
         _prevPosition   = Vector2.zero;
         _beginPosition  = Vector2.zero;
+        _inputDeltaPosition  = Vector2.zero;
         _touchTime      = 0.0f;
         _touchType      = ETouchType.End;
         _fingerId       = InvalidFingerId;
@@ -207,52 +211,54 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     /**************************************************************************************
     @brief  	タッチの更新処理
     */
-    private bool mTouchUpdate(TouchInfo touch,int id)
+    private bool mTouchUpdate(TouchInfo info,int id)
     {
         // IDが違ったらと無視
-        if (touch._fingerId != Input.touches[id].fingerId)
+        if (info._fingerId != Input.touches[id].fingerId)
             return false;
-        
-        touch._prevPosition = m_touchBuffer[id]._position;
-        touch._position = Input.touches[id].position;
-        touch._used = false;
+
+        var touch = Input.touches[id];
+        info._prevPosition  = info._position;
+        info._position      = touch.position;
+        info._inputDeltaPosition = touch.deltaPosition;
+        info._used = false;
         var phase = Input.touches[id].phase;
         switch (phase)
         {
             case TouchPhase.Began:
-                touch._beginPosition = Input.mousePosition;
-                touch._touchType = ETouchType.Begin;
+                info._beginPosition = Input.mousePosition;
+                info._touchType = ETouchType.Begin;
                 break;
 
             case TouchPhase.Moved:
                 //時間計測開始
-                touch._touchTime += Time.deltaTime;
+                info._touchTime += Time.deltaTime;
 
-                Vector2 currentTapPoint = touch._position;
-                touch._beginDiff = (currentTapPoint - touch._beginPosition);
-                if (touch._beginDiff.magnitude > kFlickMagnitude / 2)
+                Vector2 currentTapPoint = info._position;
+                info._beginDiff = (currentTapPoint - info._beginPosition);
+                if (info._beginDiff.magnitude > kFlickMagnitude / 2)
                 {
                     // フリックしないときの状態を登録
-                    touch._touchType = ETouchType.Swipe;
+                    info._touchType = ETouchType.Swipe;
                 }
                 break;
 
             case TouchPhase.Ended:
-                touch._touchType = ETouchType.End;
+                info._touchType = ETouchType.End;
 
                 //フリック条件。時間経過は0.5以下でmagnitudeが10以上なら
-                if (touch._touchTime <= kFlickTime && touch._beginDiff.magnitude >= kFlickMagnitude)
+                if (info._touchTime <= kFlickTime && info._beginDiff.magnitude >= kFlickMagnitude)
                 {
-                    touch._touchType = ETouchType.Flick;
+                    info._touchType = ETouchType.Flick;
                 }
 
-                touch._touchTime = 0f;
+                info._touchTime = 0f;
                 break;
 
             case TouchPhase.Stationary:
             case TouchPhase.Canceled:
-                touch._touchType = (phase == TouchPhase.Canceled) ? ETouchType.Cancel : ETouchType.Stationary;
-                touch._touchTime = 0f;
+                info._touchType = (phase == TouchPhase.Canceled) ? ETouchType.Cancel : ETouchType.Stationary;
+                info._touchTime = 0f;
                 break;
         }
 

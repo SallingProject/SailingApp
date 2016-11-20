@@ -121,14 +121,14 @@ public class UIHandleController : BaseObject{
         {
             if (mHandleRotationZ - (touch.mDeltaPosition.x/2) < m_maxZRotation) 
 			{
-				m_handle.localEulerAngles -= new Vector3 (0, 0, (touch.mDeltaPosition.x / 2));
+				m_handle.localEulerAngles -= new Vector3 (0, 0, (touch.mInputDeltaPosition.x));
 			}
         }
         else // 右
         {
 			if (mHandleRotationZ - (touch.mDeltaPosition.x / 2) > -m_maxZRotation)
             {
-				m_handle.localEulerAngles -= new Vector3(0, 0, (touch.mDeltaPosition.x / 2));
+				m_handle.localEulerAngles -= new Vector3(0, 0, (touch.mInputDeltaPosition.x));
             }
         }
     }
