@@ -12,8 +12,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+
 /**************************************************************************************
-@brief  	タッチ情報のクラス
+@brief  	タッチの状態列挙
+*/
+public enum ETouchType
+{
+    Begin = 0,   // 押し始め
+    Flick,       // フリック
+    Swipe,       // スワイプ
+    Cancel,      // キャンセル
+    Stationary,  // 入力禁止
+    End,         // 離した時
+}
+
+/**************************************************************************************
+@brief  	タッチ情報のインターフェースクラス
 */
 public interface ITouchInfo
 {
@@ -22,7 +36,7 @@ public interface ITouchInfo
 
     int mFingerId { get; }
 
-    TouchPhase mTouchPhase { get; }
+    ETouchType mTouchType { get; }
 
     bool mUsed { get; }
 }
@@ -35,29 +49,34 @@ public interface ITouchInfo
 public class TouchInfo : ITouchInfo
 {
     public static readonly int InvalidFingerId = -1;
-    public Vector2 _position = Vector2.zero;
-    public int _fingerId = -1;
-    public Vector2 _prevPosition = Vector2.zero;
-    public TouchPhase _phase;
-    public bool _used = false;
-
+    public int _fingerId = InvalidFingerId;         // フィンガーID  
+    public Vector2 _position = Vector2.zero;        // 現在のポジション情報
+    public Vector2 _prevPosition = Vector2.zero;    // 前回のポジション情報
+    public Vector2 _beginPosition = Vector2.zero;   // 
+    public Vector2 _beginDiff = Vector2.zero;       // 押し始めから現在までの差分
+    public float _touchTime = 0.0f;                 // 押されたときからの計測時間   
+    public ETouchType _touchType;                   // 押されている状態
+    public bool _used = false;                      // 現在使われているか
+    
     public Vector2 mPosition { get { return _position; } }
 
     public Vector2 mDeltaPosition { get { return (_position - _prevPosition); } }
 
     public int mFingerId { get { return _fingerId; } }
 
-    public TouchPhase mTouchPhase { get { return _phase; } }
+    public ETouchType mTouchType { get { return _touchType; } }
 
     public bool mUsed { get { return _used; } }
 
     public void Clear()
     {
-        _position = Vector2.zero;
-        _prevPosition = Vector2.zero;
-        _phase = TouchPhase.Ended;
-        _fingerId = InvalidFingerId;
-        _used = false;
+        _position       = Vector2.zero;
+        _prevPosition   = Vector2.zero;
+        _beginPosition  = Vector2.zero;
+        _touchTime      = 0.0f;
+        _touchType      = ETouchType.End;
+        _fingerId       = InvalidFingerId;
+        _used           = false;
     }
 }
 
@@ -65,6 +84,9 @@ public class TouchInfo : ITouchInfo
 @brief  	管理クラス
 */
 public class InputManager : BaseObjectSingleton<InputManager> {
+
+    public static readonly float kFlickTime = 0.5f;
+    public static readonly float kFlickMagnitude = 10f;
 
     [SerializeField]
     int m_maxTouchCount = 1;
@@ -95,54 +117,147 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     {
         base.mOnFastUpdate();
 
+        int kMaxLoop = (m_maxTouchCount < Input.touchCount) ? m_maxTouchCount : Input.touchCount;
+        for (int i = 0; i < kMaxLoop; ++i)
+        {
+            bool isRegistered = false;
+            // 前回のを追跡する処理
+            foreach (var index in m_touchBuffer)
+            {
+                if (mTouchUpdate(index, i))
+                {
+                    isRegistered = true;
+                    break;
+                }
+            }
+
+            // 新規登録処理
+            if (!isRegistered)
+            {
+                m_touchBuffer[i]._fingerId = Input.touches[i].fingerId;
+                mTouchUpdate(m_touchBuffer[i], i);
+            }
+        }
+
+        if (Input.touchCount == m_maxTouchCount)
+        {
+            DebugManager.mInstance.OpenDebugCommandKeyboard();
+        }
 
 #if UNITY_EDITOR || UNITY_WINDOWS
 
-        m_touchBuffer[0]._prevPosition      = m_touchBuffer[0]._position;
-        m_touchBuffer[0]._position          = Input.mousePosition;
-        m_touchBuffer[0]._used              = false;
+        mMouseUpdate();
 
         if (Input.GetKeyDown(DebugManager.mInstance.mkConsoleCommandKey))
         {
             DebugManager.mInstance.OpenDebugCommandKeyboard();
         }
 
-#elif UNITY_ANDROID || UNITY_IOS
-
-        int kMaxLoop = (m_maxTouchCount < Input.touchCount) ? m_maxTouchCount : Input.touchCount;
-        for(int i = 0; i < kMaxLoop; ++i)
-        {
-            bool isRegistered = false;
-            // 前回のを追跡する処理
-            foreach (var index in m_touchBuffer)
-            {
-                if (index._fingerId == Input.touches[i].fingerId)
-                {
-                    index._prevPosition = index._position;
-                    index._position = Input.touches[i].position;
-                    index._phase = Input.touches[i].phase;
-                    index._used = false;
-                    isRegistered = true;
-                }
-            }
-
-            // 新規登録
-            if (!isRegistered)
-            {
-                m_touchBuffer[i]._prevPosition  = m_touchBuffer[i]._position;
-                m_touchBuffer[i]._position      = Input.touches[i].position;
-                m_touchBuffer[i]._phase         = Input.touches[i].phase;
-                m_touchBuffer[i]._fingerId      = Input.touches[i].fingerId;
-                m_touchBuffer[i]._phase         = Input.touches[i].phase;
-                m_touchBuffer[i]._used          = false;
-            }
-        }
-        
-        if (Input.touchCount == m_maxTouchCount)
-        {
-            DebugManager.mInstance.OpenDebugCommandKeyboard();
-        }
 #endif
+    }
+
+    /**************************************************************************************
+    @brief  	マウス時の更新処理
+    */
+    private void mMouseUpdate()
+    {
+        // 基本的な更新処理
+        m_touchBuffer[0]._prevPosition = m_touchBuffer[0]._position;
+        m_touchBuffer[0]._position = Input.mousePosition;
+        m_touchBuffer[0]._used = false;
+
+        // 押したとき
+        if (Input.GetMouseButtonDown(0))
+        {
+            m_touchBuffer[0]._beginPosition = Input.mousePosition;
+            m_touchBuffer[0]._touchType = ETouchType.Begin;
+        }
+
+        // 押している間
+        if (Input.GetMouseButton(0))
+        {
+            //時間計測開始
+            m_touchBuffer[0]._touchTime += Time.deltaTime;
+
+            Vector2 currentTapPoint = m_touchBuffer[0]._position;
+            m_touchBuffer[0]._beginDiff = (currentTapPoint - m_touchBuffer[0]._beginPosition);
+            if (m_touchBuffer[0]._beginDiff.magnitude > kFlickMagnitude / 2)
+            {
+                // フリックしないときの状態を登録
+                m_touchBuffer[0]._touchType = ETouchType.Swipe;
+            }
+        }
+
+        // 押すのをやめたとき
+        if (Input.GetMouseButtonUp(0))
+        {
+            m_touchBuffer[0]._touchType = ETouchType.End;
+
+            //フリック条件。時間経過は0.5以下でmagnitudeが10以上なら
+            if (m_touchBuffer[0]._touchTime <= kFlickTime && m_touchBuffer[0]._beginDiff.magnitude >= kFlickMagnitude)
+            {
+                m_touchBuffer[0]._touchType = ETouchType.Flick;
+            }
+
+            //最後にタイマーを初期化
+            m_touchBuffer[0]._touchTime = 0f;
+        }
+    }
+
+    /**************************************************************************************
+    @brief  	タッチの更新処理
+    */
+    private bool mTouchUpdate(TouchInfo touch,int id)
+    {
+        // IDが違ったらと無視
+        if (touch._fingerId != Input.touches[id].fingerId)
+            return false;
+        
+        touch._prevPosition = m_touchBuffer[id]._position;
+        touch._position = Input.touches[id].position;
+        touch._used = false;
+
+        var phase = Input.touches[id].phase;
+        switch (phase)
+        {
+            case TouchPhase.Began:
+                touch._beginPosition = Input.mousePosition;
+                touch._touchType = ETouchType.Begin;
+                break;
+
+            case TouchPhase.Moved:
+                //時間計測開始
+                touch._touchTime += Time.deltaTime;
+
+                Vector2 currentTapPoint = touch._position;
+                touch._beginDiff = (currentTapPoint - touch._beginPosition);
+                if (touch._beginDiff.magnitude > kFlickMagnitude / 2)
+                {
+                    // フリックしないときの状態を登録
+                    touch._touchType = ETouchType.Swipe;
+                }
+                break;
+
+            case TouchPhase.Ended:
+                touch._touchType = ETouchType.End;
+
+                //フリック条件。時間経過は0.5以下でmagnitudeが10以上なら
+                if (touch._touchTime <= kFlickTime && touch._beginDiff.magnitude >= kFlickMagnitude)
+                {
+                    touch._touchType = ETouchType.Flick;
+                }
+
+                touch._touchTime = 0f;
+                break;
+
+            case TouchPhase.Stationary:
+            case TouchPhase.Canceled:
+                touch._touchType = (phase == TouchPhase.Canceled) ? ETouchType.Cancel : ETouchType.Stationary;
+                touch._touchTime = 0f;
+                break;
+        }
+
+        return true;
     }
 
     /**************************************************************************************

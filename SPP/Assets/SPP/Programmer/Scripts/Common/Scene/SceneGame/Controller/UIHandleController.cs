@@ -72,18 +72,18 @@ public class UIHandleController : BaseObject{
 
 		// PointerDownイベントの追加
         {
-            EventTrigger.Entry enter = new EventTrigger.Entry();
-            enter.eventID = EventTriggerType.PointerDown;
-            enter.callback.AddListener(Down);
-            trigger.triggers.Add(enter);
+            EventTrigger.Entry down = new EventTrigger.Entry();
+            down.eventID = EventTriggerType.PointerDown;
+            down.callback.AddListener(Down);
+            trigger.triggers.Add(down);
         }
 
         // PointerUpイベントの追加
         {
-            EventTrigger.Entry exit = new EventTrigger.Entry();
-            exit.eventID = EventTriggerType.PointerUp;
-            exit.callback.AddListener(Up);
-            trigger.triggers.Add(exit);
+            EventTrigger.Entry up = new EventTrigger.Entry();
+            up.eventID = EventTriggerType.PointerUp;
+            up.callback.AddListener(Up);
+            trigger.triggers.Add(up);
         }
 
         // Dragイベントの追加
@@ -100,22 +100,7 @@ public class UIHandleController : BaseObject{
     */
     void Down(BaseEventData eventData)
     {
-
-#if UNITY_EDITOR || UNITY_WINDOWS
         mIsDown = true;
-#elif UNITY_ANDROID
-        
-        if (Input.touchCount > 0)
-        {
-            mIsDown = true;
-            foreach (Touch t in Input.touches)
-            {
-                mIsDown = true;
-        
-                break;
-            }
-        }
-#endif
     }
 
 
@@ -124,6 +109,9 @@ public class UIHandleController : BaseObject{
     */
     void Up(BaseEventData eventData)
     {
+
+        var touch = InputManager.mInstance.mGetTouchInfo();
+        DebugManager.mInstance.OutputMsg(touch.mTouchType, ELogCategory.Default, true);
         mIsDown = false;
         m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation) ? true : false;
         StartCoroutine(ResetHandle());
@@ -134,8 +122,8 @@ public class UIHandleController : BaseObject{
     */
     void Drag(BaseEventData eventData)
     {
+
         var touch = InputManager.mInstance.mGetTouchInfo();
-        
         // 左
         if (touch.mDeltaPosition.x < 0)
         {
