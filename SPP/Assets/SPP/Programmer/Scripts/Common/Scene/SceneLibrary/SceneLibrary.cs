@@ -30,17 +30,19 @@ public class SceneLibrary : SceneBase {
             drag.eventID = EventTriggerType.Drag;
             drag.callback.AddListener(eventData =>
             {
-                var touch = InputManager.mInstance.mGetTouchInfo(0);
-                Vector3 rotation = m_shipRoot.transform.localEulerAngles;
-
-                
+                var touch = InputManager.mInstance.mGetTouchInfo();
                 //移動量に応じて角度計算
-                float xAngle = touch._deltaPosition.y * touch._speed;
-                float yAngle = -touch._deltaPosition.x * touch._speed;
-                float zAngle = 0;
-
-                //回転
-                m_shipRoot.transform.Rotate(xAngle, yAngle, zAngle, Space.World);
+                float xAngle =  touch.mDeltaPosition.y;
+                float yAngle = -touch.mDeltaPosition.x;
+                
+                if (Mathf.Abs(xAngle) > Mathf.Abs(yAngle))
+                {
+                    m_shipRoot.transform.Rotate(Vector3.right * xAngle / 2, Space.World);
+                }
+                else
+                {
+                    m_shipRoot.transform.Rotate(Vector3.up * yAngle / 2, Space.World);
+                }
             });
 
             trigger.triggers.Add(drag);

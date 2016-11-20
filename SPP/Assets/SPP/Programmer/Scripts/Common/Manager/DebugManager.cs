@@ -56,7 +56,7 @@ public class DebugManager : BaseObjectSingleton<DebugManager>
     private List<string> m_consoleCommandHistory = new List<string>();  // コンソールコマンドの入力履歴
     private int m_historyIndex = -1;                            // 入力履歴のインデックス
 
-    public bool IsConsoleOpen
+    private bool IsConsoleOpen
     {
         get { return m_isConsoleOpen; }
         set
@@ -268,8 +268,8 @@ public class DebugManager : BaseObjectSingleton<DebugManager>
 #if SPP_DEBUG
 		if( m_debugCommandKeyboard != null )
 			return;
-
-		m_debugCommandKeyboard = TouchScreenKeyboard.Open(
+        DebugManager.mInstance.IsConsoleOpen = true;
+        m_debugCommandKeyboard = TouchScreenKeyboard.Open(
 										""
 										, TouchScreenKeyboardType.ASCIICapable
 										, false
@@ -277,6 +277,7 @@ public class DebugManager : BaseObjectSingleton<DebugManager>
 										, false
 										, true
 										, "Debug command" );
+
 #endif // #if SPP_DEBUG
     }
 

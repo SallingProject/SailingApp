@@ -10,35 +10,82 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-
-public class TouchInfo
+/**************************************************************************************
+@brief  	タッチ情報のクラス
+*/
+public interface ITouchInfo
 {
-    public Vector2 _position = Vector2.zero;
-    public Vector2 _deltaPosition = Vector2.zero;
+    Vector2 mPosition { get; }
+    Vector2 mDeltaPosition { get; }
 
-    public float _speed = float.NaN;
-    
+    int mFingerId { get; }
+
+    TouchPhase mTouchPhase { get; }
+
+    bool mUsed { get; }
+}
+
+
+
+/**************************************************************************************
+@brief  	タッチ情報のクラス
+*/
+public class TouchInfo : ITouchInfo
+{
+    public static readonly int InvalidFingerId = -1;
+    public Vector2 _position = Vector2.zero;
+    public int _fingerId = -1;
+    public Vector2 _prevPosition = Vector2.zero;
+    public TouchPhase _phase;
+    public bool _used = false;
+
+    public Vector2 mPosition { get { return _position; } }
+
+    public Vector2 mDeltaPosition { get { return (_position - _prevPosition); } }
+
+    public int mFingerId { get { return _fingerId; } }
+
+    public TouchPhase mTouchPhase { get { return _phase; } }
+
+    public bool mUsed { get { return _used; } }
+
     public void Clear()
     {
         _position = Vector2.zero;
-        _deltaPosition = Vector2.zero;
-        _speed = float.NaN;
+        _prevPosition = Vector2.zero;
+        _phase = TouchPhase.Ended;
+        _fingerId = InvalidFingerId;
+        _used = false;
     }
 }
 
+/**************************************************************************************
+@brief  	管理クラス
+*/
 public class InputManager : BaseObjectSingleton<InputManager> {
 
     [SerializeField]
     int m_maxTouchCount = 1;
 
-    [SerializeField]
-    int m_addSpeed = 10;
-    
+    public int mTouchCount
+    {
+        get { return Input.touchCount; }
+    }
+
     List<TouchInfo> m_touchBuffer = new List<TouchInfo>();
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
+
+        // 指定数分のバッファを作成
+        for(int i = 0; i < m_maxTouchCount; ++i)
+        {
+            TouchInfo info = new TouchInfo();
+            info.Clear();
+            m_touchBuffer.Add(info);
+        }
     }
 
     /**************************************************************************************
@@ -48,45 +95,51 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     {
         base.mOnFastUpdate();
 
-        // 一回一回履歴をクリア
-        m_touchBuffer.Clear();
 
 #if UNITY_EDITOR || UNITY_WINDOWS
-        TouchInfo touchInfo = new TouchInfo();
-        touchInfo._deltaPosition    = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
-        touchInfo._position         = Input.mousePosition;
-        touchInfo._speed = m_addSpeed;
-        m_touchBuffer.Add(touchInfo);
+
+        m_touchBuffer[0]._prevPosition      = m_touchBuffer[0]._position;
+        m_touchBuffer[0]._position          = Input.mousePosition;
+        m_touchBuffer[0]._used              = false;
 
         if (Input.GetKeyDown(DebugManager.mInstance.mkConsoleCommandKey))
         {
-            DebugManager.mInstance.IsConsoleOpen = true;
             DebugManager.mInstance.OpenDebugCommandKeyboard();
         }
 
 #elif UNITY_ANDROID || UNITY_IOS
 
-		if (Input.touchCount > 0 && Input.touchCount <= m_maxTouchCount)
-		{
-			foreach (Touch touch in Input.touches)
-			{
-				if (touch.phase != TouchPhase.Ended && touch.phase != TouchPhase.Canceled)
-				{
-                    TouchInfo touchInfo         = new TouchInfo();
-        
-                    touchInfo._deltaPosition    = touch.deltaPosition;
-                    touchInfo._position         = touch.position;
-                    touchInfo._speed = m_addSpeed;
-
-                    m_touchBuffer.Add(touchInfo);
-				}
-				break;
-			}
-		}
-
-        if(Input.touchCount == m_maxTouchCount)
+        int kMaxLoop = (m_maxTouchCount < Input.touchCount) ? m_maxTouchCount : Input.touchCount;
+        for(int i = 0; i < kMaxLoop; ++i)
         {
-            DebugManager.mInstance.IsConsoleOpen = true;
+            bool isRegistered = false;
+            // 前回のを追跡する処理
+            foreach (var index in m_touchBuffer)
+            {
+                if (index._fingerId == Input.touches[i].fingerId)
+                {
+                    index._prevPosition = index._position;
+                    index._position = Input.touches[i].position;
+                    index._phase = Input.touches[i].phase;
+                    index._used = false;
+                    isRegistered = true;
+                }
+            }
+
+            // 新規登録
+            if (!isRegistered)
+            {
+                m_touchBuffer[i]._prevPosition  = m_touchBuffer[i]._position;
+                m_touchBuffer[i]._position      = Input.touches[i].position;
+                m_touchBuffer[i]._phase         = Input.touches[i].phase;
+                m_touchBuffer[i]._fingerId      = Input.touches[i].fingerId;
+                m_touchBuffer[i]._phase         = Input.touches[i].phase;
+                m_touchBuffer[i]._used          = false;
+            }
+        }
+        
+        if (Input.touchCount == m_maxTouchCount)
+        {
             DebugManager.mInstance.OpenDebugCommandKeyboard();
         }
 #endif
@@ -95,7 +148,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
     /**************************************************************************************
     @brief  	インデックスから取得可能
     */
-    public TouchInfo mGetTouchInfo(int id)
+    public ITouchInfo mGetTouchInfo(int id)
     {
 #if UNITY_EDITOR || UNITY_WINDOWS
         return m_touchBuffer[0];
@@ -104,5 +157,25 @@ public class InputManager : BaseObjectSingleton<InputManager> {
 #endif
     }
 
+    /**************************************************************************************
+     @brief  	まだつか割れていないのを取得
+    */
+    public ITouchInfo mGetTouchInfo()
+    {
+#if UNITY_EDITOR || UNITY_WINDOWS
+        return m_touchBuffer[0];
+#elif UNITY_ANDROID || UNITY_IOS
+        foreach (var index in m_touchBuffer)
+        {
+            if (!index._used)
+            {
+                index._used = true;
+                return index;
+            }
+        }
+        
+        return null;
+#endif
+    }
 
 }

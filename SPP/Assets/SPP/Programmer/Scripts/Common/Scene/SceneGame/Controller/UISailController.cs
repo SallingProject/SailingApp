@@ -50,19 +50,19 @@ public class UISailController : BaseObject {
     void Drag(BaseEventData eventData)
     {
 
-        var touch = InputManager.mInstance.mGetTouchInfo(0);
-        if (touch._deltaPosition.x > 0)
+        var touch = InputManager.mInstance.mGetTouchInfo();
+        if (touch.mDeltaPosition.x > 0)
         {
-            if (m_controllObject.rectTransform.position.x + touch._deltaPosition.x < m_right.position.x)
+            if (m_controllObject.rectTransform.position.x + touch.mDeltaPosition.x < m_right.position.x)
             {
-                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x * touch._speed, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch.mDeltaPosition.x, 0, 0);
             }
         }
         else 
         {
-            if (m_controllObject.rectTransform.position.x + touch._deltaPosition.x > m_left.position.x )
+            if (m_controllObject.rectTransform.position.x + touch.mDeltaPosition.x > m_left.position.x )
             {
-                m_controllObject.rectTransform.position += new Vector3(touch._deltaPosition.x * touch._speed, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch.mDeltaPosition.x, 0, 0);
             }
         }
 

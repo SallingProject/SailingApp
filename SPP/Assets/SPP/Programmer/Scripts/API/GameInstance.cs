@@ -176,6 +176,8 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
             yield return null;
         }
 
+        m_fade.color = new Color(info._fadeColor.r, info._fadeColor.g, info._fadeColor.b, 1);
+
         if ((info._type & LoadInfo.ELoadType.Async) == LoadInfo.ELoadType.Async)
         {
             AsyncOperation async = SceneManager.LoadSceneAsync(info._nextSceneName);
