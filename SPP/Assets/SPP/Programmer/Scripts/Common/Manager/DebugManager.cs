@@ -92,8 +92,8 @@ public class DebugManager : BaseObjectSingleton<DebugManager>
 
         // 標準のデバッグコマンド
         AddDebugCommand("shot", DebugCommand_Screenshot);
-        AddDebugCommand("slo", DebugCommand_Slomotion);
-        AddDebugCommand("fscene", DebugCommand_ForceLoadScene);
+        AddDebugCommand("slow", DebugCommand_Slomotion);
+        AddDebugCommand("fts", DebugCommand_ForceLoadScene);
 
     }
 
