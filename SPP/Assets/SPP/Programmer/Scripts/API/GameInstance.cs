@@ -108,6 +108,12 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
     
     [SerializeField]
     private Image m_fade;
+    
+    public EShipType mShipType
+    {
+        get;
+        set;
+    }
 
     /****************************************************************************** 
     @brief      初期化用。タイミングはAwakeと一緒。BaseObjectの実装
