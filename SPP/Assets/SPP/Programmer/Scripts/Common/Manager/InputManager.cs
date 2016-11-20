@@ -216,7 +216,6 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         touch._prevPosition = m_touchBuffer[id]._position;
         touch._position = Input.touches[id].position;
         touch._used = false;
-
         var phase = Input.touches[id].phase;
         switch (phase)
         {
