@@ -74,7 +74,8 @@ public class UIHandleController : BaseObject{
         {
             EventTrigger.Entry down = new EventTrigger.Entry();
             down.eventID = EventTriggerType.PointerDown;
-            down.callback.AddListener(Down);
+            down.callback.RemoveAllListeners();
+            down.callback.AddListener(data =>mIsDown = true);
             trigger.triggers.Add(down);
         }
 
@@ -82,6 +83,7 @@ public class UIHandleController : BaseObject{
         {
             EventTrigger.Entry up = new EventTrigger.Entry();
             up.eventID = EventTriggerType.PointerUp;
+            up.callback.RemoveAllListeners();
             up.callback.AddListener(Up);
             trigger.triggers.Add(up);
         }
@@ -90,20 +92,13 @@ public class UIHandleController : BaseObject{
         {
             EventTrigger.Entry drag = new EventTrigger.Entry();
             drag.eventID = EventTriggerType.Drag;
+            drag.callback.RemoveAllListeners();
             drag.callback.AddListener(Drag);
             trigger.triggers.Add(drag);
         }
     }
-
-    /**************************************************************************************
-    @brief  指定のオブジェクトを押された時に1度呼ばれる
-    */
-    void Down(BaseEventData eventData)
-    {
-        mIsDown = true;
-    }
-
-
+    
+    
     /**************************************************************************************
     @brief  指定のオブジェクトを押された状態から離された時に1度呼ばれる
     */

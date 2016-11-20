@@ -25,16 +25,40 @@ public class UISailController : BaseObject {
     [SerializeField]
     RectTransform m_left;
 
+    public bool mIsDown
+    {
+        get;
+        private set;
+    }
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
 
         EventTrigger trigger = m_controllObject.GetComponent<EventTrigger>();
-        
+
+        // PointerDownイベントの追加
+        {
+            EventTrigger.Entry down = new EventTrigger.Entry();
+            down.eventID = EventTriggerType.PointerDown;
+            down.callback.RemoveAllListeners();
+            down.callback.AddListener(data => mIsDown = true);
+            trigger.triggers.Add(down);
+        }
+
+        // PointerUpイベントの追加
+        {
+            EventTrigger.Entry up = new EventTrigger.Entry();
+            up.eventID = EventTriggerType.PointerUp;
+            up.callback.RemoveAllListeners();
+            up.callback.AddListener(data => mIsDown = false);
+            trigger.triggers.Add(up);
+        }
+
         // Dragイベントの追加
         {
             EventTrigger.Entry drag = new EventTrigger.Entry();
             drag.eventID = EventTriggerType.Drag;
+            drag.callback.RemoveAllListeners();
             drag.callback.AddListener(Drag);
             trigger.triggers.Add(drag);
         }
