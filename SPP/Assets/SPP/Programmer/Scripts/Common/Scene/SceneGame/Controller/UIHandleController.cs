@@ -109,9 +109,6 @@ public class UIHandleController : BaseObject{
     */
     void Up(BaseEventData eventData)
     {
-
-        var touch = InputManager.mInstance.mGetTouchInfo();
-        DebugManager.mInstance.OutputMsg(touch.mTouchType, ELogCategory.Default, true);
         mIsDown = false;
         m_isLeftHandle = ((int)m_handle.localEulerAngles.z >= 0 && (int)m_handle.localEulerAngles.z <= m_maxZRotation) ? true : false;
         StartCoroutine(ResetHandle());
