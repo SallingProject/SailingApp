@@ -26,11 +26,18 @@ public class CollisionDetection : BaseObject{
 
     void OnTriggerEnter(Collider other)
     {
-        mIsEntered = true;
+        float rote = transform.eulerAngles.y + m_direction * 90;
+        Vector3 rotation = new Vector3(Mathf.Sin(rote * Mathf.Deg2Rad), 0, Mathf.Cos(rote * Mathf.Deg2Rad));
+        float dot = Vector3.Dot(other.transform.forward, rotation);
+
+        if (dot > 0){
+            mIsEntered = true;
+        }
     }
 
     protected override void mOnRegistered()
     {
+        
         mUnregisterList(this);
     }
 

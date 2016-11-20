@@ -13,23 +13,20 @@ using System.Collections.Generic;
 
 public class PointArrayObject : BaseObject {    
 
-    static private Dictionary<int,BaseObject>m_pointArray = new Dictionary<int, BaseObject>();
-    static private int m_currentId;
+    private Dictionary<int,BaseObject>m_pointArray = new Dictionary<int, BaseObject>();
+    private int m_currentId = 1;
 
 
     //ポイント配列に登録
     protected override void mOnRegistered()
     {
         mUnregisterList(this);
-        Debug.Log(m_pointArray.Count);
     }
 
     
-    public void mRegisterArray(int index,BaseObject obj)
+    public void mRegisterArray(int index, BaseObject obj)
     {
-        Debug.Log(index + "\tName:" + obj.name);
         m_pointArray.Add(index,obj);
-        Debug.Log(index + "\tName:" + obj.name);
     }
     /****************************************************************************** 
     @brief      ポイントを次へ進める
@@ -38,16 +35,15 @@ public class PointArrayObject : BaseObject {
     *******************************************************************************/
     public void mNext()
     {
-        Debug.Log("ClearPoint:"+m_currentId);
-        if (m_currentId >= m_pointArray.Count) return;
+        //Debug.Log("ClearPoint:"+m_currentId);
+        if (m_currentId > m_pointArray.Count) return;
 
         //Baseクラスに書き換える
         mUnregisterList(m_pointArray[m_currentId]);
         m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
         m_currentId++;
-        if (m_currentId >= m_pointArray.Count) return;
+        if (m_currentId > m_pointArray.Count) return;
         m_pointArray[m_currentId].GetComponent<Point>().enabled = true;
-        Debug.Log(GameInfo.mInstance);
         GameInfo.mInstance.m_targetMarker.mSetTarget(m_pointArray[m_currentId].GetComponent<ReflectedOnCamera>());
     }
 
@@ -58,7 +54,7 @@ public class PointArrayObject : BaseObject {
     @return     ポイント(BaseObject)
     *******************************************************************************/
     public BaseObject mGetPoint() {
-        if (m_currentId >= m_pointArray.Count) return null;
+        if (m_currentId > m_pointArray.Count) return null;
         return m_pointArray[m_currentId];
     }
 
@@ -69,7 +65,7 @@ public class PointArrayObject : BaseObject {
     *******************************************************************************/
     public BaseObject mGetPrevPoint()
     {
-        if (m_currentId <= 0 || m_currentId >= m_pointArray.Count) return null;
+        if (m_currentId <= 1 || m_currentId > m_pointArray.Count) return null;
         return m_pointArray[m_currentId-1];
     }
 

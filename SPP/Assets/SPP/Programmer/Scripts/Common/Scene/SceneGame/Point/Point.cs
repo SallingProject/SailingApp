@@ -50,19 +50,15 @@ public class Point : BaseObject{
     {
         base.mOnRegistered();
         //管理配列に登録
-        Debug.Log("len"+m_determination.Length);
         m_pointArray = GameInfo.mInstance.m_pointArray;
-
         {   //入りのオブジェクトの生成
             m_angleObject = new GameObject[m_determination.Length];
-            for(int i=0; i< m_determination.Length; ++i)
+            for(int i=0; i< m_determination.Length; i++)
             {
                 if (m_determination[i].m_direction != 0)
                 {
-                    mCollisionCreate(m_determination[i], ref m_angleObject[i]);
-                    Debug.Log(m_angleObject[i]);
+                    mCollisionCreate(m_determination[i], out m_angleObject[i]);
                 }
-                i++;
             }
         }
         m_index = 0;
@@ -70,15 +66,15 @@ public class Point : BaseObject{
 
         foreach (var i in m_pointId){
             m_pointArray.mRegisterArray(i, this);
-            Debug.Log("id"+i);
         }
+        enabled = false;
     }
     /****************************************************************************** 
     @brief      ポイント判定用板の生成 （簡略化用）
     @in         インスペクターから受け取る配置角度、向きなど
     @return     生成されたオブジェクト
     */
-    private void mCollisionCreate(BuoyDetermination buoy,ref GameObject receive)
+    private void mCollisionCreate(BuoyDetermination buoy,out GameObject receive)
     {
         var Obj = mCreate(m_detectionPrefab);
         receive = Obj;
@@ -89,14 +85,12 @@ public class Point : BaseObject{
         receive.transform.Translate(0, 0, m_radius + 3);
         receive.transform.name = buoy.m_name;
         receive.GetComponent<CollisionDetection>().mDirection = (int)buoy.m_direction;
-        Debug.Log(receive);
 
     }
 
     override public void mOnUpdate()
     {
         if (!enabled) return;       //そもそもスクリプトがONじゃない場合<<Return
-//        Debug.Log("come:"+name);
         //エリア外なら元に戻す
         if (!m_stayArea)
         {
@@ -104,6 +98,7 @@ public class Point : BaseObject{
             {
                 obj.GetComponent<CollisionDetection>().mIsEntered = false;
             }
+            m_index = 0;
             return;
         }
         //すべて通っていたら次へ

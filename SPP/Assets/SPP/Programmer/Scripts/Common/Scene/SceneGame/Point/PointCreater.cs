@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PointCreater : BaseObject{
 
-
-    private PointArrayObject m_pointArray = new PointArrayObject();
+    [SerializeField]
+    private PointArrayObject m_pointArray;
 
     protected override void mOnRegistered()
     {
@@ -16,6 +16,11 @@ public class PointCreater : BaseObject{
     // Use this for initialization
     protected override void Start()
     {
-        m_pointArray.mGetPoint().GetComponent<Point>().enabled = true;
+        var obj = m_pointArray.mGetPoint();
+        Debug.Log(obj+obj.name);
+        if (obj)
+        {
+            obj.GetComponent<Point>().enabled = true;
+        }
     }
 }

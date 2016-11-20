@@ -26,6 +26,7 @@ public class PointWay : BaseObject
     [SerializeField]
     private BaseObject m_secondPoint;
 
+    [SerializeField]
     private PointArrayObject m_pointArray;
 
     public override void mOnUpdate()
@@ -55,8 +56,6 @@ public class PointWay : BaseObject
     // Use this for initialization
     override protected void Start()
     {
-        m_pointArray = GameInfo.mInstance.m_pointArray;
-
         m_wayPrefab = mCreate(m_wayPrefab);
 
 //        m_scoreText.text = m_distance.ToString();
