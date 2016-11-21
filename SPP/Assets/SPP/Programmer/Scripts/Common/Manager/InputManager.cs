@@ -168,6 +168,8 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         // 基本的な更新処理
         m_touchBuffer[0]._prevPosition = m_touchBuffer[0]._position;
         m_touchBuffer[0]._position = Input.mousePosition;
+
+        m_touchBuffer[0]._inputDeltaPosition = m_touchBuffer[0].mDeltaPosition;
         m_touchBuffer[0]._used = false;
 
         // 押したとき
