@@ -1,15 +1,47 @@
-﻿using UnityEngine;
+﻿/**************************************************************************************/
+/*! @file   UIItem.cs
+***************************************************************************************
+@brief      アイテムとスピン管理用
+***************************************************************************************
+@author     Ko Hashimoto
+***************************************************************************************
+* Copyright © 2016 Ko Hashimoto All Rights Reserved.
+***************************************************************************************/
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 using System.Collections;
-
+/**************************************************************************************
+@brief  	アイテムとスピン管理用
+*/
 public class UIItem : BaseObject {
 
-    [SerializeField]
-    private Image m_image;
+    [System.Serializable]
+    class Item
+    {
+        [System.NonSerialized]
+        public bool _canUse = true;
+        public Image _image;
+    }
 
+    [SerializeField]
+    private Item m_item;
+
+    [SerializeField]
+    private Button m_spin;
+
+    /**************************************************************************************
+    @brief  	スピン押された時のコールバック設定用
+    */
+    public UnityAction mSpinCallback
+    {
+        set { m_spin.onClick.RemoveAllListeners();m_spin.onClick.AddListener(value); }
+    }
+    Vector2 m_itemInitPosition = Vector2.zero;
     ITouchInfo m_touch;
+
     public bool mIsDown
     {
         get;
@@ -21,7 +53,7 @@ public class UIItem : BaseObject {
 
         mUnregisterList(this);
 
-        EventTrigger trigger = m_image.GetComponent<EventTrigger>();
+        EventTrigger trigger = m_item._image.GetComponent<EventTrigger>();
 
         // PointerDownイベントの追加
         {
@@ -49,6 +81,9 @@ public class UIItem : BaseObject {
             drag.callback.AddListener(Drag);
             trigger.triggers.Add(drag);
         }
+
+        // 初期位置を記憶
+        m_itemInitPosition = m_item._image.rectTransform.anchoredPosition;
     }
 
     void Down(BaseEventData eventData)
@@ -61,30 +96,35 @@ public class UIItem : BaseObject {
 
     void Drag(BaseEventData eventData)
     {
+        if (!m_item._canUse)
+            return;
+        var touch = InputManager.mInstance.mGetTouchInfo(m_touch.mFingerId);
+        m_item._image.rectTransform.anchoredPosition += touch.mLocalDeltaPosition;
     }
     
     void Up(BaseEventData eventData)
     {
-        StartCoroutine(ItemUp());
-    }
-    
-    // フリックが１フレーム遅れててさｗ
-    IEnumerator ItemUp()
-    {
-        yield return null;
-
         var touch = InputManager.mInstance.mGetTouchInfo(m_touch.mFingerId);
-        DebugManager.mInstance.OutputMsg(touch.mTouchType, ELogCategory.Default, true);
-        if (touch.mTouchType == ETouchType.Flick)
+        if (touch.mTouchType == ETouchType.Flick 
+            && touch.mFlickDirection == EFlickDirection.Up
+            && m_item._canUse)
         {
+            // TODO : 一度使ったら消す処理
             DebugManager.mInstance.OutputMsg("アイテム発動", ELogCategory.Default, true);
+
         }
 
         mIsDown = false;
+        m_item._image.rectTransform.anchoredPosition = m_itemInitPosition;
     }
 
+    /**************************************************************************************
+    @brief  	アイテム設定用
+    @note       アイテムがある状態だと上書き？それともしかと？
+    */
     public void SetItem(ItemDefine item)
     {
-
+        // TODO : 設定処理
+        m_item._canUse = true;
     }
 }
