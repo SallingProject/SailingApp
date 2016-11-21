@@ -6,18 +6,19 @@ using UnityEngine.UI;
 public class SceneHome : SceneBase
 {
     [SerializeField]
-    Button m_homeButton;
 
-
-
-    protected override void mOnRegistered()
+    public void mGoToHome()
     {
-        base.mOnRegistered();
-        m_homeButton.onClick.AddListener(() =>
-        {
-            Debug.Log("押されました");
-        });
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Home", LoadInfo.ELoadType.Async, 1f));
     }
 
+    public void mGoToGame()
+    {
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Game", LoadInfo.ELoadType.Async, 1f));
+    }
 
+    public void mGoToLibrary()
+    {
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Library", LoadInfo.ELoadType.Async, 1f));
+    }
 }
