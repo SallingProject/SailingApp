@@ -55,8 +55,8 @@ public class SceneLibrary : SceneBase {
 
             var touch = InputManager.mInstance.mGetTouchInfo();
             //移動量に応じて角度計算
-            float xAngle = touch.mDeltaPosition.y;
-            float yAngle = -touch.mDeltaPosition.x;
+            float xAngle = touch.mLocalDeltaPosition.y;
+            float yAngle = -touch.mLocalDeltaPosition.x;
 
             if (Mathf.Abs(xAngle) > Mathf.Abs(yAngle))
             {
