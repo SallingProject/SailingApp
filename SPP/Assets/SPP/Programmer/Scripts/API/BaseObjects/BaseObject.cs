@@ -21,11 +21,22 @@ public abstract class BaseObject: MonoBehaviour{
     @brief      BaseObject型オブジェクト管理配列
     */
     static LinkedList<BaseObject> m_objectList = new LinkedList<BaseObject>();
+
+    static LinkedList<BaseObject> m_managerObjectList = new LinkedList<BaseObject>();
+
+
     static List<BaseObject> m_unregisterList = new List<BaseObject>();
+
     public static LinkedList<BaseObject> mObjectList
     {
         get { return m_objectList; }
         private set { m_objectList = value; }
+    }
+
+    public static LinkedList<BaseObject> mManagerObjectList
+    {
+        get { return m_managerObjectList; }
+        private set { m_managerObjectList = value; }
     }
 
     /******************************************************************************
@@ -46,11 +57,19 @@ public abstract class BaseObject: MonoBehaviour{
     /**************************************************************************************
     @brief      BaseObjectを基底クラスとして作成されたコンポーネントの総数
     */
-    private static int m_objectCount = 0;
     public static int mObjectCount
     {
-        get { return m_objectCount; }
-        private set { m_objectCount = value; }
+        get;
+        private set;
+    }
+
+    /**************************************************************************************
+    @brief      BaseObjectを基底クラスとして作成されたManagerコンポーネントの総数
+    */
+    public static int mManagerObjectCount
+    {
+        get;
+        private set;
     }
     #endregion
 
@@ -102,19 +121,25 @@ public abstract class BaseObject: MonoBehaviour{
 
     #region 派生先でオーバーライドが可能なもの
     /******************************************************************************
-    @brief      更新処理。継承先で必ず実装する。
+    @brief      更新処理。継承先で実装する。
     @return     none
     */
     public virtual void mOnUpdate() { return; }
 
     /******************************************************************************
-    @brief      一番最後の更新処理。継承先で必ず実装する。
+    @brief      マネージャー系の更新処理。継承先で実装する。
+    @return     none
+    */
+    public virtual void mOnFastUpdate() { return; }
+
+    /******************************************************************************
+    @brief      一番最後の更新処理。継承先で実装する。
     @return     none
     */
     public virtual void mOnLateUpdate() { return; }
 
     /******************************************************************************
-    @brief      物理系の更新処理。継承先で必ず実装する。
+    @brief      物理系の更新処理。継承先で実装する。
     @return     none
     */
     public virtual void mOnFixedUpdate() { return; }
@@ -175,6 +200,7 @@ public abstract class BaseObject: MonoBehaviour{
     */
     static public void mRegisterList(BaseObject input)
     {
+
         if (mSerch(input) != null) return;
         mObjectList.AddLast(input);
         
@@ -183,12 +209,25 @@ public abstract class BaseObject: MonoBehaviour{
     }
 
     /****************************************************************************** 
+    @brief      指定オブジェクトを管理リストの最後尾に追加する。
+    @note       すでにあるオブジェクトは追加できません。
+    @return     none
+    */
+    static public void mManagerRegisterList(BaseObject input)
+    {
+        if (mManagerSerch(input) != null) return;
+            mManagerObjectList.AddLast(input);
+        mManagerObjectCount = mManagerObjectList.Count;
+    }
+
+    /****************************************************************************** 
     @brief      指定オブジェクトが管理リストの管理対象なら管理リストから外す
     @return     none
     */
     static public void mUnregisterList(BaseObject input)
     {
-        if (mSerch(input) == null) return;
+        if (mSerch(input) == null && mManagerSerch(input) == null)
+            return; 
         m_unregisterList.Add(input);
 
         return;
@@ -202,6 +241,20 @@ public abstract class BaseObject: MonoBehaviour{
     {
         var findObject = mObjectList.Find(input);
         if(findObject != null)
+        {
+            return findObject.Value;
+        }
+        return null;
+    }
+
+    /****************************************************************************** 
+    @brief      Managerオブジェクト検索用
+    @return     発見時：そのオブジェクトの参照/ないとき:null
+    */
+    static public BaseObject mManagerSerch(BaseObject input)
+    {
+        var findObject = mManagerObjectList.Find(input);
+        if (findObject != null)
         {
             return findObject.Value;
         }
