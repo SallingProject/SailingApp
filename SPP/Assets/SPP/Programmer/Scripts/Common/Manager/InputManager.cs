@@ -34,6 +34,8 @@ public interface ITouchInfo
     Vector2 mPosition { get; }
     Vector2 mDeltaPosition { get; } 
     Vector2 mInputDeltaPosition { get; }
+
+    float mSpeed { get; }
     int mFingerId { get; }
 
     ETouchType mTouchType { get; }
@@ -55,6 +57,7 @@ public class TouchInfo : ITouchInfo
     public Vector2 _inputDeltaPosition = Vector2.zero;  // InputクラスからのdeltaPosition
     public Vector2 _beginPosition = Vector2.zero;   
     public Vector2 _beginDiff = Vector2.zero;           // 押し始めから現在までの差分
+    public float _deltaTime = 0f;
     public float _touchTime = 0.0f;                     // 押されたときからの計測時間   
     public ETouchType _touchType;                       // 押されている状態
     public bool _used = false;                          // 現在使われているか
@@ -68,6 +71,8 @@ public class TouchInfo : ITouchInfo
     public int mFingerId { get { return _fingerId; } }
 
     public ETouchType mTouchType { get { return _touchType; } }
+
+    public float mSpeed { get { return _inputDeltaPosition.magnitude / _deltaTime; } }
 
     public bool mUsed { get { return _used; } }
 
@@ -168,7 +173,7 @@ public class InputManager : BaseObjectSingleton<InputManager> {
         // 基本的な更新処理
         m_touchBuffer[0]._prevPosition = m_touchBuffer[0]._position;
         m_touchBuffer[0]._position = Input.mousePosition;
-
+        m_touchBuffer[0]._deltaTime = Time.deltaTime;
         m_touchBuffer[0]._inputDeltaPosition = m_touchBuffer[0].mDeltaPosition;
         m_touchBuffer[0]._used = false;
 
