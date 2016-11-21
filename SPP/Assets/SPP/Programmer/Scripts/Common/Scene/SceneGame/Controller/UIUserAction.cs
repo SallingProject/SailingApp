@@ -1,7 +1,7 @@
 ﻿/**************************************************************************************/
-/*! @file   UIItem.cs
+/*! @file   UIUserAction.cs
 ***************************************************************************************
-@brief      アイテムとスピン管理用
+@brief      ユーザーの起こすアクション系（アイテムとスピン）管理用
 ***************************************************************************************
 @author     Ko Hashimoto
 ***************************************************************************************
@@ -16,7 +16,7 @@ using System.Collections;
 /**************************************************************************************
 @brief  	アイテムとスピン管理用
 */
-public class UIItem : BaseObject {
+public class UIUserAction : BaseObject {
 
     [System.Serializable]
     class Item
@@ -24,6 +24,7 @@ public class UIItem : BaseObject {
         [System.NonSerialized]
         public bool _canUse = true;
         public Image _image;
+        public ItemDefine _define;
     }
 
     [SerializeField]
@@ -122,9 +123,10 @@ public class UIItem : BaseObject {
     @brief  	アイテム設定用
     @note       アイテムがある状態だと上書き？それともしかと？
     */
-    public void SetItem(ItemDefine item)
+    public void SetItem(ItemDefine define)
     {
         // TODO : 設定処理
         m_item._canUse = true;
+        m_item._define = define;
     }
 }
