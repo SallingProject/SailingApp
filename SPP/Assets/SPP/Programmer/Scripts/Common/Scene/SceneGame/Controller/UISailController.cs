@@ -75,18 +75,18 @@ public class UISailController : BaseObject {
     {
 
         var touch = InputManager.mInstance.mGetTouchInfo();
-        if (touch.mDeltaPosition.x > 0)
+        if (touch.mLocalDeltaPosition.x > 0)
         {
-            if (m_controllObject.rectTransform.position.x + touch.mDeltaPosition.x < m_right.position.x)
+            if (m_controllObject.rectTransform.position.x + touch.mLocalDeltaPosition.x < m_right.position.x)
             {
-                m_controllObject.rectTransform.position += new Vector3(touch.mDeltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch.mLocalDeltaPosition.x, 0, 0);
             }
         }
         else 
         {
-            if (m_controllObject.rectTransform.position.x + touch.mDeltaPosition.x > m_left.position.x )
+            if (m_controllObject.rectTransform.position.x + touch.mLocalDeltaPosition.x > m_left.position.x )
             {
-                m_controllObject.rectTransform.position += new Vector3(touch.mDeltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.position += new Vector3(touch.mLocalDeltaPosition.x, 0, 0);
             }
         }
 

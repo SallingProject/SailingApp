@@ -1,5 +1,5 @@
 ﻿/**************************************************************************************/
-/*! @file   GameManager.cs
+/*! @file   ResourceManager.cs
 ***************************************************************************************
 @brief      ゲーム全体のマネージャークラス
 ***************************************************************************************
@@ -10,19 +10,8 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameManager : BaseObjectSingleton<GameManager> {
-
-    /****************************************************************************** 
-    @brief      初期化用
-    @return     none
-    */
-    protected override void mOnRegistered()
-    {
-        base.mOnRegistered();
-
-    }
-
-
+public class ResourceManager : BaseObjectSingleton<ResourceManager> {
+    
     /****************************************************************************** 
     @brief      船のオブジェクトのパスを取得取得
     @return     none
