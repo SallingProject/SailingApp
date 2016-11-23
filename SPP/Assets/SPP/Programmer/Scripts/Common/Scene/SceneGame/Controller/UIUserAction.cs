@@ -33,6 +33,8 @@ public class UIUserAction : BaseObject {
     [SerializeField]
     private Button m_spin;
 
+    private int m_userId;
+
     /**************************************************************************************
     @brief  	スピン押された時のコールバック設定用
     */
@@ -85,6 +87,7 @@ public class UIUserAction : BaseObject {
 
         // 初期位置を記憶
         m_itemInitPosition = m_item._image.rectTransform.anchoredPosition;
+        m_userId = 0; // どこからかユーザーIdを取得
     }
 
     void Down(BaseEventData eventData)
@@ -112,7 +115,8 @@ public class UIUserAction : BaseObject {
         {
             // TODO : 一度使ったら消す処理
             DebugManager.mInstance.OutputMsg("アイテム発動", ELogCategory.Default, true);
-
+            GameInfo.mInstance.SetInvokeItem(m_item._define, m_userId);
+            m_item._canUse = false;
         }
 
         mIsDown = false;
