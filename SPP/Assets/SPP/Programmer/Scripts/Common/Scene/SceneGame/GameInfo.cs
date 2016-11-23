@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameInfo : BaseObjectSingleton<GameInfo>{
 
@@ -12,6 +13,8 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     public WindObject m_wind;       //風オブジェクト
     [System.NonSerialized]
     public PointArrayObject m_pointArray;       //ポイント配列管理クラス(Staticなので問題ない)
+
+    private List<ItemDefine> m_itemList = new List<ItemDefine>();
 
     public bool mControllerTrigger { get; private set; }
     private float m_prevControllerRotation = 0;
@@ -58,4 +61,14 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     }
 
 
+    /****************************************************************************** 
+    @brief      発動するアイテムを保存する。
+    @param[in]  発動するアイテムの定義情報
+    @param[in]  使用者ID
+    @return     none
+    *******************************************************************************/
+    public void SetInvokeItem(ItemDefine define,int userId)
+    {
+        m_itemList.Add(define);
+    }   
 }
