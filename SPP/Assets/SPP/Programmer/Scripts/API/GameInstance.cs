@@ -69,6 +69,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     const float kFadeAlphaValue = 1f;
     const float kCompleateLoad = 0.9f;
+    const float kFadeTimeSpeed = 1.25f;
     
     [System.Serializable]
     class Loadbar
@@ -178,7 +179,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         while (m_fade.color.a < 1)
         {
 
-            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
+            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
             yield return null;
         }
 
@@ -212,7 +213,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         // フェードアウト
         while (m_fade.color.a > 0)
         {
-            m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
+            m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
             yield return null;
         }
  
