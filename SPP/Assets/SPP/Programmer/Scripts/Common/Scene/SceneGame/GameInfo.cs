@@ -24,7 +24,7 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
         m_wind = GetComponent<WindObject>();
 
         m_pointArray = GetComponent<PointArrayObject>();
-        mUnregisterList(this);
+     //   mUnregisterList(this);
         mUnregister();
 
     }
