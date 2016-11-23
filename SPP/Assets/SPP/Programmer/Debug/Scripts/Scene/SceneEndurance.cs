@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -23,6 +24,12 @@ public class SceneEndurance : SceneBase {
     CloneSettings m_settings;
 
     [SerializeField]
+    Camera m_camera;
+
+    [SerializeField]
+    RectTransform m_touchPanel;
+
+    [SerializeField]
     SystemWatcher m_systemWatcher;
 
     [SerializeField]
@@ -33,6 +40,28 @@ public class SceneEndurance : SceneBase {
 
     
     List<GameObject> m_cloneList = new List<GameObject>();
+
+    protected override void mOnRegistered()
+    {
+        base.mOnRegistered();
+        EventTrigger trigger = m_touchPanel.GetComponent<EventTrigger>();
+
+        // Dragイベントの追加
+        {
+            EventTrigger.Entry drag = new EventTrigger.Entry();
+            drag.eventID = EventTriggerType.Drag;
+            drag.callback.RemoveAllListeners();
+            drag.callback.AddListener(data =>
+            {
+
+                Debug.Log("きた");
+                var touch = InputManager.mInstance.mGetTouchInfo();
+                m_camera.transform.position += new Vector3(touch.mDeltaPosition.x, 0, touch.mDeltaPosition.y);
+            });
+            trigger.triggers.Add(drag);
+        }
+    }
+
     protected override void Start()
     {
         base.Start();
