@@ -93,5 +93,13 @@ public class SceneDebugHome : SceneBase {
         GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame" , LoadInfo.ELoadType.Async, 1f));
     }
 
+    /****************************************************************************** 
+    @brief      耐久テストシーンに飛ぶ
+    @return     none
+    */
+    public void mGoToEndurance()
+    {
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Endurance", LoadInfo.ELoadType.Async, 1f));
+    }
 
 }

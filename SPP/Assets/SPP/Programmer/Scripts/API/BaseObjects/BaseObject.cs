@@ -269,14 +269,7 @@ public abstract class BaseObject: MonoBehaviour{
     static public void mDelete<T>(T remove) where T : UnityEngine.Object
     {
         if (remove == null) return;
-        if (remove is BaseObject)
-        {
-            BaseObject removeIndex = (BaseObject)(object)remove;
-            if (mSerch(removeIndex) != null)
-            {
-                mUnregisterList(removeIndex);
-            }
-        }
+        
         Destroy(remove);
         return;
     }
@@ -290,7 +283,8 @@ public abstract class BaseObject: MonoBehaviour{
     {
         if (remove == null) return;
 
-        mUnregisterList(remove);
+        if (mSerch(remove) != null)
+            mUnregisterList(remove);
 
         Destroy(remove.gameObject);
         return;

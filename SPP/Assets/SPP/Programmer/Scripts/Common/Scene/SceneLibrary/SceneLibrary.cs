@@ -51,12 +51,10 @@ public class SceneLibrary : SceneBase {
     {
         if (InputManager.mInstance.mTouchCount < 2)
         {
-
-
             var touch = InputManager.mInstance.mGetTouchInfo();
             //移動量に応じて角度計算
-            float xAngle = touch.mDeltaPosition.y;
-            float yAngle = -touch.mDeltaPosition.x;
+            float xAngle = touch.mLocalDeltaPosition.y;
+            float yAngle = -touch.mLocalDeltaPosition.x;
 
             if (Mathf.Abs(xAngle) > Mathf.Abs(yAngle))
             {
@@ -69,12 +67,17 @@ public class SceneLibrary : SceneBase {
         }
         else
         {
+            // ズーム
             var touch1 = InputManager.mInstance.mGetTouchInfo(0);
             var touch2 = InputManager.mInstance.mGetTouchInfo(1);
 
-
             float distance = Vector2.Distance(touch1.mPosition, touch2.mPosition);
 
+            if(m_prevDistance == 0)
+            {
+                m_prevDistance = distance;
+                return;
+            }
             if(m_prevDistance > distance)
             {
                 // 近づける処理

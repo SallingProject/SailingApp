@@ -37,7 +37,7 @@ public class LoadInfo
     public string _nextSceneName = "";      // 次のシーンの名前
     public ELoadType _type;                 // 読み込み方法の指定
     public float _loadedWaitTime = 0.0f;    // ロード後の待機時間
-    public LoadInfo(string sceneName, Color fadeColor, ELoadType type = ELoadType.Async,float waitTime = 0.1f)
+    public LoadInfo(string sceneName, Color fadeColor, ELoadType type = ELoadType.Async,float waitTime = 0.5f)
     {
         _nextSceneName = sceneName;
         _fadeColor = fadeColor;
@@ -45,7 +45,7 @@ public class LoadInfo
         _loadedWaitTime = waitTime;
     }
 
-    public LoadInfo(string sceneName, ELoadType type, float waitTime = 0.1f)
+    public LoadInfo(string sceneName, ELoadType type, float waitTime = 0.5f)
     {
         _nextSceneName = sceneName;
         _fadeColor = Color.black;
@@ -58,7 +58,7 @@ public class LoadInfo
         _nextSceneName = sceneName;
         _fadeColor = Color.black;
         _type = ELoadType.Async;
-        _loadedWaitTime = 0.0f;
+        _loadedWaitTime = 1.0f;
     }
 }
 
@@ -69,6 +69,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     const float kFadeAlphaValue = 1f;
     const float kCompleateLoad = 0.9f;
+    const float kFadeTimeSpeed = 1.25f;
     
     [System.Serializable]
     class Loadbar
@@ -178,7 +179,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         while (m_fade.color.a < 1)
         {
 
-            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
+            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
             yield return null;
         }
 
@@ -212,7 +213,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         // フェードアウト
         while (m_fade.color.a > 0)
         {
-            m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * Time.deltaTime);
+            m_fade.color -= new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
             yield return null;
         }
  
