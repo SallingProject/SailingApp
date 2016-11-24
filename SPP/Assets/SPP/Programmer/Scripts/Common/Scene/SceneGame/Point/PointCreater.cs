@@ -3,8 +3,6 @@ using System.Collections;
 
 public class PointCreater : BaseObject{
 
-    [SerializeField]
-    private PointArrayObject m_pointArray;
 
     protected override void mOnRegistered()
     {
@@ -14,9 +12,9 @@ public class PointCreater : BaseObject{
 
 
     // Use this for initialization
-    protected override void Start()
+    public void mInitializer()
     {
-        var obj = m_pointArray.mGetPoint();
+        var obj = GameInfo.mInstance.m_pointArray.mGetPoint();
         Debug.Log(obj+obj.name);
         if (obj)
         {

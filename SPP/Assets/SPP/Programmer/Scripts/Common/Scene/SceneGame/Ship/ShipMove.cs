@@ -11,9 +11,6 @@ using DG.Tweening;
 
 public class ShipMove : BaseObject {
 
-    [SerializeField]
-    private GameInfo m_gameInfo;
-
     private WindObject m_wind;
 
     private float m_speedVector;
@@ -30,7 +27,7 @@ public class ShipMove : BaseObject {
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;
-        m_wind = m_gameInfo.m_wind;
+        m_wind = GameInfo.mInstance.m_wind;
         mNormalAccel();
     }
 
@@ -44,7 +41,7 @@ public class ShipMove : BaseObject {
         //*/
 
         //仮コントロール
-        float shipDirection = m_gameInfo.mGetHandleRotation() * (m_shipDefine.mHandling / 100);
+        float shipDirection = GameInfo.mInstance.mGetHandleRotation() * (m_shipDefine.mHandling / 100);
 
         //LiftMove
         mAcceleration();

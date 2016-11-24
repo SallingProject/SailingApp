@@ -10,7 +10,6 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     private UIHandleController m_handleController;
     [SerializeField]
     private UISailController m_sailController;
-
     [SerializeField]
     public WindObject m_wind;       //風オブジェクト
 

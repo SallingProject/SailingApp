@@ -11,7 +11,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PointArrayObject : BaseObject {    
+public class PointArrayObject : BaseObject {
+
 
     private Dictionary<int,BaseObject>m_pointArray = new Dictionary<int, BaseObject>();
     private int m_currentId = 1;

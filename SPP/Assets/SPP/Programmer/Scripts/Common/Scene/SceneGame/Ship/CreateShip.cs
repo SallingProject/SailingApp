@@ -25,6 +25,7 @@ public class CreateShip : BaseObject{
         instance.transform.localPosition = Vector3.zero;
         instance.transform.localEulerAngles = Vector3.zero;
 
+        instance.GetComponentInChildren<SailRotation>().enabled = true;
         GetComponent<ShipMove>().mSetShipDefine(scripObj);
 
     }

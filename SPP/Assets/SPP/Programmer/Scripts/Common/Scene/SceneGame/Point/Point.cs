@@ -11,8 +11,6 @@ using System.Collections;
 
 public class Point : BaseObject{
     [SerializeField]
-    private PointArrayObject m_pointArray;
-    [SerializeField]
     private GameObject m_detectionPrefab;   //当たり判定用プレハブ
 
     [System.Serializable]
@@ -39,6 +37,7 @@ public class Point : BaseObject{
 
 
     private GameObject[] m_angleObject;
+    private PointArrayObject m_pointArray;
 
     private bool m_stayArea;    //エリア内フラグ
     private int m_index;
@@ -50,8 +49,9 @@ public class Point : BaseObject{
     /****************************************************************************** 
     @brief      初期化用関数
     */
-    protected override void mOnRegistered()
+    public void mInitializer()
     {
+        m_pointArray = GameInfo.mInstance.m_pointArray;
         //オブジェクトの生成
         m_angleObject = new GameObject[m_determination.Length];
         for (int i = 0; i < m_determination.Length; i++)
@@ -130,6 +130,7 @@ public class Point : BaseObject{
 
     private void OnEnable()
     {
+        if (m_angleObject == null) return;
         foreach (var obj in m_angleObject)
         {
             obj.SetActive(true);
@@ -138,6 +139,7 @@ public class Point : BaseObject{
 
     private void OnDisable()
     {
+        if (m_angleObject == null) return;
         foreach (var obj in m_angleObject)
         {
             obj.SetActive(false);
