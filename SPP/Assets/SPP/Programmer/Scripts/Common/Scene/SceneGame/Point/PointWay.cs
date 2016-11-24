@@ -30,7 +30,6 @@ public class PointWay : BaseObject
     private BaseObject m_firstPoint;
     [SerializeField]
     private BaseObject m_secondPoint;
-
     [SerializeField]
     private PointArrayObject m_pointArray;
 
@@ -62,7 +61,6 @@ public class PointWay : BaseObject
     override protected void Start()
     {
         m_wayPrefab = mCreate(m_wayPrefab);
-
     }
 
     void mOnPointWay()

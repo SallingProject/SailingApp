@@ -37,7 +37,6 @@ public class CollisionDetection : BaseObject{
 
     protected override void mOnRegistered()
     {
-        
         mUnregisterList(this);
     }
 

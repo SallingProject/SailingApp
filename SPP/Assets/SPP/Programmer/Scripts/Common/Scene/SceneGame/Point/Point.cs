@@ -3,8 +3,6 @@
 ***************************************************************************************
 @brief      ポイントの判定
 ***************************************************************************************
-@note       生成された時管理配列に登録される。
-***************************************************************************************
 @author     Kaneko Kazuki
 ***************************************************************************************/
 using UnityEngine;
@@ -12,6 +10,11 @@ using System.Collections;
 
 
 public class Point : BaseObject{
+    [SerializeField]
+    private PointArrayObject m_pointArray;
+    [SerializeField]
+    private GameObject m_detectionPrefab;   //当たり判定用プレハブ
+
     [System.Serializable]
     public class BuoyDetermination
     {
@@ -34,8 +37,6 @@ public class Point : BaseObject{
     [SerializeField]
     private float m_radius;         //サークル半径
 
-    [SerializeField]
-    private GameObject m_detectionPrefab;   //当たり判定用プレハブ
 
     private GameObject[] m_angleObject;
 
@@ -44,26 +45,29 @@ public class Point : BaseObject{
 
     private const float mk_scaleY = 0.01f;  //縦固定値
 
-    private PointArrayObject m_pointArray;
+
+
+    /****************************************************************************** 
+    @brief      初期化用関数
+    */
     protected override void mOnRegistered()
     {
-        base.mOnRegistered();
-        //管理配列に登録
-        m_pointArray = GameInfo.mInstance.m_pointArray;
-        {   //入りのオブジェクトの生成
-            m_angleObject = new GameObject[m_determination.Length];
-            for(int i=0; i< m_determination.Length; i++)
+        //オブジェクトの生成
+        m_angleObject = new GameObject[m_determination.Length];
+        for (int i = 0; i < m_determination.Length; i++)
+        {
+            if (m_determination[i].m_direction != 0)
             {
-                if (m_determination[i].m_direction != 0)
-                {
-                    mCollisionCreate(m_determination[i], out m_angleObject[i]);
-                }
+                mCollisionCreate(m_determination[i], out m_angleObject[i]);
             }
         }
+
         m_index = 0;
         transform.GetComponent<SphereCollider>().radius = m_radius;
 
-        foreach (var i in m_pointId){
+        //管理配列に登録
+        foreach (var i in m_pointId)
+        {
             m_pointArray.mRegisterArray(i, this);
         }
         enabled = false;

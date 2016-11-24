@@ -11,6 +11,8 @@ using DG.Tweening;
 
 public class ShipMove : BaseObject {
 
+    [SerializeField]
+    private GameInfo m_gameInfo;
 
     private WindObject m_wind;
 
@@ -19,24 +21,32 @@ public class ShipMove : BaseObject {
 
 
     private ShipDefine m_shipDefine;
+    private float m_accelMagnification;
 
-    private float m_accelMagnification = 100;
     //定数
     private const float mkFriction = 0.98f;              //摩擦
-
+    private const float mkNormalMagnification = 1.0f;
     protected override void Start()
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;
-        m_wind = GameInfo.mInstance.m_wind;
+        m_wind = m_gameInfo.m_wind;
+        mNormalAccel();
     }
 
 
     public override void mOnUpdate()
     {
-        //仮コントロール
-        float shipDirection = GameInfo.mInstance.mGetHandleRotation() * (m_shipDefine.mHandling / 100);
+        ///*Test Code
+        if(Input.GetKeyDown(KeyCode.Q)){
+            mItemActivate(ItemEffect.Boost);
+        }
+        //*/
 
+        //仮コントロール
+        float shipDirection = m_gameInfo.mGetHandleRotation() * (m_shipDefine.mHandling / 100);
+
+        //LiftMove
         mAcceleration();
 
 
@@ -55,12 +65,12 @@ public class ShipMove : BaseObject {
     *******************************************************************************/
     private void mAcceleration()
     {
-        m_speedVector += (mForce(m_wind.mWindDirection) * m_wind.mWindForce) * 
-            (m_shipDefine.mAcceleration/100) * (m_accelMagnification/100);
+        m_speedVector += (mForce(m_wind.mWindDirection,transform.eulerAngles.y) * m_wind.mWindForce) * 
+            (m_shipDefine.mAcceleration/100) * m_accelMagnification;
 
-        if (m_speedVector >= m_wind.mWindForce * (m_shipDefine.mMaxSpeed/100))
+        if (m_speedVector >= m_wind.mWindForce * (m_shipDefine.mMaxSpeed/100)*m_accelMagnification )
         {
-            m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100);
+            m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification;
         }
 
         m_speedVector *= mkFriction;
@@ -69,24 +79,24 @@ public class ShipMove : BaseObject {
     }
 
     /****************************************************************************** 
-    @brief      風を受けて力へ変える関数
+    @brief      風を受けて力へ変える関数(揚力じゃない計算）
     @note       風上へは一番力が弱くなる
     @return     受けた風量
     *******************************************************************************/
-    private float mForce(float windDirec)
+    public float mForce(float windDirec,float targetDirec)
     {
         Vector2 windVec,shipVec;
         windVec.x = Mathf.Sin(windDirec / 180 * Mathf.PI);
         windVec.y = Mathf.Cos(windDirec / 180 * Mathf.PI);
 
-        {   //船の向きをベクトルで取得
-            Vector3 noVec = transform.forward;
-            shipVec.x = noVec.x;
-            shipVec.y = noVec.z;
-        }
+        shipVec.x = Mathf.Sin(targetDirec / 180 * Mathf.PI);
+        shipVec.y = Mathf.Cos(targetDirec / 180 * Mathf.PI);
 
-        //内積と１－ｘで90°以上で最速になるように
-        float liftForce = Mathf.Abs(Vector2.Dot(windVec, shipVec));        
+        //90°で最速になるように
+        float liftForce = Vector2.Dot(windVec, shipVec);
+        //スピン差し込む場所
+        liftForce = Mathf.Abs(liftForce);
+
         liftForce = 1 - liftForce;
 
 
@@ -108,19 +118,50 @@ public class ShipMove : BaseObject {
     @brief      風を受ける加速に変化をつける
     @note       Default 100(%) 
     *******************************************************************************/
-    public void mTranslateAccel(float magnification)
+    private void mTranslateAccel(float magnification,float time)
     {
         m_accelMagnification = magnification;
+        StartCoroutine(mNormalWaitTime(time));
     }
 
     /****************************************************************************** 
     @brief      風を受ける加速を元に戻す
     *******************************************************************************/
-    public void mNormalAccel()
+    private void mNormalAccel()
     {
-        m_accelMagnification = 100;
+        m_accelMagnification = mkNormalMagnification;
     }
 
+    /****************************************************************************** 
+    @brief      効果時間待ち
+    *******************************************************************************/
+    private IEnumerator mNormalWaitTime(float time)
+    {
+        Debug.Log("Boost");
+        yield return new WaitForSeconds(time);
+        Debug.Log("Off");
+        mNormalAccel();
+    }
+
+
+    /****************************************************************************** 
+    @brief      タイプを渡されたら処理を行う
+    @in         アイテムタイプ
+@note       時間も渡すか検討
+    *******************************************************************************/
+    public void mItemActivate(ItemEffect type)
+    {
+        switch (type)
+        {
+            case ItemEffect.Invalid:
+                break;
+            case ItemEffect.Boost:
+                mTranslateAccel(2.0f,3.0f);
+                break;
+            default:
+                break;
+        }
+    }
 
 
 }
