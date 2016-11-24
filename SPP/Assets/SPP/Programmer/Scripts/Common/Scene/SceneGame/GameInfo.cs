@@ -24,8 +24,6 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
-        mUnregisterList(this);
-        mUnregister();
     }
 
 
