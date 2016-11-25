@@ -14,7 +14,14 @@ public class UIWind : BaseObject
     {
 
         base.mOnUpdate();
-        transform.Rotate(0, m_wind.mWindDirection, 0);
-        //transform.eulerAngles += new Vector3(0, m_wind.mWindDirection+1, 1);
+
+        float rotationY = transform.eulerAngles.y + m_wind.mWindDirection;
+
+        if (rotationY < 180 && rotationY > -180)
+        {
+
+            //m_WindDirectionの値分回転
+            transform.Rotate(0, m_wind.mWindDirection, 0);
+        }
     }
 }
