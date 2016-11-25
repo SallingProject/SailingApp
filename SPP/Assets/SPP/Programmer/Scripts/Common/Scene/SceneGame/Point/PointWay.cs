@@ -31,7 +31,6 @@ public class PointWay : BaseObject
     [SerializeField]
     private BaseObject m_secondPoint;
 
-    [SerializeField]
     private PointArrayObject m_pointArray;
 
     public override void mOnUpdate()
@@ -62,7 +61,7 @@ public class PointWay : BaseObject
     override protected void Start()
     {
         m_wayPrefab = mCreate(m_wayPrefab);
-
+        m_pointArray = GameInfo.mInstance.m_pointArray;
     }
 
     void mOnPointWay()

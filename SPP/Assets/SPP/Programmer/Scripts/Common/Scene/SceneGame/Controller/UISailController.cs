@@ -13,6 +13,9 @@ using UnityEngine.EventSystems;
 using System.Collections;
 public class UISailController : BaseObject {
 
+    static readonly float m_kMax = 0.995f;
+
+
     [SerializeField]
     Image m_root;
 
@@ -26,6 +29,12 @@ public class UISailController : BaseObject {
     RectTransform m_left;
 
     public bool mIsDown
+    {
+        get;
+        private set;
+    }
+
+    public float mBarProgress
     {
         get;
         private set;
@@ -62,14 +71,9 @@ public class UISailController : BaseObject {
             drag.callback.AddListener(Drag);
             trigger.triggers.Add(drag);
         }
+
+        mBarProgress = 0f;
     }
-
-    public override void mOnUpdate()
-    {
-        base.mOnUpdate();
-
-    }
-
 
     void Drag(BaseEventData eventData)
     {
@@ -77,18 +81,44 @@ public class UISailController : BaseObject {
         var touch = InputManager.mInstance.mGetTouchInfo();
         if (touch.mLocalDeltaPosition.x > 0)
         {
-            if (m_controllObject.rectTransform.position.x + touch.mLocalDeltaPosition.x < m_right.position.x)
+            if (m_controllObject.rectTransform.anchoredPosition.x + touch.mLocalDeltaPosition.x < m_right.anchoredPosition.x)
             {
-                m_controllObject.rectTransform.position += new Vector3(touch.mLocalDeltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.anchoredPosition += new Vector2(touch.mLocalDeltaPosition.x, 0);       
             }
         }
         else 
         {
-            if (m_controllObject.rectTransform.position.x + touch.mLocalDeltaPosition.x > m_left.position.x )
+
+            if (m_controllObject.rectTransform.anchoredPosition.x + touch.mLocalDeltaPosition.x > m_left.anchoredPosition.x)
             {
-                m_controllObject.rectTransform.position += new Vector3(touch.mLocalDeltaPosition.x, 0, 0);
+                m_controllObject.rectTransform.anchoredPosition += new Vector2(touch.mLocalDeltaPosition.x, 0);
             }
         }
 
+
+        float ObjectX =  m_controllObject.rectTransform.anchoredPosition.x;
+        bool isRight = (ObjectX > 0);
+
+        if (isRight)
+        {
+            
+            mBarProgress = ObjectX / m_right.anchoredPosition.x;
+            if(mBarProgress > m_kMax)
+            {
+                mBarProgress = 1f;
+            }
+            Debug.Log(mBarProgress);
+
+        }
+        else
+        {
+
+            mBarProgress = -(ObjectX / m_left.anchoredPosition.x);
+            if (mBarProgress < -m_kMax)
+            {
+                mBarProgress = -1;
+            }
+            Debug.Log(mBarProgress);
+        }
     }
 }

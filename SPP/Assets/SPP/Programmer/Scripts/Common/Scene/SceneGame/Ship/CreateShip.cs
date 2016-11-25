@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/**************************************************************************************/
+/*! @file   CreateShip.cs
+***************************************************************************************
+@brief      船を生成するクラス
+***************************************************************************************
+@author     Kaneko Kazuki
+***************************************************************************************/
+
+using UnityEngine;
 using System.Collections;
 
 public class CreateShip : BaseObject{
@@ -17,6 +25,7 @@ public class CreateShip : BaseObject{
         instance.transform.localPosition = Vector3.zero;
         instance.transform.localEulerAngles = Vector3.zero;
 
+        instance.GetComponentInChildren<SailRotation>().enabled = true;
         GetComponent<ShipMove>().mSetShipDefine(scripObj);
 
     }

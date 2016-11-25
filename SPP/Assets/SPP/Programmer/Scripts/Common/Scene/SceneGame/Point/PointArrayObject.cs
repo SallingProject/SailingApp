@@ -11,7 +11,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PointArrayObject : BaseObject {    
+public class PointArrayObject : BaseObject {
+
 
     private Dictionary<int,BaseObject>m_pointArray = new Dictionary<int, BaseObject>();
     private int m_currentId = 1;
@@ -23,7 +24,7 @@ public class PointArrayObject : BaseObject {
         mUnregisterList(this);
     }
 
-    
+
     public void mRegisterArray(int index, BaseObject obj)
     {
         m_pointArray.Add(index,obj);
@@ -39,7 +40,7 @@ public class PointArrayObject : BaseObject {
         if (m_currentId > m_pointArray.Count) return;
 
         //Baseクラスに書き換える
-        mUnregisterList(m_pointArray[m_currentId]);
+        //mUnregisterList(m_pointArray[m_currentId]);
         m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
         m_currentId++;
         if (m_currentId > m_pointArray.Count) return;
