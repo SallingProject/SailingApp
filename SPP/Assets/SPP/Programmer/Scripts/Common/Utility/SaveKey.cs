@@ -13,4 +13,6 @@ public class SaveKey{
     @brief  	船のID取得時に使用するキー
     */
     public static readonly string mShipKey = "ShipKey";
+
+    public static readonly string mTutorialKey = "TutorialKey";
 }
