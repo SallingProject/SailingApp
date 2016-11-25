@@ -64,7 +64,7 @@ public static class TransformExtension{
             GameObject[] list = target.GetChildren();
             foreach (var child in list)
             {
-                if(child.name == "serchName")
+                if(child.name == serchName)
                 {
                     return child;
                 }

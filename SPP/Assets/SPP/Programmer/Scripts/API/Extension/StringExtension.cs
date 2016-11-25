@@ -15,6 +15,7 @@ public static class StringExtension{
         catch (FormatException e)
         {
             output = 0.0f;
+            DebugManager.mInstance.OutputMsg(e, ELogCategory.Default, true);
         }
         return output;  
     }
