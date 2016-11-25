@@ -69,7 +69,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
     const float kFadeAlphaValue = 1f;
     const float kCompleateLoad = 0.9f;
-    const float kFadeTimeSpeed = 1.25f;
+    const float kFadeTimeSpeed = 1.75f;
     
     [System.Serializable]
     class Loadbar
