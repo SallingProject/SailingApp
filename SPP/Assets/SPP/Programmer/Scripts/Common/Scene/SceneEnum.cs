@@ -14,5 +14,7 @@
 public enum EScene
 {
     Title,
-    Home
+    Home,
+    Tutorial,
+    selectShip
 }

@@ -6,6 +6,10 @@ using UnityEngine.UI;
 public class SceneHome : SceneBase
 {
     [SerializeField]
+    public void mGoToTutorial()
+    {
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Tutorial", LoadInfo.ELoadType.Async, 1f));
+    }
 
     public void mGoToHome()
     {
