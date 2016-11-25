@@ -6,22 +6,15 @@ using UnityEngine.UI;
 public class UIWind : BaseObject
 {
 
-
     [SerializeField]
-    private BaseObject m_player;
-    /* 初期化 */
-    public float y = 0.0f;
+    private WindObject m_wind;
 
 
     public override void mOnUpdate()
     {
 
         base.mOnUpdate();
-        transform.rotation = Quaternion.Euler(50, m_player.transform.rotation.y, 0);
-
-
-
+        transform.Rotate(0, m_wind.mWindDirection, 0);
+        //transform.eulerAngles += new Vector3(0, m_wind.mWindDirection+1, 1);
     }
-
-
 }
