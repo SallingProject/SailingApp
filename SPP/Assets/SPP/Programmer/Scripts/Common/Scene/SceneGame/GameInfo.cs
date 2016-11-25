@@ -44,7 +44,7 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     *******************************************************************************/
     public float mGetSailRotation()
     {
-        return 0.0f;
+        return -m_sailController.mBarProgress * 90;
     }
 
 
