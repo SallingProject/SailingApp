@@ -12,7 +12,6 @@ public class InductionRing : BaseObject {
     float m_radius = 10f;
     List<GameObject> m_ringCashList = new List<GameObject>();
 
-    [SerializeField]
     Point m_nextpoint;
 
     protected override void mOnRegistered()
@@ -27,8 +26,6 @@ public class InductionRing : BaseObject {
             add.transform.SetParent(this.transform, false);
             m_ringCashList.Add(add);
         }
-
-        mSetNextPoint(m_nextpoint);
     }
 
 
@@ -72,7 +69,7 @@ public class InductionRing : BaseObject {
     }
 
     #region テスト用
-#if true
+#if false
     void Update()
     {
         mSetNextPoint(m_nextpoint);
