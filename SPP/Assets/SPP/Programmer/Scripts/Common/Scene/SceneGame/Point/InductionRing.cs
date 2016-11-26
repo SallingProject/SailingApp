@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class InductionRing : BaseObject {
 
-    static readonly int     m_kCreateCount = 9;
+    static readonly int     m_kCreateCount = 7;
     static readonly float   m_kRadius = 15f;
 
     [SerializeField]
@@ -43,16 +43,18 @@ public class InductionRing : BaseObject {
         if (nextPoint.m_buoyType == Point.eBuoyType.Curve)
         {
             //オブジェクト間の角度差
-            float angleDiff = 270f / (float)m_ringCashList.Count;
+            float angleDiff = 200f / (float)m_ringCashList.Count;
             //各オブジェクトを円状に配置
             for (int i = 0; i < m_ringCashList.Count; i++)
             {
                 Vector3 childPostion = transform.position;
 
                 float angle = ((angleDiff * i) - angleDiff) * Mathf.Deg2Rad + m_nextpoint.transform.eulerAngles.y;
+
                 childPostion.x += m_kRadius * Mathf.Cos(angle) + m_nextpoint.transform.position.x;
                 childPostion.z += m_kRadius * Mathf.Sin(angle) + m_nextpoint.transform.position.z;
                 m_ringCashList[i].SetActive(true);
+                m_ringCashList[i].transform.eulerAngles = new Vector3(0, -angleDiff * i, 0);
                 m_ringCashList[i].transform.position = childPostion;
             }
         }
@@ -64,6 +66,8 @@ public class InductionRing : BaseObject {
             for (int i = 0; i < m_ringCashList.Count/2; i++)
             {
                 m_ringCashList[i].SetActive(true);
+
+                m_ringCashList[i].transform.eulerAngles = Vector3.zero;
                 m_ringCashList[i].transform.position = new Vector3(m_nextpoint.transform.position.x  + ((m_kRadius/2) * i), m_nextpoint.transform.position.y,
                      m_nextpoint.transform.position.z + (m_kRadius * i));
 
