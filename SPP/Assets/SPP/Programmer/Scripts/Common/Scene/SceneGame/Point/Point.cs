@@ -89,10 +89,17 @@ public class Point : BaseObject{
         var Obj = mCreate(m_detectionPrefab);
         receive = Obj;
         receive.transform.parent = transform;
-        receive.transform.localScale = new Vector3(1, mk_scaleY, m_radius);
-        receive.transform.Rotate(0, buoy.m_angle, 0);
-        receive.transform.localPosition = Vector3.zero;
-        receive.transform.Translate(0, 0, m_radius + 3);
+        if (m_buoyType == eBuoyType.Straight)
+        {
+            receive.transform.localScale = new Vector3(2, mk_scaleY, m_radius*1.5f);
+            receive.transform.Rotate(0, buoy.m_angle, 0);
+            receive.transform.localPosition = Vector3.zero;
+        }else{
+            receive.transform.localScale = new Vector3(1, mk_scaleY, m_radius);
+            receive.transform.Rotate(0, buoy.m_angle, 0);
+            receive.transform.localPosition = Vector3.zero;
+            receive.transform.Translate(0, 0, m_radius + 3);
+        }
         receive.transform.name = buoy.m_name;
         receive.GetComponent<CollisionDetection>().mDirection = (int)buoy.m_direction;
 
