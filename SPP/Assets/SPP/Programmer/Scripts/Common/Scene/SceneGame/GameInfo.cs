@@ -14,11 +14,21 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     public WindObject m_wind;       //風オブジェクト
 
     [SerializeField]
+    private InductionRing m_inductionRing;
+    public InductionRing InductionRing
+    {
+        get { return m_inductionRing; }
+    }
+
+    [SerializeField]
     public PointArrayObject m_pointArray;       //ポイント配列管理クラス(Staticなので問題ない)
 
     private List<ItemDefine> m_itemList = new List<ItemDefine>();
 
     public bool mControllerTrigger { get; private set; }
+
+    
+
     private float m_prevControllerRotation = 0;
 
     protected override void mOnRegistered()

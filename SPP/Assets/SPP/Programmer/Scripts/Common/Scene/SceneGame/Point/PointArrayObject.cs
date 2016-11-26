@@ -46,6 +46,7 @@ public class PointArrayObject : BaseObject {
         if (m_currentId > m_pointArray.Count) return;
         m_pointArray[m_currentId].GetComponent<Point>().enabled = true;
         GameInfo.mInstance.m_targetMarker.mSetTarget(m_pointArray[m_currentId].GetComponent<ReflectedOnCamera>());
+        GameInfo.mInstance.InductionRing.mSetNextPoint(m_pointArray[m_currentId].GetComponent<Point>());
     }
 
 
