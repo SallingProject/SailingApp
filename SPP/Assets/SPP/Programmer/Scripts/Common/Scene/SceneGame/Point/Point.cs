@@ -13,6 +13,13 @@ public class Point : BaseObject{
     [SerializeField]
     private GameObject m_detectionPrefab;   //当たり判定用プレハブ
 
+    public enum eBuoyType
+    {
+        Straight,Curve
+    }
+    [SerializeField]
+    public eBuoyType m_buoyType;
+
     [System.Serializable]
     public class BuoyDetermination
     {
