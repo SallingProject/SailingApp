@@ -8,6 +8,7 @@
 * Copyright © 2016 Ko Hashimoto All Rights Reserved.
 ***************************************************************************************/
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using DG.Tweening;
 
@@ -22,7 +23,16 @@ public class PopupBase : BaseObject {
     RectTransform m_popupRoot;
     
     PopupButton m_popupButton;
-    
+    public PopupButton PopupButton
+    {
+        get { return m_popupButton; }
+    }
+
+    Image m_blackFade;
+    public Image BlackFade
+    {
+        get { return m_blackFade; }
+    }
 
     class PopupAction
     {
@@ -45,6 +55,31 @@ public class PopupBase : BaseObject {
     {
         base.Awake();
         mUnregisterList(this);
+
+        if (m_popupWindow == null)
+        {
+            m_popupWindow = mCreate(m_popupWindowBase) as RectTransform;
+        }
+        m_popupWindow.SetParent(m_popupRoot, false);
+        m_popupWindow.transform.localScale = new Vector3(1, 0, 0);
+
+        if(m_blackFade == null)
+        {
+            m_blackFade = m_popupWindow.transform.FindInChildren("BackFade", false).GetComponent<Image>();
+            m_blackFade.transform.SetActive(false);
+        }
+
+        if (m_popupButton == null)
+        {
+            var root = m_popupWindow.transform.FindInChildren("Popup", false);
+            var buttonGroup = root.transform.FindInChildren("Button", false);
+            string path = (mButtonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
+            var button = buttonGroup.transform.FindInChildren(path, false);
+            m_popupButton = button.GetComponent<PopupButton>();
+            m_popupButton.Init();
+        }
+
+        m_popupWindow.SetActive(false);
         mUnregister();
     }
 
@@ -54,39 +89,11 @@ public class PopupBase : BaseObject {
         private set;
     }
 
-    public PopupButton PopupButton
-    {
-        get
-        {
-            return m_popupButton;
-        }
-
-        /*  set
-        {
-            m_popupButton = value;
-        }
-        */
-    }
-
+    
     public virtual void Open(System.Action openBeginAction, System.Action openning = null, System.Action openEnd = null, float time = 0.25f)
     {
-        if(m_popupWindow == null)
-        {
-            m_popupWindow = mCreate(m_popupWindowBase) as RectTransform;
-        }
-        m_popupWindow.SetParent(m_popupRoot, false);
-        m_popupWindow.transform.localScale = new Vector3(1, 0, 0);
-
-        if (m_popupButton == null)
-        {
-            var parent = transform.FindInChildren("PopupBase_M(Clone)", false);
-            var buttonGroup = parent.transform.FindInChildren("Button", false);
-
-            string path = (mButtonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
-            var button = buttonGroup.transform.FindInChildren(path, false);
-            m_popupButton = button.GetComponent<PopupButton>();
-            m_popupButton.Init();
-        }
+        m_popupWindow.SetActive(true);
+        m_popupWindow.transform.localScale = new Vector3(1, 0);
 
         m_openAction._begin = openBeginAction;
         m_openAction._run = openning;
@@ -103,6 +110,7 @@ public class PopupBase : BaseObject {
         m_closeAction._end = closeEnd;
         m_time = time;
 
+        m_popupWindow.transform.localScale = new Vector3(1, 1);
         OnCloseAnimation();
     }
 
@@ -112,6 +120,7 @@ public class PopupBase : BaseObject {
         tweener
         .OnStart(()=>
         {
+            m_blackFade.transform.SetActive(true);
             if (m_openAction._begin != null)
             {
                 m_openAction._begin.Invoke();
@@ -172,6 +181,7 @@ public class PopupBase : BaseObject {
                  m_closeAction._end.Invoke();
                  m_closeAction._end = null;
              }
+             m_blackFade.transform.SetActive(false);
              mPopupState = EPopupState.CloseEnd;
          });
     }
