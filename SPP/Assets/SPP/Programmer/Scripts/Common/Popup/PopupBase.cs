@@ -54,6 +54,20 @@ public class PopupBase : BaseObject {
         private set;
     }
 
+    public PopupButton PopupButton
+    {
+        get
+        {
+            return m_popupButton;
+        }
+
+        /*  set
+        {
+            m_popupButton = value;
+        }
+        */
+    }
+
     public virtual void Open(System.Action openBeginAction, System.Action openning = null, System.Action openEnd = null, float time = 0.25f)
     {
         if(m_popupWindow == null)
