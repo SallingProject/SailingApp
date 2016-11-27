@@ -16,7 +16,7 @@ public class SceneHome : SceneBase
 {
     public void mGoToTutorial()
     {
-        GameInstance.mInstance.mSceneLoad(new LoadInfo("Tutorial", LoadInfo.ELoadType.Async, 1f));
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("SelectCourse", LoadInfo.ELoadType.Async, 1f));
     }
 
     public void mGoToCpuBattle()

@@ -8,6 +8,14 @@ public class ShipSelectPopupWindowScript : PopupBase {
     [SerializeField]
     private GameObject m_contens;
 
+    public void OpenEnd()
+    {
+        m_contens.SetActive(true);
+    }
+    public void CloseEnd()
+    {
+        m_contens.SetActive(false);
+    }    
     void PopupAction(EButtonId id)
     {
         switch (id)
@@ -17,24 +25,21 @@ public class ShipSelectPopupWindowScript : PopupBase {
                 break;
         }
     }
-    
+
     public void Open()
     {
+        /*
         mButtonSet = EButtonSet.Set1;
-        PopupButton.mOnClickCallback = PopupAction;
+        //PopupButton.mOnClickCallback = PopupAction;
         base.Open(null, null, OpenEnd);
-
+        Debug.Log(PopupButton);
+        */
+        //ここにポップアップのスクリプトを書く
     }
+
     public void Close()
     {
        base.Close(null, null, CloseEnd);
     }
-    public void OpenEnd()
-    {
-        m_contens.SetActive(true);
-    }
-    public void CloseEnd()
-    {
-        m_contens.SetActive(false);
-    }
+
 }

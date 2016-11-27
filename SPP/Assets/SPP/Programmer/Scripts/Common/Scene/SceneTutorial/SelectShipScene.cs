@@ -16,7 +16,7 @@ public class SelectShipScene : SceneBase
     {
         PlayerPrefs.SetInt("ShipKey", (int)m_id);
         PlayerPrefs.GetInt("ShipKey");
-        //.Log("Button Push !!");
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame"));
     }
 
 }
