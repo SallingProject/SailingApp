@@ -130,7 +130,7 @@ public class PopupBase : BaseObject {
         })
         .OnUpdate(() =>
         {
-            if (m_closeAction._run != null)
+            if (m_openAction._run != null)
             {
                 m_openAction._run.Invoke();
                 m_openAction._run = null;
@@ -140,7 +140,7 @@ public class PopupBase : BaseObject {
          .OnComplete(() =>
          {
 
-             if (m_closeAction._end != null)
+             if (m_openAction._end != null)
              {
                  m_openAction._end.Invoke();
                  m_openAction._end = null;

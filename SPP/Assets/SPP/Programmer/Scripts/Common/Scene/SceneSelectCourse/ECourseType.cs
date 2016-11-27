@@ -1,7 +1,7 @@
 ﻿/**************************************************************************************/
-/*! @file   SelectShipScene.cs
+/*! @file   ECourseType.cs
 ***************************************************************************************
-@brief      船選択時に関する処理
+@brief      コースボタンに関する列挙体
 ***************************************************************************************
 @author     Ryo Sugiyama
 ***************************************************************************************
@@ -11,23 +11,12 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class SelectShipScene : SceneBase
+
+public enum ECourseType
 {
-
-    [SerializeField]
-    private EShipType m_id;
-    [SerializeField]
-    private ShipSelectPopupWindowScript m_popup;
-
-    protected override void mOnRegistered()
-    {
-        base.mOnRegistered();
-    }
-    public void ButtonPush()
-    {
-        m_popup.GetShipType(m_id);
-        m_popup.Open();
-   
-    }
-
+    straight,
+    corner,
+    usingItem,
+    accelerate,
+    none
 }

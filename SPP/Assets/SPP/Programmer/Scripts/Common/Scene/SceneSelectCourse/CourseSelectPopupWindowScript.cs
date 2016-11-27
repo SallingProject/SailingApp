@@ -1,7 +1,7 @@
 ﻿/**************************************************************************************/
-/*! @file   ShipSelectPopupWindowScript.cs
+/*! @file   CourseSelectPopupWindowScript.cs
 ***************************************************************************************
-@brief      船選択時のポップアップに関する処理
+@brief      コースセレクト時のポップアップに関する処理
 ***************************************************************************************
 @author     Ryo Sugiyama
 ***************************************************************************************
@@ -12,13 +12,13 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class ShipSelectPopupWindowScript : PopupBase
+public class CourseSelectPopupWindowScript : PopupBase
 {
 
     [SerializeField]
     private GameObject m_contens;
     [SerializeField]
-    private EShipType m_type;
+    private ECourseType m_type;
 
     public void OpenEnd()
     {
@@ -27,33 +27,36 @@ public class ShipSelectPopupWindowScript : PopupBase
     public void CloseEnd()
     {
         m_contens.SetActive(false);
-    }    
+    }
     void PopupAction(EButtonId id)
     {
         switch (id)
         {
             case EButtonId.Ok:
-                PlayerPrefs.SetInt(SaveKey.mShipKey, (int)m_type);
-                GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame"));
+                /*
+                *PlayerPlefs.SetInt:SaveKeyにmCourseKeyを追加
+                *PlayerPrefs.SetInt(SaveKey.mCourseKey, (int)m_type);
+                */
+                GameInstance.mInstance.mSceneLoad(new LoadInfo("Tutorial"));
                 break;
         }
     }
-    public void GetShipType(EShipType type)
+    public void GetCourseType(ECourseType type)
     {
         m_type = type;
     }
     public void Open()
     {
-       
+
         mButtonSet = EButtonSet.Set1;
         PopupButton.mOnClickCallback = PopupAction;
-        base.Open(null,null , OpenEnd);
-    
+        base.Open(null, null, OpenEnd);
+
     }
 
     public void Close()
     {
-       base.Close(null, null, CloseEnd);
+        base.Close(null, null, CloseEnd);
     }
 
 }
