@@ -15,7 +15,7 @@ public class WindObject : BaseObject{
     private float m_windForce;
 
     [SerializeField]
-    [Range(-180, 180)]
+    [Range(0, 360)]
     private float m_windDirection;
 
     public float mWindForce
@@ -27,10 +27,12 @@ public class WindObject : BaseObject{
     {
         get { return m_windDirection; }
         set {
-            //180°以上にはならないようにする
-            if (Mathf.Abs(value) > 180)
+            //360°以上,-にはならないようにする
+            if (value >= 360)
             {
-                m_windDirection = Mathf.Clamp(value, -180, 180);
+                m_windDirection = value - 360;
+            }else if(value < 0){
+                m_windDirection = 360 - value;
             }
         }
     }
