@@ -86,7 +86,7 @@ public class SceneLibrary : SceneBase {
             {
                 m_shipList[m_currentShip].SetActive(false);
                 m_currentShip += 1;
-                m_shipList[m_currentShip].SetActive(true);
+                ChangeShip(m_currentShip);
             }
         });
 
@@ -96,9 +96,16 @@ public class SceneLibrary : SceneBase {
             {
                 m_shipList[m_currentShip].SetActive(false);
                 m_currentShip -= 1;
-                m_shipList[m_currentShip].SetActive(true);
+                ChangeShip(m_currentShip);
             }
         });
+    }
+
+    void ChangeShip(int id)
+    {
+        m_shipList[id].SetActive(true);
+        m_camera.transform.position = m_kInitCameraPosition;
+        m_shipRoot.transform.localEulerAngles = m_kInitRotation;
     }
 
     /******************************************************************************* 
