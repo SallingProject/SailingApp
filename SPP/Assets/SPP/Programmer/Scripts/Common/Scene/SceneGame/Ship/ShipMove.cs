@@ -16,7 +16,7 @@ public class ShipMove : BaseObject
     [System.Serializable]
     class CoefficientLift
     {
-        [Range(0,45)]
+        [Range(0, 45)]
         public float m_direction_max;
         public AnimationCurve m_curve;
     }
@@ -26,7 +26,7 @@ public class ShipMove : BaseObject
     [SerializeField]
     private CoefficientLift m_cd;
 
-    
+
     private WindObject m_wind;
 
     private float m_speedVector;
@@ -39,8 +39,13 @@ public class ShipMove : BaseObject
     public SailRotation m_sail;
     private RudderRotation m_rudder;
 
+    //移動の際に発生した力
+    public float mMoveForce
+    {
+        get; private set;
+    }
     //定数
-    
+
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
@@ -61,14 +66,22 @@ public class ShipMove : BaseObject
     public override void mOnUpdate()
     {
         ///*Test Code
-        if (Input.GetKeyDown(KeyCode.Q)){
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
             mItemActivate(ItemEffect.Boost);
         }
         //*/
 
 
-        //LiftMove
+        //Move
         mAcceleration();
+        if (m_speedVector >= m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification)
+        {
+            m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification;
+        }
+
+        m_speedVector *= mkFriction;
+//        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
 
         //FloatMove;
@@ -87,53 +100,46 @@ public class ShipMove : BaseObject
         float direction = 1;
 
 
-        Vector3 force = new Vector3(liftForce, 0,dragForce);
+        Vector3 force = new Vector3(liftForce, 0, dragForce);
         {
             Quaternion rote = Quaternion.AngleAxis(m_wind.mWindDirection, Vector3.up);
             float fl = transform.eulerAngles.y - m_wind.mWindDirection;
-            if (fl > 180){
+            if (fl > 180)
+            {
                 fl = fl - 360;
             }
-            if (fl < 0){
+            if (fl < 0)
+            {
                 direction = -1;
             }
-            Debug.Log("fl" + fl);
             force.x *= direction;
             force = rote * force;
+
+            GetComponentsInChildren<LineRenderer>()[0].SetPosition(0, transform.position);
+            GetComponentsInChildren<LineRenderer>()[0].SetPosition(1, transform.position + force);
+            //ベクトルの正射影
+            Vector3 project = Vector3.Project(force, transform.right);
+            GetComponentsInChildren<LineRenderer>()[1].SetPosition(0, transform.position);
+            GetComponentsInChildren<LineRenderer>()[1].SetPosition(1, transform.position + project);
+            force = force - project;
+
+            GetComponentsInChildren<LineRenderer>()[2].SetPosition(0, transform.position);
+            GetComponentsInChildren<LineRenderer>()[2].SetPosition(1, transform.position + force);
         }
-        //Debug.Log("force" + force);
-        GetComponent<LineRenderer>().SetPosition(0, transform.position);
-        GetComponent<LineRenderer>().SetPosition(1, transform.position+force);
+
         {
-            Vector2 v1, v2;
-            v1.x = force.x;
-            v1.y = force.z;
-            v2.x = transform.forward.x;
-            v2.y = transform.forward.z;
-            float forceRange = Mathf.Acos(Vector2.Dot(v1.normalized, v2.normalized));
-            v1 = SailMath.mRadToVector2(forceRange);
-            Debug.Log("force" + v1+""+forceRange*Mathf.Rad2Deg);
-            Vector3 mul;
-            mul.x = force.x * v1.x;
-            mul.z = force.z * v1.y;
-            mul.y = 0;
-            Debug.Log("Accel" + mul); 
+            Quaternion windrote = Quaternion.AngleAxis(-m_wind.mWindDirection, Vector3.up);
+            Quaternion shiprote = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
+            Vector3 diff = force;
+            diff = shiprote * windrote * diff;
+            Debug.Log(diff);
+            if (diff.z < 0){
+                mMoveForce = 0;
+                return;
+            }
         }
-
-        //Vector2 windVector = SailMath.mDegToVector2(m_wind.mWindDirection);
-        //windVector.x = windVector.x * liftForce;
-        //windVector.y = windVector.y * dragForce;
-
-        //Debug.Log("windLift&Drag" + windVector);
-        //(m_shipDefine.mAcceleration/100) * m_accelMagnification;
-
-        if (m_speedVector >= m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification)
-        {
-            m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification;
-        }
-
-        m_speedVector *= mkFriction;
-        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
+        m_speedVector += Mathf.Abs(force.z) * (m_shipDefine.mAcceleration / 100) * m_accelMagnification;
+        mMoveForce = force.z;
 
     }
 
@@ -145,16 +151,20 @@ public class ShipMove : BaseObject
     private float mDragForce()
     {
         float angle = mAngleAttack(m_wind.mWindDirection, m_sail.transform.eulerAngles.y);
-        if(angle >= 90)
+        if (angle >= 90)
         {
             angle = 180 - angle;
         }
         float diff = angle / m_cd.m_direction_max;
         float cd = m_cd.m_curve.Evaluate(diff);
-//        Debug.Log("CD" + cd);
+        //        Debug.Log("CD" + cd);
 
         float DragForce = (Mathf.Pow(m_wind.mWindForce, 2) * cd * mkAirDensity) / 2;
-//        Debug.Log("drag" + DragForce);
+        //        Debug.Log("drag" + DragForce);
+        if(DragForce > m_wind.mWindForce)
+        {
+            DragForce = m_wind.mWindForce;
+        }
         return -DragForce;
     }
 
@@ -176,24 +186,29 @@ public class ShipMove : BaseObject
         {
             sailFlagment = sailFlagment - 360;
         }
-        //進行方向とセールの向きが不一致かどうか
-        if (sailFlagment < 0 && shipFlagment > 0 || sailFlagment > 0 && shipFlagment < 0)
+        Debug.Log("direction" + sailFlagment + "" + shipFlagment);
+        //９０°辺りはその限りではないので無視させる
+        if (Mathf.Abs(shipFlagment) < 90)
         {
-            //Debug.Log("Error: not Lift");
-            return 0.0f;
+            //進行方向とセールの向きが不一致かどうか
+            if (sailFlagment < 0 && shipFlagment > 0 || sailFlagment > 0 && shipFlagment < 0)
+            {
+                //Debug.Log("Error: not Lift");
+                return 0.0f;
+            }
         }
 
         //揚力で計算してみる
         //まず迎え角を求める
         //揚力係数を疑似カーブから引っ張る
         float angle = mAngleAttack(m_wind.mWindDirection, m_sail.transform.eulerAngles.y);
-    
+
         float diff = angle / m_cl.m_direction_max;
         float cl = m_cl.m_curve.Evaluate(diff);
-//        Debug.Log("CL" + cl);
+        //        Debug.Log("CL" + cl);
 
-        float LiftForce = (Mathf.Pow(m_wind.mWindForce,2) * cl * mkAirDensity) / 2;
-//        Debug.Log("LiftForce" + LiftForce);
+        float LiftForce = (Mathf.Pow(m_wind.mWindForce, 2) * cl * mkAirDensity) / 2;
+        //        Debug.Log("LiftForce" + LiftForce);
 
         return LiftForce;
     }
@@ -202,12 +217,12 @@ public class ShipMove : BaseObject
     @note       fluid   流体,0~360°    target  対象　transform.eulerAngle,
     @return     迎え角
     *******************************************************************************/
-    private float mAngleAttack(float fluidDirec,float targetDirec)
+    private float mAngleAttack(float fluidDirec, float targetDirec)
     {
         Vector2 fluidVec, targetVec;
         fluidVec = SailMath.mDegToVector2(fluidDirec);
         targetVec = SailMath.mDegToVector2(targetDirec);
-//        Debug.Log("flued" + fluidVec);
+        //        Debug.Log("flued" + fluidVec);
         return Mathf.Acos(Vector2.Dot(fluidVec, targetVec)) * Mathf.Rad2Deg;
     }
 
@@ -253,7 +268,7 @@ public class ShipMove : BaseObject
     /****************************************************************************** 
     @brief      タイプを渡されたら処理を行う
     @in         アイテムタイプ
-@note       時間も渡すか検討
+@note       時間も渡すか検討    
     *******************************************************************************/
     public void mItemActivate(ItemEffect type)
     {
