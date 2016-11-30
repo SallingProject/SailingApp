@@ -39,13 +39,16 @@ public class ShipMove : BaseObject
     public SailRotation m_sail;
     private RudderRotation m_rudder;
 
-    //移動の際に発生した力
+
+    /****************************************************************************** 
+    @brief      船に発生した加速度
+    */
     public float mMoveForce
     {
         get; private set;
     }
-    //定数
 
+    //定数
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
@@ -115,16 +118,9 @@ public class ShipMove : BaseObject
             force.x *= direction;
             force = rote * force;
 
-            GetComponentsInChildren<LineRenderer>()[0].SetPosition(0, transform.position);
-            GetComponentsInChildren<LineRenderer>()[0].SetPosition(1, transform.position + force);
             //ベクトルの正射影
             Vector3 project = Vector3.Project(force, transform.right);
-            GetComponentsInChildren<LineRenderer>()[1].SetPosition(0, transform.position);
-            GetComponentsInChildren<LineRenderer>()[1].SetPosition(1, transform.position + project);
             force = force - project;
-
-            GetComponentsInChildren<LineRenderer>()[2].SetPosition(0, transform.position);
-            GetComponentsInChildren<LineRenderer>()[2].SetPosition(1, transform.position + force);
         }
 
         {
@@ -154,14 +150,8 @@ public class ShipMove : BaseObject
         }
         float diff = angle / m_cd.m_direction_max;
         float cd = m_cd.m_curve.Evaluate(diff);
-        //        Debug.Log("CD" + cd);
 
         float DragForce = (Mathf.Pow(m_wind.mWindForce, 2) * cd * mkAirDensity) / 2;
-        //        Debug.Log("drag" + DragForce);
-        //if(DragForce > m_wind.mWindForce)
-        //{
-        //    DragForce = m_wind.mWindForce;
-        //}
         return -DragForce;
     }
 
@@ -183,7 +173,7 @@ public class ShipMove : BaseObject
         {
             sailFlagment = sailFlagment - 360;
         }
-        Debug.Log("direction" + sailFlagment + "" + shipFlagment);
+
         //９０°辺りはその限りではないので無視させる
         if (Mathf.Abs(shipFlagment) < 90)
         {
