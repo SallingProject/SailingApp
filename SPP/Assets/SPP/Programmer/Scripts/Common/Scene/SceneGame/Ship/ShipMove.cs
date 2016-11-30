@@ -81,7 +81,7 @@ public class ShipMove : BaseObject
         }
 
         m_speedVector *= mkFriction;
-//        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
+        transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
 
         //FloatMove;
@@ -128,18 +128,15 @@ public class ShipMove : BaseObject
         }
 
         {
-            Quaternion windrote = Quaternion.AngleAxis(-m_wind.mWindDirection, Vector3.up);
-            Quaternion shiprote = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
-            Vector3 diff = force;
-            diff = shiprote * windrote * diff;
-            Debug.Log(diff);
-            if (diff.z < 0){
+            if(Vector3.Dot(force,transform.forward) < 0) { 
                 mMoveForce = 0;
                 return;
             }
         }
-        m_speedVector += Mathf.Abs(force.z) * (m_shipDefine.mAcceleration / 100) * m_accelMagnification;
-        mMoveForce = force.z;
+
+        m_speedVector += (force.sqrMagnitude/10) * (m_shipDefine.mAcceleration / 100) * m_accelMagnification;
+        mMoveForce = force.sqrMagnitude;
+
 
     }
 
@@ -161,10 +158,10 @@ public class ShipMove : BaseObject
 
         float DragForce = (Mathf.Pow(m_wind.mWindForce, 2) * cd * mkAirDensity) / 2;
         //        Debug.Log("drag" + DragForce);
-        if(DragForce > m_wind.mWindForce)
-        {
-            DragForce = m_wind.mWindForce;
-        }
+        //if(DragForce > m_wind.mWindForce)
+        //{
+        //    DragForce = m_wind.mWindForce;
+        //}
         return -DragForce;
     }
 
