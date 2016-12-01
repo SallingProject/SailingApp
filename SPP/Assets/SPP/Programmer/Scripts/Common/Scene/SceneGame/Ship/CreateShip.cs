@@ -16,7 +16,27 @@ public class CreateShip : BaseObject{
         mUnregisterList(this);
 
         //GameManagerから受け取る
-        var scripObj = Resources.Load("Data/Ship/ShipTest") as ShipDefine;
+        var selectedShip = (EShipType)PlayerPrefs.GetInt(SaveKey.mShipKey);
+        string shipData = "Data/Ship/ShipTest";
+        //switch (selectedShip)
+        //{
+        //    case EShipType.Class470:
+        //        shipData += "Ship0004";
+        //        break;
+        //    case EShipType.ClassLaser:
+        //        shipData += "Ship0001";
+        //        break;
+        //    case EShipType.Class49er:
+        //        shipData += "Ship0002";
+        //        break;
+        //    case EShipType.ClassRS_X:
+        //        shipData += "Ship0003";
+        //        break;
+        //    default:
+        //        shipData += "ShipTest";
+        //        break;
+        //}
+        var scripObj = Resources.Load(shipData) as ShipDefine;
         var path = scripObj.mPath;
 
         var obj = Resources.Load(path);
@@ -29,5 +49,4 @@ public class CreateShip : BaseObject{
         GetComponent<ShipMove>().mSetShipDefine(scripObj);
 
     }
-
 }

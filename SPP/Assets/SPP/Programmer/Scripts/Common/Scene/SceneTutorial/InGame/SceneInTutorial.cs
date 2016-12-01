@@ -28,5 +28,7 @@ public class SceneInTutorial : SceneBase
         //初期化したい順番ごとにクラスを追加していく
         m_pointCreater.mInitializer();
 
+
+
     }
 }
