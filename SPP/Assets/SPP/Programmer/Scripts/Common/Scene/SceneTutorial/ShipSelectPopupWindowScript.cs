@@ -34,7 +34,7 @@ public class ShipSelectPopupWindowScript : PopupBase
         {
             case EButtonId.Ok:
                 PlayerPrefs.SetInt(SaveKey.mShipKey, (int)m_type);
-                GameInstance.mInstance.mSceneLoad(new LoadInfo("InGame"));
+                GameInstance.mInstance.mSceneLoad(new LoadInfo("InTutorial"));
                 break;
         }
     }
