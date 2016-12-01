@@ -107,7 +107,7 @@ public class UISailController : BaseObject {
             {
                 mBarProgress = 1f;
             }
-            Debug.Log(mBarProgress);
+  //          Debug.Log(mBarProgress);
 
         }
         else
@@ -118,7 +118,7 @@ public class UISailController : BaseObject {
             {
                 mBarProgress = -1;
             }
-            Debug.Log(mBarProgress);
+//            Debug.Log(mBarProgress);
         }
     }
 }
