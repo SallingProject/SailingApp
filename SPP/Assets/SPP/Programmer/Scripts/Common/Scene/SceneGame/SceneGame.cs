@@ -15,8 +15,6 @@ public class SceneGame : SceneBase{
     とりあえずGameInstanceを持ってくる
     */
     [SerializeField]
-    private Point[] m_point;
-    [SerializeField]
     private PointCreater m_creater;
 
     protected override void mOnRegistered()
@@ -27,12 +25,7 @@ public class SceneGame : SceneBase{
     protected override void Start()
     {
         //初期化したい順番ごとにクラスを追加していく
-
-        foreach (var obj in m_point){
-            obj.mInitializer();
-        }
         m_creater.mInitializer();
-        
 
     }
 }
