@@ -11,6 +11,13 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     [SerializeField]
     private UISailController m_sailController;
     [SerializeField]
+    private UIUserAction m_userAction;
+    public UIUserAction UserAction
+    {
+        get{return m_userAction;}
+    }
+
+    [SerializeField]
     public WindObject m_wind;       //風オブジェクト
 
     [SerializeField]
@@ -26,9 +33,7 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     private List<ItemDefine> m_itemList = new List<ItemDefine>();
 
     public bool mControllerTrigger { get; private set; }
-
     
-
     private float m_prevControllerRotation = 0;
 
     protected override void mOnRegistered()

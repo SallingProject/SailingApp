@@ -16,5 +16,6 @@ public class Item : BaseObject
     void OnTriggerEnter(Collider other)
     {
         this.gameObject.SetActive(false);
+        GameInfo.mInstance.UserAction.SetItem(m_define);
     }
 }
