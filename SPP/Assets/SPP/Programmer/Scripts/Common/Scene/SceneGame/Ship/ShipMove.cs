@@ -87,9 +87,9 @@ public class ShipMove : BaseObject
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
 
-        //FloatMove;
-        m_surfacingRadian += Time.deltaTime * 120;
-        transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
+        ////FloatMove;
+        //m_surfacingRadian += Time.deltaTime * 120;
+        //transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
     }
 
     /****************************************************************************** 
