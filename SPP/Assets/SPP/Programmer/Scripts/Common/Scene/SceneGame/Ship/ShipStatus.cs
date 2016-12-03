@@ -1,31 +1,37 @@
 ﻿/**************************************************************************************/
-/*! @file   SceneGame.cs
+/*! @file   ShipStatus.cs
 ***************************************************************************************
-@brief      ゲームシーンの管理（Initializer）
+@brief      船のステータスを持つクラス
 ***************************************************************************************
 @author     Kaneko Kazuki
 ***************************************************************************************/
-
 using UnityEngine;
 using System.Collections;
 
-public class SceneGame : SceneBase{
+public class ShipStatus : BaseObject {
 
-    /*
-    とりあえずGameInstanceを持ってくる
+    /**************************************************************************************
+    @brief  船のID
     */
-    [SerializeField]
-    private PointCreater m_creater;
+    public int mId
+    {
+        get; set;
+    }
+
+    /**************************************************************************************
+    @brief  関連付けされる船のコンポーネント
+    */
+    public ShipMove mShip
+    {
+        get; set;
+    }
+
 
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
+        mUnregisterList(this);
     }
 
-    protected override void Start()
-    {
-        //初期化したい順番ごとにクラスを追加していく
-        //m_creater.mInitializer();
 
-    }
 }

@@ -12,11 +12,8 @@ using System.Collections;
 public class SceneInTutorial : SceneBase
 {
 
-    /*
-    とりあえずGameInstanceを持ってくる
-    */
     [SerializeField]
-    private PointCreater m_pointCreater;
+    private GameObject[] stagePrefs;
 
     protected override void mOnRegistered()
     {
@@ -26,9 +23,9 @@ public class SceneInTutorial : SceneBase
     protected override void Start()
     {
         //初期化したい順番ごとにクラスを追加していく
-        m_pointCreater.mInitializer();
-
-
-
+        var type = (ECourseType)PlayerPrefs.GetInt(SaveKey.mTutorialKey);
+        Debug.Log("StageType" + type);
+        mCreate(stagePrefs[(int)type]);
+        //ECourseType.
     }
 }

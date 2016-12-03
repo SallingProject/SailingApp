@@ -14,7 +14,7 @@ public class PointCreater : BaseObject{
 
 
     // Use this for initialization
-    public void mInitializer()
+    protected override void Start()
     {
         foreach (var obj in m_point)
         {
