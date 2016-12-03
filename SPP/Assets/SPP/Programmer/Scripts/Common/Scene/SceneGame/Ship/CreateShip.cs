@@ -23,9 +23,9 @@ public class CreateShip : BaseObject{
             case EShipType.Class470:
                 shipData += "Ship0004";
                 break;
-            //case EShipType.ClassLaser:
-            //    shipData += "Ship0001";
-            //    break;
+            case EShipType.ClassLaser:
+                shipData += "Ship0001";
+                break;
             //case EShipType.Class49er:
             //    shipData += "Ship0002";
             //    break;
