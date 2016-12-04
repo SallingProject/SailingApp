@@ -34,7 +34,6 @@ public class TutorialEventArea : BaseObject
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("きたあああああ");
         if(mEventCallback != null && !m_used)
         {
             mEventCallback.Invoke(m_eventId);
