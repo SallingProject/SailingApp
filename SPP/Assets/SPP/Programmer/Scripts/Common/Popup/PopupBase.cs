@@ -187,4 +187,24 @@ public class PopupBase : BaseObject {
     }
 
 
+
+    public void SetButtonText(EButtonId id,string text)
+    {
+        switch (id)
+        {
+            case EButtonId.Ok:
+                if (m_popupButton.OkText != null)
+                {
+                    m_popupButton.OkText.text = text;
+                }
+                break;
+
+            case EButtonId.Cancel:
+                if (m_popupButton.CancelText != null)
+                {
+                    m_popupButton.CancelText.text = text;
+                }
+                break;
+        }
+    }
 }
