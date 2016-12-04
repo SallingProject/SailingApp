@@ -57,6 +57,16 @@ public class PopupButton : BaseObject{
         base.Awake();
         mUnregisterList(this);
         this.transform.SetActive(false);
+        
+        if(m_ok.Text != null)
+        {
+            m_ok.Text.text = "OK";
+        }
+
+        if (m_cancel.Text != null)
+        {
+            m_cancel.Text.text = "Cancel";
+        }
     }
 
     public void Init()

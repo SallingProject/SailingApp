@@ -12,7 +12,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class PopupWindow : PopupBase
+public class TutorialPopup : PopupBase
 {
 
     [SerializeField]
