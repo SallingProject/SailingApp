@@ -52,7 +52,8 @@ public class ShipMove : BaseObject
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
-    protected override void Start()
+
+    public void mInitialize()
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;

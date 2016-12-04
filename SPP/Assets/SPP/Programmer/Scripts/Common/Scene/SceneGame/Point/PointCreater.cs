@@ -22,7 +22,7 @@ public class PointCreater : BaseObject{
         }
         GameInfo.mInstance.m_pointArray.mGetPoint().GetComponent<Point>().enabled = true;
         var instance = GameInfo.mInstance.m_pointArray.mGetLastPoint().transform.FindInChildren("In", false);
-        instance.AddComponent<SceneChanger>();
+        instance.AddComponent<ClearChecker>();
     }
 
 }

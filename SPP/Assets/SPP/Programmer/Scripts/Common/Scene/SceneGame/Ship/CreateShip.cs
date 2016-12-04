@@ -10,15 +10,29 @@ using UnityEngine;
 using System.Collections;
 
 public class CreateShip : BaseObject{
+    private int m_shipDataSize = 0;
 
-    protected override void mOnRegistered()
+    protected override void Start()
     {
         mUnregisterList(this);
 
-        //GameManagerから受け取る
-        var selectedShip = (EShipType)PlayerPrefs.GetInt(SaveKey.mShipKey);
+
+        var player = mCreatePlayer();
+        //GameInfoへ登録
+        GameInfo.mInstance.mCreateShipData(m_shipDataSize);
+        GameInfo.mInstance.mShipStatus[0] = player;
+    }
+
+
+    /****************************************************************************** 
+    @brief      スクリプタブルオブジェクトのパスを返す
+    @param[in]  船のタイプ
+    @return     ScriptableObjectPath
+    *******************************************************************************/
+    private string mShipPath(EShipType type)
+    {
         string shipData = "Data/Ship/";
-        switch (selectedShip)
+        switch (type)
         {
             case EShipType.Class470:
                 shipData += "Ship0004";
@@ -36,21 +50,38 @@ public class CreateShip : BaseObject{
                 shipData += "ShipTest";
                 break;
         }
+        return shipData;
+    }
 
-        var scripObj = Resources.Load(shipData) as ShipDefine;
-        var path = scripObj.mPath;
+    /****************************************************************************** 
+    @brief      操作するプレイヤーとなるオブジェクトを作る
+    @return     ShipStatus
+    *******************************************************************************/
+    private ShipStatus mCreatePlayer()
+    {
+        //GameManagerから受け取る
+        var scripPath = mShipPath((EShipType)PlayerPrefs.GetInt(SaveKey.mShipKey));
 
-        var obj = Resources.Load(path);
+        var scripObj = Resources.Load(scripPath) as ShipDefine;
+        var modelpath = scripObj.mPath;
+
+        var obj = Resources.Load(modelpath);
         var instance = mCreate(obj) as GameObject;
         instance.transform.SetParent(transform);
         instance.transform.localPosition = Vector3.zero;
         instance.transform.localEulerAngles = Vector3.zero;
-
         instance.GetComponentInChildren<SailRotation>().enabled = true;
-        GetComponent<ShipMove>().mSetShipDefine(scripObj);
+
+        var shipMove = GetComponent<ShipMove>();
+        shipMove.mSetShipDefine(scripObj);
+        shipMove.mInitialize();
 
         var shipStatus = gameObject.GetComponent<ShipStatus>();
-        shipStatus.mId = 1;
-        shipStatus.mShip = GetComponent<ShipMove>();
+        shipStatus.mId = m_shipDataSize;
+        shipStatus.mShip = shipMove;
+
+        m_shipDataSize++;
+        instance.name = "Player" + m_shipDataSize.ToString();
+        return shipStatus;
     }
 }
