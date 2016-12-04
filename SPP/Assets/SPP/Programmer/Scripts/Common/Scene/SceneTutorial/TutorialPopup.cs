@@ -20,6 +20,7 @@ public class TutorialPopup : PopupBase
     [SerializeField]
     private GameObject m_comtens;
 
+    private System.Action m_endCallback;
 
 
 	public void StartPopup ()
@@ -35,6 +36,11 @@ public class TutorialPopup : PopupBase
     void SkipPopupActuon()
     {
         base.Close(null, null, EndPopup);
+
+        Debug.Log("Cancel");
+
+        if (m_endCallback != null)
+            m_endCallback.Invoke();
     }
 
     void PopupActionFourTimes(EButtonId id)
@@ -57,6 +63,7 @@ public class TutorialPopup : PopupBase
                 break;
             case EButtonId.Cancel:
                 SkipPopupActuon();
+
                 break;
         }
     }
@@ -71,6 +78,7 @@ public class TutorialPopup : PopupBase
                 break;
             case EButtonId.Cancel:
                 SkipPopupActuon();
+
                 break;
         }
     }
@@ -85,6 +93,7 @@ public class TutorialPopup : PopupBase
                 break;
             case EButtonId.Cancel:
                 SkipPopupActuon();
+
                 break;
         }
 	}
@@ -94,11 +103,18 @@ public class TutorialPopup : PopupBase
         m_Type = type;
     }
 
-   public void Open()
+   public void Open(System.Action openedCallback,System.Action endCallback)
     {
         GetCoueseType(m_Type);
         mButtonSet = EButtonSet.Set2;
         PopupButton.mOnClickCallback = PopupActionOnce;
-        base.Open(null, null, StartPopup);
+        base.Open(null, null,
+            () =>
+            {
+                StartPopup();
+                openedCallback.Invoke();
+            });
+
+        m_endCallback = endCallback;
     }
 }

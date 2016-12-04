@@ -21,7 +21,7 @@ public class PopupBase : BaseObject {
 
     [SerializeField]
     RectTransform m_popupRoot;
-    
+
     PopupButton m_popupButton;
     public PopupButton PopupButton
     {
@@ -44,10 +44,23 @@ public class PopupBase : BaseObject {
     PopupAction m_openAction = new PopupAction();
     PopupAction m_closeAction = new PopupAction();
 
+    private EButtonSet m_buttonSet = EButtonSet.Set1;
     public EButtonSet mButtonSet
     {
-        private get;
-        set;
+        private get { return m_buttonSet; }
+        set
+        {
+            m_buttonSet = value;
+            var root = m_popupWindow.transform.FindInChildren("Popup", false);
+            var buttonGroup = root.transform.FindInChildren("Button", false);
+            string path = (m_buttonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
+            var button = buttonGroup.transform.FindInChildren(path, false);
+
+            if (m_popupButton == null || m_popupButton.name != button.name)
+            {
+                m_popupButton = button.GetComponent<PopupButton>();
+            }
+        }
     }
 
     float m_time = float.NaN;
@@ -68,18 +81,9 @@ public class PopupBase : BaseObject {
             m_blackFade = m_popupWindow.transform.FindInChildren("BackFade", false).GetComponent<Image>();
             m_blackFade.transform.SetActive(false);
         }
-
-        if (m_popupButton == null)
-        {
-            var root = m_popupWindow.transform.FindInChildren("Popup", false);
-            var buttonGroup = root.transform.FindInChildren("Button", false);
-            string path = (mButtonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
-            var button = buttonGroup.transform.FindInChildren(path, false);
-            m_popupButton = button.GetComponent<PopupButton>();
-            m_popupButton.Init();
-        }
-
         m_popupWindow.SetActive(false);
+
+        mButtonSet = EButtonSet.Set1;
         mUnregister();
     }
 
@@ -92,6 +96,9 @@ public class PopupBase : BaseObject {
     
     public virtual void Open(System.Action openBeginAction, System.Action openning = null, System.Action openEnd = null, float time = 0.25f)
     {
+
+        
+
         m_popupWindow.SetActive(true);
         m_popupWindow.transform.localScale = new Vector3(1, 0);
 
