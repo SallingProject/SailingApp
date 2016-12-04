@@ -67,12 +67,11 @@ public class PopupButton : BaseObject{
         {
             m_cancel.Text.text = "Cancel";
         }
-    }
 
-    public void Init()
-    {
+
         if (m_ok.Button != null)
         {
+            m_ok.Button.onClick.RemoveAllListeners();
             m_ok.Button.onClick.AddListener(() =>
             {
                 if (mOnClickCallback != null)
@@ -84,6 +83,7 @@ public class PopupButton : BaseObject{
 
         if (m_cancel.Button != null)
         {
+            m_cancel.Button.onClick.RemoveAllListeners();
             m_cancel.Button.onClick.AddListener(() =>
             {
                 if (mOnClickCallback != null)
@@ -93,4 +93,5 @@ public class PopupButton : BaseObject{
             });
         }
     }
+    
 }

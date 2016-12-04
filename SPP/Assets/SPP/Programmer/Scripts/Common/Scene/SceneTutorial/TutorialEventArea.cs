@@ -31,10 +31,9 @@ public class TutorialEventArea : BaseObject
         base.mOnRegistered();
         mUnregisterList(this);
     }
-
     void OnTriggerEnter(Collider other)
     {
-        if(mEventCallback != null && !m_used)
+        if (mEventCallback != null && !m_used)
         {
             mEventCallback.Invoke(m_eventId);
 
