@@ -41,6 +41,17 @@ public class PopupButton : BaseObject{
         private get;
         set;
     }
+
+    public Text OkText
+    {
+        get{ return m_ok.Text;}
+    }
+
+    public Text CancelText
+    {
+        get { return m_cancel.Text; }
+    }
+
     protected override void Awake()
     {
         base.Awake();
