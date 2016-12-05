@@ -15,6 +15,7 @@ public class ResultWindow : PopupBase {
 
     public void Open()
     {
+        base.mButtonSet = EButtonSet.SetNone;
         base.Open(null, null, PopupOpenEnd);
     }
 
