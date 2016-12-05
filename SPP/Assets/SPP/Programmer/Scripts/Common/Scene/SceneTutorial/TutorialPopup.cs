@@ -37,7 +37,7 @@ public class TutorialPopup : PopupBase
     {
         base.Close(null, null, EndPopup);
 
-        Debug.Log("Cancel");
+        //Debug.Log("Cancel");
 
         if (m_endCallback != null)
             m_endCallback.Invoke();

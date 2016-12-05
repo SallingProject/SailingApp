@@ -39,7 +39,7 @@ public class InductionRing : BaseObject {
         m_prevPoint = m_nextpoint;
         m_nextpoint = nextPoint;
 
-        Debug.Log(m_nextpoint.name);
+        //Debug.Log(m_nextpoint.name);
         if (nextPoint.m_buoyType == Point.eBuoyType.Curve)
         {
             //オブジェクト間の角度差

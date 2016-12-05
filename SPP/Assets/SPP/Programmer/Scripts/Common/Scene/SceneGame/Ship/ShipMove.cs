@@ -246,9 +246,9 @@ public class ShipMove : BaseObject
     *******************************************************************************/
     private IEnumerator mNormalWaitTime(float time)
     {
-        Debug.Log("Boost");
+        //Debug.Log("Boost");
         yield return new WaitForSeconds(time);
-        Debug.Log("Off");
+        //Debug.Log("Off");
         mNormalAccel();
     }
 

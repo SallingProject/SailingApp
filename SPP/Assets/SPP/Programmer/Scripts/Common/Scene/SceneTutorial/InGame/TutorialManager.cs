@@ -9,7 +9,8 @@ public class TutorialManager : BaseObject
     private GameObject[] m_stagePrefs;
     [SerializeField]
     private RaceTimer m_timer;
-
+    [SerializeField]
+    private ResultWindow m_result;
     protected override void mOnRegistered()
     {
     }
@@ -18,7 +19,7 @@ public class TutorialManager : BaseObject
     {
         //ECourseType　ステージ生成
         var type = (ECourseType)PlayerPrefs.GetInt(SaveKey.mTutorialKey);
-        Debug.Log("StageType" + type);
+        //Debug.Log("StageType" + type);
         mCreate(m_stagePrefs[(int)type]);
 
 
@@ -38,7 +39,7 @@ public class TutorialManager : BaseObject
             {
                 m_timer.StopTime();
             }
-            GameInstance.mInstance.mSceneLoad(new LoadInfo("Home"));
+            m_result.Open();
             GameInfo.mInstance.mIsEnd = false;
         }
     }
