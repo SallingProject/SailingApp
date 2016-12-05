@@ -27,6 +27,7 @@ public enum EButtonId
 
 public enum EButtonSet
 {
+   SetNone = 0,
    Set1,
    Set2,
 }
