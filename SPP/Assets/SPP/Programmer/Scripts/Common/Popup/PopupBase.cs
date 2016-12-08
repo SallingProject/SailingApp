@@ -34,6 +34,18 @@ public class PopupBase : BaseObject {
         get { return m_blackFade; }
     }
 
+   private  System.Action<EButtonId> m_buttonCallback;
+    public System.Action<EButtonId> mButtonCallback
+    {
+        set
+        {
+            if (m_popupButton != null)
+                m_popupButton.mOnClickCallback = value;
+
+            m_buttonCallback = value;
+        }
+    }
+
     class PopupAction
     {
         public System.Action _begin;
@@ -51,14 +63,21 @@ public class PopupBase : BaseObject {
         set
         {
             m_buttonSet = value;
-            var root = m_popupWindow.transform.FindInChildren("Popup", false);
-            var buttonGroup = root.transform.FindInChildren("Button", false);
-            string path = (m_buttonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
-            var button = buttonGroup.transform.FindInChildren(path, false);
+            if (m_popupButton != null)
+                m_popupButton.transform.SetActive(false);
 
-            if (m_popupButton == null || m_popupButton.name != button.name)
+            if (m_buttonSet != EButtonSet.SetNone)
             {
-                m_popupButton = button.GetComponent<PopupButton>();
+                var root = m_popupWindow.transform.FindInChildren("Popup", false);
+                var buttonGroup = root.transform.FindInChildren("Button", false);
+                string path = (m_buttonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
+                var button = buttonGroup.transform.FindInChildren(path, false);
+
+                if (m_popupButton == null || m_popupButton.name != button.name)
+                {
+                    m_popupButton = button.GetComponent<PopupButton>();
+                    m_popupButton.mOnClickCallback = m_buttonCallback;
+                }
             }
         }
     }
@@ -83,7 +102,7 @@ public class PopupBase : BaseObject {
         }
         m_popupWindow.SetActive(false);
 
-        mButtonSet = EButtonSet.Set1;
+        mButtonSet = EButtonSet.SetNone;
         mUnregister();
     }
 

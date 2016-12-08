@@ -48,10 +48,14 @@ public class Point : BaseObject{
 
     private bool m_stayArea;    //エリア内フラグ
     private int m_index;
-
     private const float mk_scaleY = 0.01f;  //縦固定値
 
+    private bool m_initialized = false;
 
+    protected override void mOnRegistered()
+    {
+        mUnregisterList(this);
+    }
 
     /****************************************************************************** 
     @brief      初期化用関数
@@ -70,7 +74,7 @@ public class Point : BaseObject{
         }
 
         m_index = 0;
-        transform.GetComponent<SphereCollider>().radius = m_radius;
+        transform.GetComponent<SphereCollider>().radius = m_radius * 2;
 
         //管理配列に登録
         foreach (var i in m_pointId)
@@ -78,6 +82,7 @@ public class Point : BaseObject{
             m_pointArray.mRegisterArray(i, this);
         }
         enabled = false;
+        m_initialized = true;
     }
     /****************************************************************************** 
     @brief      ポイント判定用板の生成 （簡略化用）
@@ -95,7 +100,7 @@ public class Point : BaseObject{
             receive.transform.Rotate(0, buoy.m_angle, 0);
             receive.transform.localPosition = Vector3.zero;
         }else{
-            receive.transform.localScale = new Vector3(2, mk_scaleY, m_radius*1.5f);
+            receive.transform.localScale = new Vector3(4, mk_scaleY, m_radius*1.5f);
             receive.transform.Rotate(0, buoy.m_angle, 0);
             receive.transform.localPosition = Vector3.zero;
             receive.transform.Translate(0, 0, m_radius-1);
@@ -105,29 +110,29 @@ public class Point : BaseObject{
 
     }
 
-    override public void mOnUpdate()
+    public IEnumerator mUpdate()
     {
-        if (!enabled) return;       //そもそもスクリプトがONじゃない場合<<Return
-        //エリア外なら元に戻す
-        if (!m_stayArea)
-        {
-            foreach(var obj in m_angleObject)
+        if (!m_initialized) yield return null;
+            while (m_stayArea) {
+            //すべて通っていたら次へ
+            if (m_angleObject[m_index].GetComponent<CollisionDetection>().mIsEntered)
             {
-                obj.GetComponent<CollisionDetection>().mIsEntered = false;
+                if (m_angleObject.Length - 1 == m_index)
+                {
+                    m_pointArray.mNext();
+                    yield break;
+                }
+                m_index++;
             }
-            m_index = 0;
-            return;
+
+            yield return null;
         }
-        //すべて通っていたら次へ
-        if (m_angleObject[m_index].GetComponent<CollisionDetection>().mIsEntered)
+        foreach (var obj in m_angleObject)
         {
-            if(m_angleObject.Length-1 == m_index)
-            {
-                m_pointArray.mNext();
-                return;
-            }
-            m_index++;
+            obj.GetComponent<CollisionDetection>().mIsEntered = false;
         }
+        m_index = 0;
+
 
     }
 
@@ -135,11 +140,13 @@ public class Point : BaseObject{
     //ポイント周囲の空間にはいっているか
     void OnTriggerEnter(Collider col)
     {
-        m_stayArea = true;
+            m_stayArea = true;
+            StartCoroutine("mUpdate");
     }
     void OnTriggerExit(Collider col)
     {
         m_stayArea = false;
+
     }
 
     private void OnEnable()
