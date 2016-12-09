@@ -46,7 +46,8 @@ public class TutorialEventArea : BaseObject
     */
     public void BeginEvent()
     {
-        Time.timeScale = 0;
+        GameInfo.mInstance.mShipStatus[0].mShip.mItemActivate(ItemEffect.Invalid, ShipMove.EEffectTimeType.Infnit);
+        GameInfo.mInstance.mShipStatus[0].mShip.mIsInfnit = true;
     }
 
     /**************************************************************************************
@@ -54,6 +55,6 @@ public class TutorialEventArea : BaseObject
     */
     public void ExitEvent()
     {
-        Time.timeScale = 1;
+        GameInfo.mInstance.mShipStatus[0].mShip.mIsInfnit = false;
     }
 }

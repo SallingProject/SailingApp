@@ -13,6 +13,13 @@ public class ShipMove : BaseObject
 {
 
 
+    public enum EEffectTimeType
+    {
+        Infnit, // 無限
+        Normal, // 通常の状態
+    }
+
+
     [System.Serializable]
     class CoefficientLift
     {
@@ -52,6 +59,12 @@ public class ShipMove : BaseObject
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
+    
+    public bool mIsInfnit
+    {
+        private get;
+        set;
+    }
 
     public void mInitialize()
     {
@@ -227,10 +240,10 @@ public class ShipMove : BaseObject
     @brief      風を受ける加速に変化をつける
     @note       Default 100(%) 
     *******************************************************************************/
-    private void mTranslateAccel(float magnification, float time)
+    private void mTranslateAccel(float magnification, float time,EEffectTimeType timeType)
     {
         m_accelMagnification = magnification;
-        StartCoroutine(mNormalWaitTime(time));
+        StartCoroutine(mNormalWaitTime(time,timeType));
     }
 
     /****************************************************************************** 
@@ -244,11 +257,19 @@ public class ShipMove : BaseObject
     /****************************************************************************** 
     @brief      効果時間待ち
     *******************************************************************************/
-    private IEnumerator mNormalWaitTime(float time)
+    private IEnumerator mNormalWaitTime(float time, EEffectTimeType timeType)
     {
-        //Debug.Log("Boost");
-        yield return new WaitForSeconds(time);
-        //Debug.Log("Off");
+        if (timeType == EEffectTimeType.Normal)
+        {
+            yield return new WaitForSeconds(time);
+        }
+        else
+        {
+            while (mIsInfnit)
+            {
+                yield return null;
+            }
+        }
         mNormalAccel();
     }
 
@@ -258,14 +279,16 @@ public class ShipMove : BaseObject
     @in         アイテムタイプ
 @note       時間も渡すか検討    
     *******************************************************************************/
-    public void mItemActivate(ItemEffect type)
+    public void mItemActivate(ItemEffect type, EEffectTimeType timeType = EEffectTimeType.Normal)
     {
         switch (type)
         {
             case ItemEffect.Invalid:
+                mIsInfnit = true;
+                mTranslateAccel(0f, 0f,timeType);
                 break;
             case ItemEffect.Boost:
-                mTranslateAccel(2.0f, 3.0f);
+                mTranslateAccel(2.0f, 3.0f,timeType);
                 break;
             default:
                 break;

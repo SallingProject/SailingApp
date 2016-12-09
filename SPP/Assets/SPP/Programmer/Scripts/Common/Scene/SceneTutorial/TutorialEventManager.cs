@@ -5,7 +5,7 @@ public class TutorialEventManager : BaseObject {
 
     [SerializeField]
     TutorialPopup m_popup;
-
+    
     [SerializeField]
     List<TutorialEventArea> m_eventAreaList = new List<TutorialEventArea>();
 
@@ -17,8 +17,8 @@ public class TutorialEventManager : BaseObject {
         foreach(var index in m_eventAreaList)
         {
             index.mEventCallback = id =>
-            {
-                m_popup.Open(index.BeginEvent, index.ExitEvent);
+            { 
+                m_popup.Open(null,index.BeginEvent);
             };
         }
     }
