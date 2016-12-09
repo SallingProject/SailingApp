@@ -52,7 +52,8 @@ public class ShipMove : BaseObject
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
-    protected override void Start()
+
+    public void mInitialize()
     {
         m_speedVector = 0;
         m_surfacingRadian = 0;
@@ -87,9 +88,9 @@ public class ShipMove : BaseObject
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
 
-        //FloatMove;
-        m_surfacingRadian += Time.deltaTime * 120;
-        transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
+        ////FloatMove;
+        //m_surfacingRadian += Time.deltaTime * 120;
+        //transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
     }
 
     /****************************************************************************** 
@@ -245,9 +246,9 @@ public class ShipMove : BaseObject
     *******************************************************************************/
     private IEnumerator mNormalWaitTime(float time)
     {
-        Debug.Log("Boost");
+        //Debug.Log("Boost");
         yield return new WaitForSeconds(time);
-        Debug.Log("Off");
+        //Debug.Log("Off");
         mNormalAccel();
     }
 

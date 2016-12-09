@@ -41,17 +41,37 @@ public class PopupButton : BaseObject{
         private get;
         set;
     }
+
+    public Text OkText
+    {
+        get{ return m_ok.Text;}
+    }
+
+    public Text CancelText
+    {
+        get { return m_cancel.Text; }
+    }
+
     protected override void Awake()
     {
         base.Awake();
         mUnregisterList(this);
         this.transform.SetActive(false);
-    }
+        
+        if(m_ok.Text != null)
+        {
+            m_ok.Text.text = "OK";
+        }
 
-    public void Init()
-    {
+        if (m_cancel.Text != null)
+        {
+            m_cancel.Text.text = "Cancel";
+        }
+
+
         if (m_ok.Button != null)
         {
+            m_ok.Button.onClick.RemoveAllListeners();
             m_ok.Button.onClick.AddListener(() =>
             {
                 if (mOnClickCallback != null)
@@ -63,6 +83,7 @@ public class PopupButton : BaseObject{
 
         if (m_cancel.Button != null)
         {
+            m_cancel.Button.onClick.RemoveAllListeners();
             m_cancel.Button.onClick.AddListener(() =>
             {
                 if (mOnClickCallback != null)
@@ -72,4 +93,5 @@ public class PopupButton : BaseObject{
             });
         }
     }
+    
 }

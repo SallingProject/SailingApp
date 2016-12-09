@@ -25,7 +25,7 @@ public class SceneGame : SceneBase{
     protected override void Start()
     {
         //初期化したい順番ごとにクラスを追加していく
-        m_creater.mInitializer();
+        //m_creater.mInitializer();
 
     }
 }

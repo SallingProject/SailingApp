@@ -71,7 +71,14 @@ public class PointArrayObject : BaseObject {
         return m_pointArray[m_currentId-1];
     }
 
-
+    /****************************************************************************** 
+    @brief      最後のポイントを取得する
+    @return     ポイント(BaseObject)
+    *******************************************************************************/
+    public BaseObject mGetLastPoint()
+    {
+        return m_pointArray[m_pointArray.Count];
+    }
 
 }
     
