@@ -32,4 +32,9 @@ public class TutorialPopup : PopupBase
                 openedCallback.Invoke();
             });
     }
+
+    public void Close(System.Action closeBegin)
+    {
+        base.Close(closeBegin);
+    }
 }
