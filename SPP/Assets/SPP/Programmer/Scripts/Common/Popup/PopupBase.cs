@@ -62,23 +62,27 @@ public class PopupBase : BaseObject {
         private get { return m_buttonSet; }
         set
         {
-            m_buttonSet = value;
             if (m_popupButton != null)
                 m_popupButton.transform.SetActive(false);
 
-            if (m_buttonSet != EButtonSet.SetNone)
+            if (value != EButtonSet.SetNone)
             {
                 var root = m_popupWindow.transform.FindInChildren("Popup", false);
                 var buttonGroup = root.transform.FindInChildren("Button", false);
-                string path = (m_buttonSet == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
+                string path = (value == EButtonSet.Set1) ? "ButtonSet1" : "ButtonSet2";
                 var button = buttonGroup.transform.FindInChildren(path, false);
 
                 if (m_popupButton == null || m_popupButton.name != button.name)
                 {
                     m_popupButton = button.GetComponent<PopupButton>();
+                    
                     m_popupButton.mOnClickCallback = m_buttonCallback;
                 }
             }
+            if (m_popupButton != null)
+                m_popupButton.transform.SetActive(true);
+
+            m_buttonSet = value;
         }
     }
 
@@ -115,8 +119,6 @@ public class PopupBase : BaseObject {
     
     public virtual void Open(System.Action openBeginAction, System.Action openning = null, System.Action openEnd = null, float time = 0.25f)
     {
-
-        
 
         m_popupWindow.SetActive(true);
         m_popupWindow.transform.localScale = new Vector3(1, 0);

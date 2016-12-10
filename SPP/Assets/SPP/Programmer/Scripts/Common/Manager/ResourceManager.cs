@@ -22,6 +22,12 @@ public class ResourceManager : BaseObjectSingleton<ResourceManager> {
         return Resources.Load(GetShipPath(type)) as GameObject;
     }
 
+
+    public T mLoad<T>(string path) where T : class
+    {
+        return Resources.Load(path)as T;
+    }
+
     /****************************************************************************** 
     @brief      船のオブジェクトのパスを取得取得
     @return     none
