@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Item : BaseObject
+public class TutorialItem : BaseObject
 {
 
     [SerializeField]

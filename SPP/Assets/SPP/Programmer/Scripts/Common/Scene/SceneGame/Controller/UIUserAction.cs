@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-
+using DG.Tweening;
 using System.Collections;
 /**************************************************************************************
 @brief  	アイテムとスピン管理用
@@ -21,10 +21,21 @@ public class UIUserAction : BaseObject {
     [System.Serializable]
     class Item
     {
-        [System.NonSerialized]
-        public bool _canUse = true;
         public Image _image;
+
+        [System.NonSerialized]
+        public bool _canUse;
+
+        [System.NonSerialized]
         public ItemDefine _define;
+
+        // 初期化
+        public void Setup()
+        {
+            _canUse = false;
+            _image.transform.localScale = new Vector3(0, 0, 0);
+            _define = null;
+        }
     }
 
     [SerializeField]
@@ -32,6 +43,9 @@ public class UIUserAction : BaseObject {
 
     [SerializeField]
     private Button m_spin;
+
+    [SerializeField]
+    float m_animationSec = 0.5f;
 
     private int m_userId;
 
@@ -88,6 +102,7 @@ public class UIUserAction : BaseObject {
         // 初期位置を記憶
         m_itemInitPosition = m_item._image.rectTransform.anchoredPosition;
         m_userId = 0; // どこからかユーザーIdを取得
+        m_item.Setup();
     }
 
     void Down(BaseEventData eventData)
@@ -113,9 +128,8 @@ public class UIUserAction : BaseObject {
             && touch.mFlickDirection == EFlickDirection.Up
             && m_item._canUse)
         {
-            // TODO : 一度使ったら消す処理
-            DebugManager.mInstance.OutputMsg("アイテム発動", ELogCategory.Default, true);
             GameInfo.mInstance.SetInvokeItem(m_item._define, m_userId);
+            m_item._image.transform.SetActive(false);
             m_item._canUse = false;
         }
 
@@ -130,7 +144,15 @@ public class UIUserAction : BaseObject {
     public void SetItem(ItemDefine define)
     {
         // TODO : 設定処理
-        m_item._canUse = true;
         m_item._define = define;
+        m_item._image.transform.localScale = new Vector3(0, 0, 0);
+        m_item._image.sprite = ResourceManager.mInstance.mLoad<Sprite>(define.mPath);
+        m_item._image.transform.SetActive(true);
+
+        m_item._image.transform.DOScale(new Vector3(1, 1, 1), m_animationSec)
+            .OnComplete(() => m_item._canUse = true);
+
     }
+
+   
 }
