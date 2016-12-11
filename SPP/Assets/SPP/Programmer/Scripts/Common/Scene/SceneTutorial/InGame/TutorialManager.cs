@@ -22,7 +22,10 @@ public class TutorialManager : BaseObject
         //Debug.Log("StageType" + type);
         mCreate(m_stagePrefs[(int)type]);
 
-
+        if(type == ECourseType.straight)
+        {
+            GameInfo.mInstance.m_wind.mWindDirection = 270;
+        }
         if (type == ECourseType.accelerate)
         {
             m_timer.gameObject.SetActive(true);
