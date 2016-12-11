@@ -13,6 +13,13 @@ public class ShipMove : BaseObject
 {
 
 
+    public enum EEffectTimeType
+    {
+        Infnit, // 無限
+        Normal, // 通常の状態
+    }
+
+
     [System.Serializable]
     class CoefficientLift
     {
@@ -52,6 +59,12 @@ public class ShipMove : BaseObject
     private const float mkFriction = 0.98f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
+    
+    public bool mIsInfnit
+    {
+        private get;
+        set;
+    }
 
     public void mInitialize()
     {
@@ -108,9 +121,16 @@ public class ShipMove : BaseObject
         {
             Quaternion rote = Quaternion.AngleAxis(m_wind.mWindDirection, Vector3.up);
             float fl = transform.eulerAngles.y - m_wind.mWindDirection;
-            if (fl > 180)
+            if (Mathf.Abs(fl) > 180)
             {
-                fl = fl - 360;
+                if (fl < 0)
+                {
+                    fl = 360 + fl;
+                }
+                else
+                {
+                    fl = fl - 360;
+                }
             }
             if (fl < 0)
             {
@@ -165,16 +185,32 @@ public class ShipMove : BaseObject
     {
         //風の向きに対してセールが正しい向きをでない場合揚力は発生しない
         float shipFlagment = transform.eulerAngles.y - m_wind.mWindDirection;
-        if (shipFlagment > 180)
+        if (Mathf.Abs(shipFlagment) > 180)
         {
-            shipFlagment = shipFlagment - 360;
+            if (shipFlagment < 0)
+            {
+                shipFlagment = 360 + shipFlagment;
+            }
+            else
+            {
+                shipFlagment = shipFlagment - 360;
+
+            }
         }
         float sailFlagment = m_sail.transform.eulerAngles.y - m_wind.mWindDirection;
-        if (sailFlagment > 180)
-        {
-            sailFlagment = sailFlagment - 360;
+        if (Mathf.Abs(sailFlagment) > 180){
+            if (sailFlagment < 0)
+            {
+                sailFlagment = 360 + sailFlagment;
+            }
+            else
+            {
+                sailFlagment = sailFlagment - 360;
+
+            }
         }
 
+        //Debug.Log(shipFlagment+" "+sailFlagment);
         //９０°辺りはその限りではないので無視させる
         if (Mathf.Abs(shipFlagment) < 90)
         {
@@ -193,7 +229,7 @@ public class ShipMove : BaseObject
 
         float diff = angle / m_cl.m_direction_max;
         float cl = m_cl.m_curve.Evaluate(diff);
-        //        Debug.Log("CL" + cl);
+                //Debug.Log("CL" + cl);
 
         float LiftForce = (Mathf.Pow(m_wind.mWindForce, 2) * cl * mkAirDensity) / 2;
         //        Debug.Log("LiftForce" + LiftForce);
@@ -227,10 +263,10 @@ public class ShipMove : BaseObject
     @brief      風を受ける加速に変化をつける
     @note       Default 100(%) 
     *******************************************************************************/
-    private void mTranslateAccel(float magnification, float time)
+    private void mTranslateAccel(float magnification, float time,EEffectTimeType timeType)
     {
         m_accelMagnification = magnification;
-        StartCoroutine(mNormalWaitTime(time));
+        StartCoroutine(mNormalWaitTime(time,timeType));
     }
 
     /****************************************************************************** 
@@ -244,11 +280,19 @@ public class ShipMove : BaseObject
     /****************************************************************************** 
     @brief      効果時間待ち
     *******************************************************************************/
-    private IEnumerator mNormalWaitTime(float time)
+    private IEnumerator mNormalWaitTime(float time, EEffectTimeType timeType)
     {
-        Debug.Log("Boost");
-        yield return new WaitForSeconds(time);
-        Debug.Log("Off");
+        if (timeType == EEffectTimeType.Normal)
+        {
+            yield return new WaitForSeconds(time);
+        }
+        else
+        {
+            while (mIsInfnit)
+            {
+                yield return null;
+            }
+        }
         mNormalAccel();
     }
 
@@ -258,14 +302,16 @@ public class ShipMove : BaseObject
     @in         アイテムタイプ
 @note       時間も渡すか検討    
     *******************************************************************************/
-    public void mItemActivate(ItemEffect type)
+    public void mItemActivate(ItemEffect type, EEffectTimeType timeType = EEffectTimeType.Normal)
     {
         switch (type)
         {
             case ItemEffect.Invalid:
+                mIsInfnit = true;
+                mTranslateAccel(0f, 0f,timeType);
                 break;
             case ItemEffect.Boost:
-                mTranslateAccel(2.0f, 3.0f);
+                mTranslateAccel(2.0f, 3.0f,timeType);
                 break;
             default:
                 break;

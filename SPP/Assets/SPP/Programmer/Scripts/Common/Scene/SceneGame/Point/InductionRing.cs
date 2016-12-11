@@ -8,7 +8,10 @@ public class InductionRing : BaseObject {
 
     [SerializeField]
     GameObject m_ringPref;
-    
+
+    [SerializeField]
+    float m_zOffset = 4;
+
     List<GameObject> m_ringCashList = new List<GameObject>();
 
     Point m_prevPoint;
@@ -39,7 +42,7 @@ public class InductionRing : BaseObject {
         m_prevPoint = m_nextpoint;
         m_nextpoint = nextPoint;
 
-        Debug.Log(m_nextpoint.name);
+        //Debug.Log(m_nextpoint.name);
         if (nextPoint.m_buoyType == Point.eBuoyType.Curve)
         {
             //オブジェクト間の角度差
@@ -68,8 +71,10 @@ public class InductionRing : BaseObject {
                 m_ringCashList[i].SetActive(true);
 
                 m_ringCashList[i].transform.eulerAngles = Vector3.zero;
-                m_ringCashList[i].transform.position = new Vector3(m_nextpoint.transform.position.x  + ((m_kRadius/2) * i), m_nextpoint.transform.position.y,
-                     m_nextpoint.transform.position.z + (m_kRadius * i));
+                m_ringCashList[i].transform.position = new Vector3
+                    (m_nextpoint.transform.position.x + ((nextPoint.transform.rotation.y / 2) * i),
+                    m_nextpoint.transform.position.y,
+                     m_nextpoint.transform.position.z - ((m_zOffset * i) + (nextPoint.transform.rotation.y * i)));
 
             }
         }

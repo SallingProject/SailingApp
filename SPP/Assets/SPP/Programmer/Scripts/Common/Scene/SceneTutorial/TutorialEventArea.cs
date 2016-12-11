@@ -9,6 +9,7 @@
 ***************************************************************************************/
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TutorialEventArea : BaseObject
 {
@@ -18,6 +19,20 @@ public class TutorialEventArea : BaseObject
     [SerializeField]
     bool m_isOneTimeOnly = false;
 
+    [SerializeField]
+    List<GameObject> m_animations;
+
+    public int mAnimationId
+    {
+        get;
+        set;
+    }
+
+    public List<GameObject> Animations
+    {
+        get { return m_animations; }
+    }
+
     bool m_used = false;
 
     public System.Action<int> mEventCallback
@@ -26,6 +41,8 @@ public class TutorialEventArea : BaseObject
         set;
     }
 
+    
+
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
@@ -33,7 +50,7 @@ public class TutorialEventArea : BaseObject
     }
     void OnTriggerEnter(Collider other)
     {
-        if (mEventCallback != null && !m_used)
+        if ((!m_used && m_isOneTimeOnly))
         {
             mEventCallback.Invoke(m_eventId);
 
@@ -46,7 +63,8 @@ public class TutorialEventArea : BaseObject
     */
     public void BeginEvent()
     {
-        Time.timeScale = 0;
+        GameInfo.mInstance.mShipStatus[0].mShip.mItemActivate(ItemEffect.Invalid, ShipMove.EEffectTimeType.Infnit);
+        GameInfo.mInstance.mShipStatus[0].mShip.mIsInfnit = true;
     }
 
     /**************************************************************************************
@@ -54,6 +72,6 @@ public class TutorialEventArea : BaseObject
     */
     public void ExitEvent()
     {
-        Time.timeScale = 1;
+        GameInfo.mInstance.mShipStatus[0].mShip.mIsInfnit = false;
     }
 }

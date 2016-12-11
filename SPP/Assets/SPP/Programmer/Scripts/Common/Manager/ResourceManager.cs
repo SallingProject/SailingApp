@@ -22,6 +22,21 @@ public class ResourceManager : BaseObjectSingleton<ResourceManager> {
         return Resources.Load(GetShipPath(type)) as GameObject;
     }
 
+
+    public T mLoad<T>(string path) where T : class
+    {
+        var h = Resources.Load(path);
+        return Resources.Load(path)as T;
+    }
+
+    public Sprite mSpriteLoad(string path)
+    {
+        Texture2D tex = Resources.Load(path) as Texture2D;
+
+        Sprite output = Sprite.Create(tex, new Rect(0, 0, 256, 256), Vector2.zero);
+        return output;
+    }
+
     /****************************************************************************** 
     @brief      船のオブジェクトのパスを取得取得
     @return     none
