@@ -146,7 +146,8 @@ public class UIUserAction : BaseObject {
         // TODO : 設定処理
         m_item._define = define;
         m_item._image.transform.localScale = new Vector3(0, 0, 0);
-        m_item._image.sprite = ResourceManager.mInstance.mLoad<Sprite>(define.mPath);
+        m_item._image.sprite = define.mSprite;
+        
         m_item._image.transform.SetActive(true);
 
         m_item._image.transform.DOScale(new Vector3(1, 1, 1), m_animationSec)

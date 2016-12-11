@@ -27,10 +27,10 @@ public class ItemDefine : ScriptableObject {
     @brief  アイテムの画像のパス
     */
     [SerializeField]
-    string m_path;
-    public string mPath
+    Sprite m_sprite;
+    public Sprite mSprite
     {
-        get { return m_path; }
+        get { return m_sprite; }
     }
 
     /************************************************************************************** 
