@@ -100,7 +100,6 @@ public class ShipMove : BaseObject
         m_speedVector *= mkFriction;
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
-
         ////FloatMove;
         //m_surfacingRadian += Time.deltaTime * 120;
         //transform.position = new Vector3(transform.position.x, Mathf.Sin(m_surfacingRadian / 180 * 3.14f) / 8, transform.position.z);
@@ -121,9 +120,16 @@ public class ShipMove : BaseObject
         {
             Quaternion rote = Quaternion.AngleAxis(m_wind.mWindDirection, Vector3.up);
             float fl = transform.eulerAngles.y - m_wind.mWindDirection;
-            if (fl > 180)
+            if (Mathf.Abs(fl) > 180)
             {
-                fl = fl - 360;
+                if (fl < 0)
+                {
+                    fl = 360 + fl;
+                }
+                else
+                {
+                    fl = fl - 360;
+                }
             }
             if (fl < 0)
             {
@@ -178,16 +184,32 @@ public class ShipMove : BaseObject
     {
         //風の向きに対してセールが正しい向きをでない場合揚力は発生しない
         float shipFlagment = transform.eulerAngles.y - m_wind.mWindDirection;
-        if (shipFlagment > 180)
+        if (Mathf.Abs(shipFlagment) > 180)
         {
-            shipFlagment = shipFlagment - 360;
+            if (shipFlagment < 0)
+            {
+                shipFlagment = 360 + shipFlagment;
+            }
+            else
+            {
+                shipFlagment = shipFlagment - 360;
+
+            }
         }
         float sailFlagment = m_sail.transform.eulerAngles.y - m_wind.mWindDirection;
-        if (sailFlagment > 180)
-        {
-            sailFlagment = sailFlagment - 360;
+        if (Mathf.Abs(sailFlagment) > 180){
+            if (sailFlagment < 0)
+            {
+                sailFlagment = 360 + sailFlagment;
+            }
+            else
+            {
+                sailFlagment = sailFlagment - 360;
+
+            }
         }
 
+        //Debug.Log(shipFlagment+" "+sailFlagment);
         //９０°辺りはその限りではないので無視させる
         if (Mathf.Abs(shipFlagment) < 90)
         {
@@ -206,7 +228,7 @@ public class ShipMove : BaseObject
 
         float diff = angle / m_cl.m_direction_max;
         float cl = m_cl.m_curve.Evaluate(diff);
-        //        Debug.Log("CL" + cl);
+                //Debug.Log("CL" + cl);
 
         float LiftForce = (Mathf.Pow(m_wind.mWindForce, 2) * cl * mkAirDensity) / 2;
         //        Debug.Log("LiftForce" + LiftForce);

@@ -36,6 +36,11 @@ public class SceneSetup : SceneBase {
     protected override void Start()
     {
         base.mOnUpdate();
+#if SPP_DEBUG
         GameInstance.mInstance.mSceneLoad(new LoadInfo("DebugHome", LoadInfo.ELoadType.Sync, 1));
+#else
+        GameInstance.mInstance.mSceneLoad(new LoadInfo("Title", LoadInfo.ELoadType.Sync, 1));
+#endif
+
     }
 }

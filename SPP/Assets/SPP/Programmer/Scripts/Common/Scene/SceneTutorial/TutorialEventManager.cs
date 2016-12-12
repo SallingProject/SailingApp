@@ -33,43 +33,75 @@ public class TutorialEventManager : BaseObject {
     {
         area.mEventCallback = id =>
         {
-            m_popup.mButtonCallback = buttonType =>
-            {
-
-                m_contentRoot.SetActive(false);
-                mDelete(m_visibleContent);
-
-                switch (buttonType)
-                {
-                    case EButtonId.Ok:
-                        area.mAnimationId += 1;
-                        if (area.mAnimationId >= area.Animations.Count - 1)
-                        {
-                            m_popup.mButtonSet = EButtonSet.Set1;
-                            m_popup.mButtonCallback = type => { m_popup.Close(() => { area.ExitEvent(); m_contentRoot.SetActive(false); });};
-                        }
-
-                        var next = mCreate(area.Animations[area.mAnimationId]);
-                        next.transform.SetParent(m_contentRoot.transform, false);
-
-                        m_visibleContent = next;
-                        
-                        break;
-
-                    case EButtonId.Cancel:
-                        m_popup.mButtonCallback = type => { m_popup.Close(() => { area.ExitEvent(); m_contentRoot.SetActive(false); }); };
-                        break;
-                }
-
-                m_contentRoot.SetActive(true);
-            };
-
+            m_popup.mButtonCallback = buttonType => DefaultPageCallback(buttonType, area);
             area.mAnimationId = 0;
+
             var first = mCreate(area.Animations[area.mAnimationId]);
             first.transform.SetParent(m_contentRoot.transform, false);
             m_visibleContent = first;
             m_popup.mButtonSet = EButtonSet.Set2;
+            m_popup.SetButtonText(EButtonId.Ok, "次へ");
+            m_popup.SetButtonText(EButtonId.Cancel, "前へ");
             m_popup.Open(m_contentRoot.gameObject, area.BeginEvent);
         };
+    }
+
+    /**************************************************************************************
+    @brief  	前のページ表示用
+    */
+    private void EventPrevPage(TutorialEventArea area)
+    {
+        if (area.mAnimationId < 0)
+            area.mAnimationId = 0;
+
+
+        m_popup.SetButtonText(EButtonId.Ok, "次へ");
+
+        var prev = mCreate(area.Animations[area.mAnimationId]);
+        prev.transform.SetParent(m_contentRoot.transform, false);
+        m_visibleContent = prev;
+    }
+
+    /**************************************************************************************
+    @brief  	通常ののページのときのコールバック設定
+    */
+    private void DefaultPageCallback(EButtonId id, TutorialEventArea area)
+    {
+
+        m_contentRoot.SetActive(false);
+        mDeleteImmediate(m_visibleContent);
+
+        switch (id)
+        {
+            case EButtonId.Ok:
+                area.mAnimationId += 1;
+
+                if (area.mAnimationId > area.Animations.Count - 1)
+                {
+                    m_popup.Close(() => { area.ExitEvent(); m_contentRoot.SetActive(false); });
+                    return;
+                }
+
+                if (area.mAnimationId >= area.Animations.Count - 1)
+                {
+                    m_popup.SetButtonText(EButtonId.Ok, "OK");
+                }
+
+                var next = mCreate(area.Animations[area.mAnimationId]);
+                next.transform.SetParent(m_contentRoot.transform, false);
+
+                m_visibleContent = next;
+
+                break;
+
+            case EButtonId.Cancel:
+
+                area.mAnimationId -= 1;
+                EventPrevPage(area);
+
+                break;
+        }
+
+        m_contentRoot.SetActive(true);
     }
 }
