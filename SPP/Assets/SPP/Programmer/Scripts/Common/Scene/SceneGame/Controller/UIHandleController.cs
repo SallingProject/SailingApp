@@ -117,7 +117,7 @@ public class UIHandleController : BaseObject{
 
         var touch = InputManager.mInstance.mGetTouchInfo();
 
-        float addValue = touch.mDeltaPosition.x / 2;
+        float addValue = touch.mDeltaPosition.x;
         if (mHandleRotationZ - addValue< m_maxZRotation 
             && mHandleRotationZ - addValue > -m_maxZRotation)
         {
