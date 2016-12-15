@@ -35,6 +35,11 @@ public class ShipSelectPopupWindowScript : PopupBase
             case EButtonId.Ok:
                 PlayerPrefs.SetInt(SaveKey.mShipKey, (int)m_type);
                 GameInstance.mInstance.mSceneLoad(new LoadInfo("InTutorial"));
+                Close();
+
+                break;
+            case EButtonId.Cancel:
+                Close();
                 break;
         }
     }
@@ -45,7 +50,7 @@ public class ShipSelectPopupWindowScript : PopupBase
     public void Open()
     {
        
-        mButtonSet = EButtonSet.Set1;
+        mButtonSet = EButtonSet.Set2;
         PopupButton.mOnClickCallback = PopupAction;
         base.Open(null,null , OpenEnd);
     

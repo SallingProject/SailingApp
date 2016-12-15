@@ -199,6 +199,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
 
             async.allowSceneActivation = true;      // シーン遷移許可
 
+            yield return async;
         }
         else
         {
@@ -206,6 +207,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         }
         
         m_loadbar._bar.fillAmount = 1f;
+
         yield return new WaitForSeconds(info._loadedWaitTime);  // ロード終了後少し待機
 
         m_loadbar._root.SetActive(false);

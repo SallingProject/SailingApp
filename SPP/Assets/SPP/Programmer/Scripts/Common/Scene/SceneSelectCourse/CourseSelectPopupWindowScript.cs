@@ -38,6 +38,11 @@ public class CourseSelectPopupWindowScript : PopupBase
                 */
                 PlayerPrefs.SetInt(SaveKey.mTutorialKey, (int)m_type);
                 GameInstance.mInstance.mSceneLoad(new LoadInfo("Tutorial"));
+                Close();
+                break;
+
+            case EButtonId.Cancel:
+                Close();
                 break;
         }
     }
@@ -48,7 +53,7 @@ public class CourseSelectPopupWindowScript : PopupBase
     public void Open()
     {
 
-        mButtonSet = EButtonSet.Set1;
+        mButtonSet = EButtonSet.Set2;
         PopupButton.mOnClickCallback = PopupAction;
         base.Open(null, null, OpenEnd);
 
@@ -56,7 +61,7 @@ public class CourseSelectPopupWindowScript : PopupBase
 
     public void Close()
     {
-        base.Close(null, null, CloseEnd);
+        base.Close(CloseEnd, null, null);
     }
 
 }

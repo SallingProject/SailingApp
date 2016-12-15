@@ -42,6 +42,7 @@ public class PointArrayObject : BaseObject {
         //Baseクラスに書き換える
         //mUnregisterList(m_pointArray[m_currentId]);
         m_pointArray[m_currentId].GetComponent<Point>().enabled = false;
+        m_pointArray[m_currentId].GetComponent<SphereCollider>().enabled = false;
         m_currentId++;
         if (m_currentId > m_pointArray.Count) return;
         m_pointArray[m_currentId].GetComponent<Point>().enabled = true;

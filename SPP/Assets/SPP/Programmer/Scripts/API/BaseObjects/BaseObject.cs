@@ -274,6 +274,14 @@ public abstract class BaseObject: MonoBehaviour{
         return;
     }
 
+    static public void mDeleteImmediate<T>(T remove) where T : UnityEngine.Object
+    {
+        if (remove == null) return;
+
+        DestroyImmediate(remove);
+        return;
+    }
+
     /********************************************************************************************
     @brief      オブジェクト削除用。削除したいオブジェクトがBaseObject型なら管理リストからも削除
     @note       MonoBehaviorのDestroy関数は使用せずこの関数を使用してください。
@@ -289,6 +297,18 @@ public abstract class BaseObject: MonoBehaviour{
         Destroy(remove.gameObject);
         return;
     }
+
+    static public void mDeleteImmediate(BaseObject remove)
+    {
+        if (remove == null) return;
+
+        if (mSerch(remove) != null)
+            mUnregisterList(remove);
+
+        DestroyImmediate(remove);
+        return;
+    }
+
 
     /****************************************************************************** 
     @brief      オブジェクト生成用。生成したオブジェクトがBaseObject型なら管理リストに登録

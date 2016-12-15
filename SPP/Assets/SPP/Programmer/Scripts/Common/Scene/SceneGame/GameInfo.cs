@@ -81,6 +81,9 @@ public class GameInfo : BaseObjectSingleton<GameInfo>{
     *******************************************************************************/
     public void SetInvokeItem(ItemDefine define,int userId)
     {
+
+        if (define == null) return;
+
         switch (define.mType)
         {
             case ItemType.Invalid:

@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:SPP/Assets/SPP/Designer/Res/scene1/scene1-2/scene1-2-1.prefab.meta
 guid: 937af40a0263bc54a9e9067a90b33e51
 timeCreated: 1481529687
+=======
+guid: c2a5c077d6ebfd649a9c6d78d1142f29
+timeCreated: 1481468208
+>>>>>>> 6325c0793b8167eb7afa98d5678bab91b57e38ac:SPP/Assets/SPP/Designer/Res/scene1/scene1-2/scene1-2.prefab.meta
 licenseType: Free
 NativeFormatImporter:
   userData: 
