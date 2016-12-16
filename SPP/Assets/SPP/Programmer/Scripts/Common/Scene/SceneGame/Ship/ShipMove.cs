@@ -97,6 +97,7 @@ public class ShipMove : BaseObject
             m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification;
         }
 
+        m_speedVector *= mkFriction;
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
         ////FloatMove;
@@ -150,7 +151,6 @@ public class ShipMove : BaseObject
         }
 
         m_speedVector += (force.sqrMagnitude/10) * (m_shipDefine.mAcceleration / 100) * m_accelMagnification;
-        m_speedVector *= mkFriction;
         mMoveForce = force.sqrMagnitude;
 
 
