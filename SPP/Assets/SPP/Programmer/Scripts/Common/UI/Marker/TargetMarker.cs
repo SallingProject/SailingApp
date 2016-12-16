@@ -103,8 +103,8 @@ public class TargetMarker : BaseObject {
     private void mSetCanvasMarkActive(Vector3 target,Vector3 ship)
     {
         Vector3 diff = target - ship;
-
-        if (diff.x * m_ship.transform.right.x > 0)
+        
+        if (diff.x * m_ship.transform.right.x > 0 && diff.z * m_ship.transform.right.z > 0)
         {
             m_canvasMark._right.SetActive(true);
             m_canvasMark._left.SetActive(false);
