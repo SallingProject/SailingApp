@@ -100,20 +100,14 @@ public class TargetMarker : BaseObject {
     /**************************************************************************************
     @brief  ターゲットとカメラの位置関係からどのオブジェクトのアクティブをオンにするか決める
     */
-    private void mSetCanvasMarkActive(Vector3 target,Vector3 ship)
+    private void mSetCanvasMarkActive(Vector3 target, Vector3 ship)
     {
         Vector3 diff = target - ship;
-        
-        if (diff.x * m_ship.transform.right.x > 0 && diff.z * m_ship.transform.right.z > 0)
-        {
-            m_canvasMark._right.SetActive(true);
-            m_canvasMark._left.SetActive(false);
-        }
-        else
-        {
-            m_canvasMark._right.SetActive(false);
-            m_canvasMark._left.SetActive(true);
-        }
+
+        bool isRight = (diff.x * m_ship.transform.right.x > 0 || diff.z * m_ship.transform.right.z > 0);
+        m_canvasMark._right.SetActive(isRight);
+        m_canvasMark._left.SetActive(!isRight);
+
     }
 
     /**************************************************************************************
