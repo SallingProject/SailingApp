@@ -56,7 +56,7 @@ public class ShipMove : BaseObject
     }
 
     //定数
-    private const float mkFriction = 0.98f;              //摩擦
+    private const float mkFriction = 0.989f;              //摩擦
     private const float mkNormalMagnification = 1.0f;
     private const float mkAirDensity = 1.2f;
     
@@ -97,7 +97,6 @@ public class ShipMove : BaseObject
             m_speedVector = m_wind.mWindForce * (m_shipDefine.mMaxSpeed / 100) * m_accelMagnification;
         }
 
-        m_speedVector *= mkFriction;
         transform.Translate(new Vector3(0.0f, 0.0f, m_speedVector * Time.deltaTime));
 
         ////FloatMove;
@@ -151,6 +150,7 @@ public class ShipMove : BaseObject
         }
 
         m_speedVector += (force.sqrMagnitude/10) * (m_shipDefine.mAcceleration / 100) * m_accelMagnification;
+        m_speedVector *= mkFriction;
         mMoveForce = force.sqrMagnitude;
 
 
@@ -171,7 +171,7 @@ public class ShipMove : BaseObject
         float diff = angle / m_cd.m_direction_max;
         float cd = m_cd.m_curve.Evaluate(diff);
 
-        float DragForce = (Mathf.Pow(m_wind.mWindForce, 2) * cd * mkAirDensity) / 2;
+        float DragForce = (m_wind.mWindForce * cd * mkAirDensity);
         return -DragForce;
     }
 
@@ -230,7 +230,7 @@ public class ShipMove : BaseObject
         float cl = m_cl.m_curve.Evaluate(diff);
                 //Debug.Log("CL" + cl);
 
-        float LiftForce = (Mathf.Pow(m_wind.mWindForce, 2) * cl * mkAirDensity) / 2;
+        float LiftForce = (m_wind.mWindForce * cl * mkAirDensity) / 2;
         //        Debug.Log("LiftForce" + LiftForce);
 
         return LiftForce;
