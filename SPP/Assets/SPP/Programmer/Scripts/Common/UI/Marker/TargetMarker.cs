@@ -107,7 +107,7 @@ public class TargetMarker : BaseObject {
         //Debug.Log(diff.x);
        // Debug.Log(diff.x * m_ship.transform.forward.x);
 
-        bool isRight = (diff.x  > 0 || diff.x * m_ship.transform.forward.x > 0 || diff.x * m_ship.transform.right.x > 0);
+        bool isRight = (diff.x  > 0 || diff.x * m_ship.transform.forward.x > 0 );
         m_canvasMark._right.SetActive(isRight);
         m_canvasMark._left.SetActive(!isRight);
 
