@@ -58,7 +58,7 @@ public class ShipSelectPopupWindowScript : PopupBase
 
     public void Close()
     {
-       base.Close(null, null, CloseEnd);
+        base.Close(CloseEnd, null, null);
     }
 
 }
