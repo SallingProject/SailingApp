@@ -33,14 +33,10 @@ public class CourseSelectPopupWindowScript : PopupBase
         switch (id)
         {
             case EButtonId.Ok:
-                /*
-                *PlayerPlefs.SetInt:SaveKeyにmCourseKeyを追加
-                */
                 PlayerPrefs.SetInt(SaveKey.mTutorialKey, (int)m_type);
                 GameInstance.mInstance.mSceneLoad(new LoadInfo("Tutorial"));
                 Close();
                 break;
-
             case EButtonId.Cancel:
                 Close();
                 break;
