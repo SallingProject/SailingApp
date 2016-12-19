@@ -17,6 +17,7 @@ public class SelectCourseScript : SceneBase {
     private ECourseType m_type;
     [SerializeField]
     private CourseSelectPopupWindowScript m_popup;
+     
 
     protected override void mOnRegistered()
     {

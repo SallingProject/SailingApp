@@ -19,14 +19,48 @@ public class CourseSelectPopupWindowScript : PopupBase
     private GameObject m_contens;
     [SerializeField]
     private ECourseType m_type;
+    [SerializeField]
+    private GameObject[] m_coursePref;
 
     public void OpenEnd()
     {
         m_contens.SetActive(true);
+        switch(m_type)
+        {
+            case ECourseType.straight:
+                m_coursePref[0].SetActive(true);
+                break;
+            case ECourseType.corner:
+                m_coursePref[1].SetActive(true);
+                break;
+            case ECourseType.usingItem:
+                m_coursePref[2].SetActive(true);
+                break;
+            case ECourseType.accelerate:
+                m_coursePref[3].SetActive(true);
+                break;
+        }
+        
+        
     }
     public void CloseEnd()
     {
         m_contens.SetActive(false);
+        switch (m_type)
+        {
+            case ECourseType.straight:
+                m_coursePref[0].SetActive(false);
+                break;
+            case ECourseType.corner:
+                m_coursePref[1].SetActive(false);
+                break;
+            case ECourseType.usingItem:
+                m_coursePref[2].SetActive(false);
+                break;
+            case ECourseType.accelerate:
+                m_coursePref[3].SetActive(false);
+                break;
+        }
     }
     void PopupAction(EButtonId id)
     {
@@ -51,6 +85,7 @@ public class CourseSelectPopupWindowScript : PopupBase
 
         mButtonSet = EButtonSet.Set2;
         PopupButton.mOnClickCallback = PopupAction;
+        
         base.Open(null, null, OpenEnd);
 
     }
