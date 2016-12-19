@@ -164,6 +164,16 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         mLoadProgress = 0;
         m_fade.gameObject.SetActive(true);
 
+        m_fade.color = new Color(info._fadeColor.r, info._fadeColor.g, info._fadeColor.b, 0);
+        // フェードイン
+        while (m_fade.color.a < 1)
+        {
+
+            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
+            yield return null;
+        }
+        m_fade.color = new Color(info._fadeColor.r, info._fadeColor.g, info._fadeColor.b, 1);
+
         // ロードバーを使うか
         bool isActivebar = ((info._type & LoadInfo.ELoadType._Loadbar) == LoadInfo.ELoadType._Loadbar);
         if (isActivebar)
@@ -174,17 +184,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         }
 
         yield return null;
-        m_fade.color = new Color(info._fadeColor.r, info._fadeColor.g, info._fadeColor.b, 0);
-        // フェードイン
-        while (m_fade.color.a < 1)
-        {
-
-            m_fade.color += new Color(0, 0, 0, kFadeAlphaValue * (kFadeTimeSpeed * Time.deltaTime));
-            yield return null;
-        }
-
-        m_fade.color = new Color(info._fadeColor.r, info._fadeColor.g, info._fadeColor.b, 1);
-
+        
         if ((info._type & LoadInfo.ELoadType.Async) == LoadInfo.ELoadType.Async)
         {
             AsyncOperation async = SceneManager.LoadSceneAsync(info._nextSceneName);
@@ -193,13 +193,15 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
             while (async.progress < kCompleateLoad)
             {
                 mLoadProgress = async.progress;
+
+                m_loadbar._text.text = async.progress.ToString();
                 m_loadbar._bar.fillAmount = async.progress;
                 yield return new WaitForEndOfFrame();
             }
 
             async.allowSceneActivation = true;      // シーン遷移許可
-
             yield return async;
+
         }
         else
         {
@@ -208,8 +210,7 @@ public class GameInstance : BaseObjectSingleton<GameInstance> {
         
         m_loadbar._bar.fillAmount = 1f;
 
-        yield return new WaitForSeconds(info._loadedWaitTime);  // ロード終了後少し待機
-
+        yield return new WaitForEndOfFrame();
         m_loadbar._root.SetActive(false);
 
         // フェードアウト
