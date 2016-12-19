@@ -52,12 +52,14 @@ public class InductionRing : BaseObject {
             {
                 Vector3 childPostion = transform.position;
 
-                float angle = ((angleDiff * i) - angleDiff) * Mathf.Deg2Rad + m_nextpoint.transform.eulerAngles.y;
+                float angle = (((angleDiff * i)) + m_nextpoint.transform.eulerAngles.y) * Mathf.Deg2Rad;
 
-                childPostion.x += m_kRadius * Mathf.Cos(angle) + m_nextpoint.transform.position.x;
-                childPostion.z += m_kRadius * Mathf.Sin(angle) + m_nextpoint.transform.position.z;
+                childPostion.z += m_kRadius * Mathf.Cos(angle) + m_nextpoint.transform.position.z;
+                childPostion.x += m_kRadius * Mathf.Sin(angle) + m_nextpoint.transform.position.x;
+                float ringDirection = Mathf.Atan2(Mathf.Sin(angle), Mathf.Cos(angle));
+
                 m_ringCashList[i].SetActive(true);
-                m_ringCashList[i].transform.eulerAngles = new Vector3(0, -angleDiff * i, 0);
+                m_ringCashList[i].transform.eulerAngles = new Vector3(0, ringDirection*Mathf.Rad2Deg, 0);
                 m_ringCashList[i].transform.position = childPostion;
             }
         }
@@ -70,7 +72,7 @@ public class InductionRing : BaseObject {
             {
                 m_ringCashList[i].SetActive(true);
 
-                m_ringCashList[i].transform.eulerAngles = Vector3.zero;
+                m_ringCashList[i].transform.eulerAngles = new Vector3(0.0f, 90.0f, 0.0f);
                 m_ringCashList[i].transform.position = new Vector3
                     (m_nextpoint.transform.position.x + ((nextPoint.transform.rotation.y / 2) * i),
                     m_nextpoint.transform.position.y,
