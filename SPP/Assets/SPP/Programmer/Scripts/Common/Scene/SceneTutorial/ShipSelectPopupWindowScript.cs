@@ -20,13 +20,14 @@ public class ShipSelectPopupWindowScript : PopupBase
     [SerializeField]
     private EShipType m_type;
 
-    public void OpenEnd()
-    {
-        m_contens.SetActive(true);
-    }
+    GameObject m_viewContent;
+    
     public void CloseEnd()
     {
+        m_viewContent.SetActive(false);
         m_contens.SetActive(false);
+
+        m_viewContent = null;
     }    
     void PopupAction(EButtonId id)
     {
@@ -47,12 +48,17 @@ public class ShipSelectPopupWindowScript : PopupBase
     {
         m_type = type;
     }
-    public void Open()
+    public void Open(GameObject content)
     {
        
         mButtonSet = EButtonSet.Set2;
         PopupButton.mOnClickCallback = PopupAction;
-        base.Open(null,null , OpenEnd);
+        m_viewContent = content;
+        base.Open(null,null , ()=> 
+        {
+            m_contens.SetActive(true);
+            m_viewContent.SetActive(true);
+        });
     
     }
 

@@ -19,6 +19,9 @@ public class SelectShipScene : SceneBase
     [SerializeField]
     private ShipSelectPopupWindowScript m_popup;
 
+    [SerializeField]
+    private GameObject m_viewObject;
+
     protected override void mOnRegistered()
     {
         base.mOnRegistered();
@@ -26,7 +29,7 @@ public class SelectShipScene : SceneBase
     public void ButtonPush()
     {
         m_popup.GetShipType(m_id);
-        m_popup.Open();
+        m_popup.Open(m_viewObject);
    
     }
 
