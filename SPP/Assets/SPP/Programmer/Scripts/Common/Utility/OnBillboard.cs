@@ -14,12 +14,10 @@ public class OnBillboard : BaseObject {
     {
         base.mOnUpdate();
 
-        Transform cameraTrans = Camera.main.transform;
-        Transform thisTrans = this.transform;
-        Vector3 diff = cameraTrans.position - thisTrans.position;
-
-        diff.x = diff.z = 0;
-
-        thisTrans.LookAt(diff);
+        //Transform cameraTrans = Camera.main.transform;
+        //Transform thisTrans = this.transform;
+        //Vector3 lookAt = cameraTrans.position;
+        //lookAt.x = lookAt.z = 0;
+        //thisTrans.LookAt(lookAt);
     }
 }
