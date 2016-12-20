@@ -102,14 +102,19 @@ public class TargetMarker : BaseObject {
     */
     private void mSetCanvasMarkActive(Vector3 target, Vector3 ship)
     {
-        Vector3 diff = target - ship;
+        Vector3 diff = target - m_ship.transform.position;
+        Matrix4x4 mat = Camera.main.worldToCameraMatrix;
+        diff = mat * diff;
 
-        //Debug.Log(diff.x);
-       // Debug.Log(diff.x * m_ship.transform.forward.x);
 
-        bool isRight = (diff.x  > 0 || diff.x * m_ship.transform.forward.x > 0 );
+        // Vector3 diff = target - ship;
+        // //Debug.Log(diff.x);
+        //// Debug.Log(diff.x * m_ship.transform.forward.x);
+        //bool isRight = (diff.x  > 0 || diff.x * m_ship.transform.forward.x > 0 );
+        bool isRight = (diff.x > 0);
         m_canvasMark._right.SetActive(isRight);
-        m_canvasMark._left.SetActive(!isRight);
+         m_canvasMark._left.SetActive(!isRight);
+
 
     }
 
