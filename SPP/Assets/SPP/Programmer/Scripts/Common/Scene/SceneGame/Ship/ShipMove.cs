@@ -230,7 +230,7 @@ public class ShipMove : BaseObject
         float cl = m_cl.m_curve.Evaluate(diff);
                 //Debug.Log("CL" + cl);
 
-        float LiftForce = (m_wind.mWindForce * cl * mkAirDensity) / 2;
+        float LiftForce = (m_wind.mWindForce * cl * mkAirDensity) / 3;
         //        Debug.Log("LiftForce" + LiftForce);
 
         return LiftForce;
